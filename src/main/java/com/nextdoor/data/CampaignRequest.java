@@ -3,12 +3,12 @@ package com.nextdoor.data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nextdoor.api.response.NextDoorAPIResponseNode;
+import com.nextdoor.api.response.NextDoorAPIRequestNode;
 import com.nextdoor.auth.NextDoorAPIAuth;
 
 import java.util.Objects;
 
-public class CampaignRequest extends NextDoorAPIResponseNode {
+public class CampaignRequest extends NextDoorAPIRequestNode {
     @JsonProperty("advertiser_id")
     protected String advertiserId;
 
@@ -54,6 +54,18 @@ public class CampaignRequest extends NextDoorAPIResponseNode {
 
     public String getObjective() {
         return objective;
+    }
+
+    public void setAdvertiserId(String advertiserId) {
+        this.advertiserId = advertiserId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setObjective(String objective) {
+        this.objective = objective;
     }
 
     public CampaignRequestBuilder builder() {

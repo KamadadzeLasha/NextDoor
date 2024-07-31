@@ -1,21 +1,17 @@
 package com.nextdoor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nextdoor.data.CampaignRequest;
 import com.nextdoor.impl.advertise.NextDoorAPICampaign;
 
 public class Main {
-    public static void main(String[] args) {
-        NextDoorAPICampaign nextDoorAPICampaign = new NextDoorAPICampaign();
-        CampaignRequest nextDoor = nextDoorAPICampaign
-                .getObj()
-                .builder()
-                .name("Next Door")
-                .advertiserId("123123")
-                .token("Test my new token")
-                .build();
+    public static void main(String[] args) throws UnirestException, JsonProcessingException {
+        NextDoorAPICampaign nextDoorAPICampaign = new NextDoorAPICampaign()
+                .name("Name");
 
-        nextDoorAPICampaign.setObj(nextDoor);
-
-        System.out.println(nextDoorAPICampaign.getObj());
+        System.out.println(nextDoorAPICampaign.getObj().getObjAsString());
+//        nextDoorAPICampaign.setObj(nextDoor);
+//        nextDoorAPICampaign.createCampaign();
     }
 }

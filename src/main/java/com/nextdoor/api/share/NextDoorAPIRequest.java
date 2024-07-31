@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.nextdoor.api.response.NextDoorAPIResponseNode;
+import com.nextdoor.api.response.NextDoorAPIRequestNode;
 import com.nextdoor.auth.NextDoorAPIAuth;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class NextDoorAPIRequest<T extends NextDoorAPIResponseNode> {
+public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
     private T obj;
     private ObjectMapper objectMapper = new ObjectMapper();
     private final Class<T> responseClass;
