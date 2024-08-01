@@ -10,6 +10,7 @@ import com.nextdoor.api.response.NextDoorAPIRequestNode;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.internal.HttpClient;
+import com.nextdoor.util.NextDoorUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +49,18 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         this.params = params;
     }
 
+    public boolean containsParamInternal(String param) {
+        return this.params.containsKey(param);
+    }
+
+    public void removeParamInternal(String param) {
+        this.params.remove(param);
+    }
+
+    public Object getParamInternal(String param) {
+        return this.params.get(param);
+    }
+
     public void addHeader(String key, String value) {
         this.additionalHeaders.put(key, value);
     }
@@ -61,9 +74,11 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
     }
 
     protected T sendHttpRequest(HttpMethod httpMethod) throws UnirestException, JsonProcessingException, APIRequestException {
-        nextDoorAPIAuth.log("======================= NEXTDOOR API {0} START =======================", httpMethod);
+        return sendHttpRequest(httpMethod, getPath());
+    }
 
-        String path = getPath();
+    protected T sendHttpRequest(HttpMethod httpMethod, String path) throws UnirestException, JsonProcessingException, APIRequestException {
+        nextDoorAPIAuth.log("======================= NEXTDOOR API {0} START =======================", httpMethod);
 
         nextDoorAPIAuth.log("Sending HTTP {0} request to {1}", httpMethod, path);
 
@@ -79,7 +94,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
             default:
                 throw new APIRequestException("Unsupported HTTP method");
         }
-        
+
         params.clear();
         additionalHeaders.clear();
 
@@ -99,5 +114,12 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         return objectMapper.readValue(body, responseClass);
     }
 
+    protected void validateParams(String... params) {
+        for(String param : params) {
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal(param), param);
+        }
+    }
+
     protected abstract String getPath();
+    protected abstract void validateRequiredParams();
 }

@@ -102,4 +102,10 @@ public class Campaign extends NextDoorAPIRequestNode implements Serializable {
     public enum Objective {
         AWARENESS, CONSIDERATION, CONVERSION, LEAD_GENERATION
     }
+
+    public enum UserStatus {
+        ACTIVE,
+        PAUSED,
+        ARCHIVED
+    }
 }

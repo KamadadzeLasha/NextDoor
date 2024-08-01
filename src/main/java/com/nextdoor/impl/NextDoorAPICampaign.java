@@ -9,6 +9,7 @@ import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.exception.CampaignCreationException;
+import com.nextdoor.exception.CampaignUpdateException;
 import com.nextdoor.models.Campaign;
 import com.nextdoor.util.NextDoorUtil;
 
@@ -38,6 +39,10 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         return new NextDoorAPICreateCampaign(nextDoorAPIAuth, this);
     }
 
+    public NextDoorAPIUpdateCampaign updateCampaign(String campaignId) {
+        return new NextDoorAPIUpdateCampaign(nextDoorAPIAuth, this, campaignId);
+    }
+
     public static class NextDoorAPICreateCampaign extends NextDoorAPIRequest<Campaign> {
         private final NextDoorAPICampaign nextDoorAPICampaign;
 
@@ -58,12 +63,14 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             return this;
         }
 
-        public Campaign execute() throws CampaignCreationException {
+        public Campaign create() throws CampaignCreationException {
             this.setParamInternal("advertiser_id", nextDoorAPICampaign.advertiserId);
             this.addHeader(nextDoorAPICampaign.nextDoorAPIAuth.getTokenHeader());
 
+            validateRequiredParams();
+
             try {
-                return sendHttpRequest(HttpMethod.POST);
+                return sendHttpRequest(HttpMethod.POST, getPath());
             } catch (UnirestException | JsonProcessingException | APIRequestException e) {
                 throw new CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
             }
@@ -72,6 +79,87 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         @Override
         protected String getPath() {
             return DefaultURLS.DEFAULT_FULL_API_URL + "campaign/create";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("advertiser_id"), "advertiser_id");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("name"), "name");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("objective"), "objective");
+        }
+    }
+
+    public static class NextDoorAPIUpdateCampaign extends NextDoorAPIRequest<Campaign> {
+        private final NextDoorAPICampaign nextDoorAPICampaign;
+        private final String campaignId;
+
+        public NextDoorAPIUpdateCampaign(NextDoorAPIAuth nextDoorAPIAuth, NextDoorAPICampaign nextDoorAPICampaign, String campaignId) {
+            super(Campaign.class, nextDoorAPIAuth);
+
+            this.nextDoorAPICampaign = nextDoorAPICampaign;
+            this.campaignId = campaignId;
+        }
+
+        public NextDoorAPIUpdateCampaign setName(String name) {
+            this.setParamInternal("name", name);
+
+            return this;
+        }
+
+        public NextDoorAPIUpdateCampaign setObjective(Campaign.Objective objective) {
+            this.setParamInternal("objective", objective.name());
+
+            return this;
+        }
+
+        public NextDoorAPIUpdateCampaign setUserStatus(Campaign.UserStatus userStatus) {
+            this.setParamInternal("user_status", userStatus.name());
+
+            return this;
+        }
+
+        public Campaign update() throws CampaignUpdateException {
+            this.setParamInternal("advertiser_id", this.nextDoorAPICampaign.advertiserId);
+            this.setParamInternal("id", this.campaignId);
+            validateRequiredParams();
+
+            this.addHeader(this.nextDoorAPICampaign.nextDoorAPIAuth.getTokenHeader());
+
+            try {
+                if (this.containsParamInternal("user_status") && !this.containsParamInternal("objective")) {
+                    validateParams("user_status");
+                    return sendHttpRequest(HttpMethod.POST, updateStatusPath());
+                } else if (!this.containsParamInternal("user_status") && this.containsParamInternal("objective")) {
+                    validateParams("objective");
+                    validateParams("name");
+
+                    return sendHttpRequest(HttpMethod.POST, getPath());
+                }
+
+                validateParams("objective");
+                validateParams("name");
+                validateParams("user_status");
+
+                sendHttpRequest(HttpMethod.POST, getPath());
+                return sendHttpRequest(HttpMethod.POST, updateStatusPath());
+            } catch (UnirestException | JsonProcessingException | APIRequestException e) {
+                throw new CampaignUpdateException("Can't create campaign, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        @Override
+        protected String getPath() {
+            return "campaign/update";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("id"), "id");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("advertiser_id"), "id");
+        }
+
+        private String updateStatusPath() {
+            return "campaign/status/update";
         }
     }
 }

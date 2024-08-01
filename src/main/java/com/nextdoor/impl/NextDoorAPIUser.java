@@ -34,10 +34,10 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
         }
 
         public NextDoorUser get() throws CampaignCreationException {
-            this.addHeader(nextDoorAPIUser.nextDoorAPIAuth.getTokenHeader());
+            this.addHeader(this.nextDoorAPIUser.nextDoorAPIAuth.getTokenHeader());
 
             try {
-                return sendHttpRequest(HttpMethod.GET);
+                return sendHttpRequest(HttpMethod.GET, getPath());
             } catch (UnirestException | JsonProcessingException | APIRequestException e) {
                 throw new CampaignCreationException("Can't get user info, because of: " + e.getLocalizedMessage());
             }
@@ -46,6 +46,11 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
         @Override
         protected String getPath() {
             return DefaultURLS.DEFAULT_FULL_API_URL + "me";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
         }
     }
 }

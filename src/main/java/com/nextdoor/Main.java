@@ -2,28 +2,22 @@ package com.nextdoor;
 
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.CampaignCreationException;
-import com.nextdoor.impl.NextDoorAPIUser;
-import com.nextdoor.models.NextDoorUser;
+import com.nextdoor.impl.NextDoorAPICampaign;
+import com.nextdoor.models.Campaign;
 
 public class Main {
     public static void main(String[] args) throws CampaignCreationException {
-//        Campaign newCampaign = new NextDoorAPICampaign("123123", getApiAuth()).createCampaign()
-//                .setName("New Campaign")
-//                .setObjective(Campaign.Objective.AWARENESS)
-//                .execute();
-//
-//        System.out.println(newCampaign.getStatus());
+        Campaign newCampaign = new NextDoorAPICampaign("advId", getApiAuth()).createCampaign()
+                .setName("New Campaign")
+                .setObjective(Campaign.Objective.AWARENESS)
+                .create();
 
-        NextDoorUser nextDoorUser = new NextDoorAPIUser(getApiAuth())
-                .getUserInfo()
-                .get();
-
-        System.out.println(nextDoorUser.getCurrentUser());
+        System.out.println(newCampaign.getStatus());
     }
 
     public static NextDoorAPIAuth getApiAuth() {
         NextDoorAPIAuth nextDoorAPIAuth = new NextDoorAPIAuth();
-        nextDoorAPIAuth.setToken("123123");
+        nextDoorAPIAuth.setToken("your-token");
         nextDoorAPIAuth.enableDebug(true);
 
         return nextDoorAPIAuth;
