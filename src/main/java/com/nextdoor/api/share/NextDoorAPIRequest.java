@@ -74,17 +74,18 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
 
     protected T sendPostRequest() throws UnirestException, JsonProcessingException, APIRequestException {
         nextDoorAPIAuth.log("======================= NEXTDOOR API POST START =======================");
-        nextDoorAPIAuth.log("Sending HTTP POST request to " + getPath());
+        String sendBody = objectMapper.writeValueAsString(this.params);
+        nextDoorAPIAuth.log("Sending HTTP POST request to {0} with body {1}", getPath(), sendBody);
 
         HttpResponse<String> response = Unirest.post(getPath())
                 .headers(this.getDefaultHeaders())
                 .headers(nextDoorAPIAuth.getTokenHeader())
                 .headers(additionalHeaders)
-                .body(objectMapper.writeValueAsString(this.params))
+                .body(sendBody)
                 .asString();
 
         int status = response.getStatus();
-        nextDoorAPIAuth.log("HTTP Request sended with status " + status);
+        nextDoorAPIAuth.log("HTTP Request sended with status {0}", status);
 
         String body = response.getBody();
 
@@ -94,7 +95,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
             throw new APIRequestException("HTTP POST request failed " + badRequestResponse.getMessage());
         }
 
-        nextDoorAPIAuth.log("Ended successfully, converting to JSON");
+        nextDoorAPIAuth.log("Ended successfully, converting to JSON {0}", body);
         nextDoorAPIAuth.log("======================= NEXTDOOR API POST ENDED SUCCESSFULLY =======================");
         return objectMapper.readValue(body, responseClass);
     }

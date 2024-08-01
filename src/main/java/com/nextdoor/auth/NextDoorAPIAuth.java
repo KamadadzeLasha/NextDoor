@@ -64,6 +64,14 @@ public class NextDoorAPIAuth {
         }
     }
 
+    public void log(String message, Object... objects) {
+        for(int index = 0; index < objects.length; index++) {
+            message = message.replace("{" + index + "}", objects[index].toString());
+        }
+
+        log(message);
+    }
+
     public Map<String, String> getTokenHeader() {
         Map<String, String> header = new HashMap<>();
 
