@@ -2,7 +2,7 @@ package com.nextdoor;
 
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.CampaignCreationException;
-import com.nextdoor.impl.advertise.NextDoorAPICampaign;
+import com.nextdoor.impl.NextDoorAPICampaign;
 import com.nextdoor.models.Campaign;
 
 public class Main {

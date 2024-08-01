@@ -1,4 +1,4 @@
-package com.nextdoor.impl.advertise;
+package com.nextdoor.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
