@@ -16,6 +16,7 @@ import java.util.Map;
 public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
     private Map<String, Object> params = new HashMap<>();
     private Map<String, String> additionalHeaders = new HashMap<>();
+
     private ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient = new HttpClient();
     private final NextDoorAPIAuth nextDoorAPIAuth;
@@ -68,11 +69,13 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         nextDoorAPIAuth.log("======================= NEXTDOOR API POST START =======================");
 
         String sendBody = objectMapper.writeValueAsString(this.params);
+        params.clear();
         String path = getPath();
 
         nextDoorAPIAuth.log("Sending HTTP POST request to {0} with body {1}", path, sendBody);
 
         HttpResponse<JsonNode> response = httpClient.sendPostRequest(path, sendBody, additionalHeaders);
+        additionalHeaders.clear();
 
         int status = response.getStatus();
         nextDoorAPIAuth.log("HTTP Request sended with status {0}", status);
