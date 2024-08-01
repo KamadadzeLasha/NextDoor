@@ -1,7 +1,13 @@
 package com.nextdoor.util;
 
 public final class NextDoorUtil {
-    public static void ensureNotNull(Object object, String name) {
+    public static void ensureStringNotNull(String str, String name) {
+        if (str == null || str.trim().isEmpty()) {
+            throw new IllegalArgumentException(name + " can not be null or empty.");
+        }
+    }
+
+    public static void ensureObjectNotNull(Object object, String name) {
         if (object == null) {
             throw new IllegalArgumentException(name + " can not be null.");
         }

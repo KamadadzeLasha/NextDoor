@@ -9,6 +9,7 @@ import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.exception.CampaignCreationException;
 import com.nextdoor.models.Campaign;
+import com.nextdoor.util.NextDoorUtil;
 
 public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
     protected String advertiserId;
@@ -19,6 +20,9 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
     public NextDoorAPICampaign(String advertiserId, NextDoorAPIAuth nextDoorAPIAuth) {
         super();
+        NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
+        NextDoorUtil.ensureObjectNotNull(nextDoorAPIAuth, "nextDoorAPIAuth");
+
         this.advertiserId = advertiserId;
         this.nextDoorAPIAuth = nextDoorAPIAuth;
     }

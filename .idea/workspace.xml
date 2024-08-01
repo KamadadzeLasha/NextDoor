@@ -5,20 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="25f88b50-e003-4360-9ce0-7668ccf2d210" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/nextdoor/exception/APIRequestException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/nextdoor/exception/BadRequestResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/nextdoor/exception/CampaignCreationException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/nextdoor/models/Campaign.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/nextdoor/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nextdoor/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/nextdoor/api/response/NextDoorAPIRequestNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nextdoor/api/response/NextDoorAPIRequestNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/nextdoor/api/response/NextDoorAPIResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nextdoor/api/response/NextDoorAPIResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/nextdoor/api/share/NextDoorAPIRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nextdoor/api/share/NextDoorAPIRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/nextdoor/data/CampaignRequest.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/nextdoor/impl/advertise/NextDoorAPICampaign.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nextdoor/impl/advertise/NextDoorAPICampaign.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/nextdoor/models/NextDoorCampaign.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/nextdoor/util/NextDoorUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/nextdoor/util/NextDoorUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +91,7 @@
       <option name="presentableId" value="Default" />
       <updated>1722428167221</updated>
       <workItem from="1722428168262" duration="10112000" />
-      <workItem from="1722497892474" duration="4410000" />
+      <workItem from="1722497892474" duration="4823000" />
     </task>
     <servers />
   </component>
