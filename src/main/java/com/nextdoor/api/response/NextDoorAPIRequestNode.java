@@ -7,7 +7,7 @@ public abstract class NextDoorAPIRequestNode implements NextDoorAPIResponse {
     protected NextDoorAPIAuth nextDoorAPIAuth;
 
     public NextDoorAPIRequestNode() {
-
+        this.nextDoorAPIAuth = new NextDoorAPIAuth();
     }
 
     public NextDoorAPIRequestNode(NextDoorAPIAuth nextDoorAPIAuth) {

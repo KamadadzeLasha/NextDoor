@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nextdoor.api.response.NextDoorAPIRequestNode;
+import com.nextdoor.api.share.NextDoorAPICreate;
 import com.nextdoor.api.share.NextDoorAPIRequest;
+import com.nextdoor.api.share.NextDoorAPIUpdate;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
@@ -43,7 +45,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         return new NextDoorAPIUpdateCampaign(nextDoorAPIAuth, this, campaignId);
     }
 
-    public static class NextDoorAPICreateCampaign extends NextDoorAPIRequest<Campaign> {
+    public static class NextDoorAPICreateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPICreate<Campaign> {
         private final NextDoorAPICampaign nextDoorAPICampaign;
 
         public NextDoorAPICreateCampaign(NextDoorAPIAuth nextDoorAPIAuth, NextDoorAPICampaign nextDoorAPICampaign) {
@@ -63,6 +65,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             return this;
         }
 
+        @Override
         public Campaign create() throws CampaignCreationException {
             this.setParamInternal("advertiser_id", nextDoorAPICampaign.advertiserId);
             this.addHeader(nextDoorAPICampaign.nextDoorAPIAuth.getTokenHeader());
@@ -89,7 +92,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIUpdateCampaign extends NextDoorAPIRequest<Campaign> {
+    public static class NextDoorAPIUpdateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPIUpdate<Campaign> {
         private final NextDoorAPICampaign nextDoorAPICampaign;
         private final String campaignId;
 
@@ -118,9 +121,11 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             return this;
         }
 
+        @Override
         public Campaign update() throws CampaignUpdateException {
             this.setParamInternal("advertiser_id", this.nextDoorAPICampaign.advertiserId);
             this.setParamInternal("id", this.campaignId);
+
             validateRequiredParams();
 
             this.addHeader(this.nextDoorAPICampaign.nextDoorAPIAuth.getTokenHeader());
@@ -149,7 +154,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         @Override
         protected String getPath() {
-            return "campaign/update";
+            return DefaultURLS.DEFAULT_FULL_API_URL + "campaign/update";
         }
 
         @Override
@@ -159,7 +164,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         }
 
         private String updateStatusPath() {
-            return "campaign/status/update";
+            return DefaultURLS.DEFAULT_FULL_API_URL + "campaign/status/update";
         }
     }
 }
