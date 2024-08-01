@@ -61,6 +61,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         public Campaign execute() throws CampaignCreationException {
             this.setParamInternal("advertiser_id", nextDoorAPICampaign.advertiserId);
+            this.addHeader(nextDoorAPICampaign.nextDoorAPIAuth.getTokenHeader());
 
             try {
                 return sendPostRequest();
