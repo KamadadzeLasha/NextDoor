@@ -7,36 +7,22 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nextdoor.api.response.NextDoorAPIRequestNode;
 import com.nextdoor.auth.NextDoorAPIAuth;
+import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.exception.BadRequestResponse;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
-    private T obj;
+    private Map<String, Object> params = new HashMap<>();
+    private Map<String, String> additionalHeaders = new HashMap<>();
     private ObjectMapper objectMapper = new ObjectMapper();
+    private final NextDoorAPIAuth nextDoorAPIAuth;
     private final Class<T> responseClass;
 
-    public NextDoorAPIRequest(Class<T> responseClass) {
+    public NextDoorAPIRequest(Class<T> responseClass, NextDoorAPIAuth nextDoorAPIAuth) {
         this.responseClass = responseClass;
-    }
-
-    public NextDoorAPIRequest(T obj, Class<T> responseClass) {
-        this.obj = obj;
-        this.responseClass = responseClass;
-    }
-
-    public NextDoorAPIRequest(Class<T> responseClass, T obj, ObjectMapper objectMapper) {
-        this.responseClass = responseClass;
-        this.obj = obj;
-        this.objectMapper = objectMapper;
-    }
-
-    public T getObj() {
-        return ensureObjNotNull();
-    }
-
-    public void setObj(T obj) {
-        this.obj = obj;
+        this.nextDoorAPIAuth = nextDoorAPIAuth;
     }
 
     public ObjectMapper getObjectMapper() {
@@ -45,6 +31,36 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
 
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+    }
+
+    public void setParamInternal(String param, Object value) {
+        this.params.put(param, value);
+    }
+
+    public void setParamInternal(Map<String, Object> params) {
+        this.params.putAll(params);
+    }
+
+    public void writeParamInternal(Map<String, Object> params) {
+        this.params = params;
+    }
+
+    public NextDoorAPIRequest<T> addHeader(String key, String value) {
+        this.additionalHeaders.put(key, value);
+
+        return this;
+    }
+
+    public NextDoorAPIRequest<T> addHeader(Map<String, String> additionalHeaders) {
+        this.additionalHeaders.putAll(additionalHeaders);
+
+        return this;
+    }
+
+    public NextDoorAPIRequest<T> writeHeader(Map<String, String> additionalHeaders) {
+        this.additionalHeaders = additionalHeaders;
+
+        return this;
     }
 
     public Map<String, String> getDefaultHeaders() {
@@ -56,40 +72,30 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         return headers;
     }
 
-    protected T sendPostRequest(String URL, Map<String, String> headers, Class<T> classToParse) throws UnirestException, JsonProcessingException {
-        NextDoorAPIAuth nextDoorAPIAuth = this.obj.getNextDoorAPIAuth();
-
+    protected T sendPostRequest(String URL) throws UnirestException, JsonProcessingException, APIRequestException {
+        nextDoorAPIAuth.log("======================= NEXTDOOR API POST START =======================");
         nextDoorAPIAuth.log("Sending HTTP POST request to " + URL);
+
         HttpResponse<String> response = Unirest.post(URL)
                 .headers(this.getDefaultHeaders())
                 .headers(nextDoorAPIAuth.getTokenHeader())
-                .headers(headers)
-                .body(this.obj.getObjAsString())
+                .headers(additionalHeaders)
+                .body(objectMapper.writeValueAsString(this.params))
                 .asString();
+
         int status = response.getStatus();
         nextDoorAPIAuth.log("HTTP Request sended with status " + status);
-        if (status == 200) {
-            nextDoorAPIAuth.log("Ended successfully, converting to JSON");
-            return objectMapper.readValue(response.getBody(), classToParse);
+
+        String body = response.getBody();
+
+        if (status != 200) {
+            BadRequestResponse badRequestResponse = objectMapper.readValue(body, BadRequestResponse.class);
+            nextDoorAPIAuth.log("======================= NEXTDOOR API POST FAILED =======================");
+            throw new APIRequestException("HTTP POST request failed " + badRequestResponse.getMessage());
         }
 
-        //TODO: Refactor
-        return null;
+        nextDoorAPIAuth.log("Ended successfully, converting to JSON");
+        nextDoorAPIAuth.log("======================= NEXTDOOR API POST ENDED SUCCESSFULLY =======================");
+        return objectMapper.readValue(body, responseClass);
     }
-
-    private T ensureObjNotNull() {
-        //TODO: Maybe refactor
-
-        if (this.obj == null) {
-            try {
-                this.obj = this.responseClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return this.obj;
-    }
-
-    public abstract String getAPIRequestPath();
 }

@@ -2,49 +2,67 @@ package com.nextdoor.impl.advertise;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.nextdoor.api.response.NextDoorAPIRequestNode;
 import com.nextdoor.api.share.NextDoorAPIRequest;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
-import com.nextdoor.data.CampaignRequest;
+import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.exception.CampaignCreationException;
+import com.nextdoor.models.Campaign;
 
-import java.util.HashMap;
-
-public class NextDoorAPICampaign extends NextDoorAPIRequest<CampaignRequest> {
-    private String campaignId;
+public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
+    protected String advertiserId;
 
     public NextDoorAPICampaign() {
-        super(CampaignRequest.class);
+
     }
 
-    public NextDoorAPICampaign(NextDoorAPIAuth nextDoorAPIAuth) {
-        super(CampaignRequest.class);
-        getObj().setNextDoorAPIAuth(nextDoorAPIAuth);
+    public NextDoorAPICampaign(String advertiserId, NextDoorAPIAuth nextDoorAPIAuth) {
+        super();
+        this.advertiserId = advertiserId;
+        this.nextDoorAPIAuth = nextDoorAPIAuth;
     }
 
-    public CampaignRequest createCampaign() throws UnirestException, JsonProcessingException {
-        String url = DefaultURLS.DEFAULT_FULL_API_URL + getAPIRequestPath() + "/create";
-        return sendPostRequest(url, new HashMap<>(), CampaignRequest.class);
+    public String getAdvertiserId() {
+        return advertiserId;
     }
 
-    public NextDoorAPICampaign name(String name) {
-        this.getObj().setName(name);
-        return this;
+    public void setAdvertiserId(String advertiserId) {
+        this.advertiserId = advertiserId;
     }
 
-    public NextDoorAPICampaign advertiserId(String advertiserId) {
-        this.getObj().setAdvertiserId(advertiserId);
-
-        return this;
+    public NextDoorAPICreateCampaign createCampaign() {
+        return new NextDoorAPICreateCampaign(nextDoorAPIAuth, this);
     }
 
-    public NextDoorAPICampaign objective(String objective) {
-        this.getObj().setObjective(objective);
+    public static class NextDoorAPICreateCampaign extends NextDoorAPIRequest<Campaign> {
+        private final NextDoorAPICampaign nextDoorAPICampaign;
 
-        return this;
-    }
+        public NextDoorAPICreateCampaign(NextDoorAPIAuth nextDoorAPIAuth, NextDoorAPICampaign nextDoorAPICampaign) {
+            super(Campaign.class, nextDoorAPIAuth);
+            this.nextDoorAPICampaign = nextDoorAPICampaign;
+        }
 
-    @Override
-    public String getAPIRequestPath() {
-        return "campaign";
+        public NextDoorAPICreateCampaign setName(String name) {
+            this.setParamInternal("name", name);
+
+            return this;
+        }
+
+        public NextDoorAPICreateCampaign setObjective(Campaign.Objective objective) {
+            this.setParamInternal("objective", objective.name());
+
+            return this;
+        }
+
+        public Campaign execute() throws CampaignCreationException {
+            this.setParamInternal("advertiser_id", nextDoorAPICampaign.advertiserId);
+
+            try {
+                return sendPostRequest(DefaultURLS.DEFAULT_FULL_API_URL + "campaign/create");
+            } catch (UnirestException | JsonProcessingException | APIRequestException e) {
+                throw new CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+            }
+        }
     }
 }
