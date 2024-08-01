@@ -1,5 +1,6 @@
 package com.nextdoor.internal;
 
+import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -9,8 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpClient {
-    //TODO: Refactor to HTTPRequest enum -- ?
-
     public HttpResponse<JsonNode> sendPostRequest(String url, String body, Map<String, String> headers) throws UnirestException {
         Map<String, String> allHeaders = new HashMap<>(headers);
         allHeaders.putAll(this.getDefaultHeadersForPostRequest());

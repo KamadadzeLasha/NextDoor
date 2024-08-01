@@ -1,6 +1,7 @@
 package com.nextdoor.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nextdoor.api.response.NextDoorAPIRequestNode;
 import com.nextdoor.api.share.NextDoorAPIRequest;
@@ -19,12 +20,10 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
     }
 
     public NextDoorAPICampaign(String advertiserId, NextDoorAPIAuth nextDoorAPIAuth) {
-        super();
-        NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
-        NextDoorUtil.ensureObjectNotNull(nextDoorAPIAuth, "nextDoorAPIAuth");
+        super(nextDoorAPIAuth);
 
+        NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
         this.advertiserId = advertiserId;
-        this.nextDoorAPIAuth = nextDoorAPIAuth;
     }
 
     public String getAdvertiserId() {
@@ -64,7 +63,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             this.addHeader(nextDoorAPICampaign.nextDoorAPIAuth.getTokenHeader());
 
             try {
-                return sendPostRequest();
+                return sendHttpRequest(HttpMethod.POST);
             } catch (UnirestException | JsonProcessingException | APIRequestException e) {
                 throw new CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
             }
