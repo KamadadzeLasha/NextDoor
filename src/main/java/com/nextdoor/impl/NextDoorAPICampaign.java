@@ -63,10 +63,15 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             this.setParamInternal("advertiser_id", nextDoorAPICampaign.advertiserId);
 
             try {
-                return sendPostRequest(DefaultURLS.DEFAULT_FULL_API_URL + "campaign/create");
+                return sendPostRequest();
             } catch (UnirestException | JsonProcessingException | APIRequestException e) {
                 throw new CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
             }
+        }
+
+        @Override
+        protected String getPath() {
+            return DefaultURLS.DEFAULT_FULL_API_URL + "campaign/create";
         }
     }
 }

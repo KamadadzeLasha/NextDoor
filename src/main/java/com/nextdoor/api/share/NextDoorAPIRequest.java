@@ -72,11 +72,11 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         return headers;
     }
 
-    protected T sendPostRequest(String URL) throws UnirestException, JsonProcessingException, APIRequestException {
+    protected T sendPostRequest() throws UnirestException, JsonProcessingException, APIRequestException {
         nextDoorAPIAuth.log("======================= NEXTDOOR API POST START =======================");
-        nextDoorAPIAuth.log("Sending HTTP POST request to " + URL);
+        nextDoorAPIAuth.log("Sending HTTP POST request to " + getPath());
 
-        HttpResponse<String> response = Unirest.post(URL)
+        HttpResponse<String> response = Unirest.post(getPath())
                 .headers(this.getDefaultHeaders())
                 .headers(nextDoorAPIAuth.getTokenHeader())
                 .headers(additionalHeaders)
@@ -98,4 +98,6 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         nextDoorAPIAuth.log("======================= NEXTDOOR API POST ENDED SUCCESSFULLY =======================");
         return objectMapper.readValue(body, responseClass);
     }
+
+    protected abstract String getPath();
 }
