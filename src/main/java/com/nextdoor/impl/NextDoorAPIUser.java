@@ -7,6 +7,7 @@ import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.exception.CampaignCreationException;
+import com.nextdoor.models.ConversionType;
 import com.nextdoor.models.NextDoorUser;
 
 public class NextDoorAPIUser extends NextDoorAPIRequestNode {
@@ -35,7 +36,7 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
             this.addHeader(this.nextDoorAPIUser.nextDoorAPIAuth.getTokenHeader());
 
             try {
-                return sendHttpRequest(HttpMethod.GET, getPath());
+                return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
                 throw new CampaignCreationException("Can't get user info, because of: " + e.getLocalizedMessage());
             }

@@ -13,6 +13,7 @@ import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.exception.CampaignCreationException;
 import com.nextdoor.exception.CampaignUpdateException;
 import com.nextdoor.models.Campaign;
+import com.nextdoor.models.ConversionType;
 import com.nextdoor.util.NextDoorUtil;
 
 public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
@@ -73,7 +74,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             validateRequiredParams();
 
             try {
-                return sendHttpRequest(HttpMethod.POST, getPath());
+                return sendHttpRequest(HttpMethod.POST, getPath(), ConversionType.JSON);
             } catch (APIRequestException e) {
                 throw new CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
             }
@@ -133,20 +134,20 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             try {
                 if (this.containsParamInternal("user_status") && !this.containsParamInternal("objective")) {
                     validateParams("user_status");
-                    return sendHttpRequest(HttpMethod.POST, updateStatusPath());
+                    return sendHttpRequest(HttpMethod.POST, updateStatusPath(), ConversionType.JSON);
                 } else if (!this.containsParamInternal("user_status") && this.containsParamInternal("objective")) {
                     validateParams("objective");
                     validateParams("name");
 
-                    return sendHttpRequest(HttpMethod.POST, getPath());
+                    return sendHttpRequest(HttpMethod.POST, getPath(), ConversionType.JSON);
                 }
 
                 validateParams("objective");
                 validateParams("name");
                 validateParams("user_status");
 
-                sendHttpRequest(HttpMethod.POST, getPath());
-                return sendHttpRequest(HttpMethod.POST, updateStatusPath());
+                sendHttpRequest(HttpMethod.POST, getPath(), ConversionType.JSON);
+                return sendHttpRequest(HttpMethod.POST, updateStatusPath(), ConversionType.JSON);
             } catch (APIRequestException e) {
                 throw new CampaignUpdateException("Can't create campaign, because of: " + e.getLocalizedMessage());
             }

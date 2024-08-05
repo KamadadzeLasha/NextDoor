@@ -9,6 +9,7 @@ import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.exception.CampaignCreationException;
 import com.nextdoor.models.Advertiser;
+import com.nextdoor.models.ConversionType;
 import com.nextdoor.util.NextDoorUtil;
 
 public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
@@ -64,7 +65,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             this.addHeader(this.nextDoorAPIAdvertiser.nextDoorAPIAuth.getTokenHeader());
 
             try {
-                return sendHttpRequest(HttpMethod.POST);
+                return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
             } catch (APIRequestException e) {
                 throw new CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
             }
