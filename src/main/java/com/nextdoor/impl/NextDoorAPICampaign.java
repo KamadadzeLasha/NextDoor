@@ -16,7 +16,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
     protected String advertiserId;
 
     public NextDoorAPICampaign() {
-
+        super(NextDoorAPIAuth.defaultNextDoorAPIAuth());
     }
 
     public NextDoorAPICampaign(String advertiserId, NextDoorAPIAuth nextDoorAPIAuth) {
@@ -35,18 +35,19 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
     }
 
     public NextDoorAPICreateCampaign createCampaign() {
-        return new NextDoorAPICreateCampaign(nextDoorAPIAuth, this);
+        return new NextDoorAPICreateCampaign(this);
     }
 
     public NextDoorAPIUpdateCampaign updateCampaign(String campaignId) {
-        return new NextDoorAPIUpdateCampaign(nextDoorAPIAuth, this, campaignId);
+        return new NextDoorAPIUpdateCampaign(this, campaignId);
     }
 
     public static class NextDoorAPICreateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPICreate<Campaign> {
         private final NextDoorAPICampaign nextDoorAPICampaign;
 
-        public NextDoorAPICreateCampaign(NextDoorAPIAuth nextDoorAPIAuth, NextDoorAPICampaign nextDoorAPICampaign) {
-            super(Campaign.class, nextDoorAPIAuth);
+        public NextDoorAPICreateCampaign(NextDoorAPICampaign nextDoorAPICampaign) {
+            super(Campaign.class, nextDoorAPICampaign.nextDoorAPIAuth);
+
             this.nextDoorAPICampaign = nextDoorAPICampaign;
         }
 
@@ -114,8 +115,8 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         private final NextDoorAPICampaign nextDoorAPICampaign;
         private final String campaignId;
 
-        public NextDoorAPIUpdateCampaign(NextDoorAPIAuth nextDoorAPIAuth, NextDoorAPICampaign nextDoorAPICampaign, String campaignId) {
-            super(Campaign.class, nextDoorAPIAuth);
+        public NextDoorAPIUpdateCampaign(NextDoorAPICampaign nextDoorAPICampaign, String campaignId) {
+            super(Campaign.class, nextDoorAPICampaign.nextDoorAPIAuth);
 
             this.nextDoorAPICampaign = nextDoorAPICampaign;
             this.campaignId = campaignId;
