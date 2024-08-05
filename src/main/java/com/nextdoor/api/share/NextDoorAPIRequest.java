@@ -74,7 +74,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         this.additionalHeaders = additionalHeaders;
     }
 
-    protected T sendHttpRequest(HttpMethod httpMethod) throws UnirestException, JsonProcessingException, APIRequestException {
+    protected T sendHttpRequest(HttpMethod httpMethod) throws APIRequestException {
         return sendHttpRequest(httpMethod, getPath());
     }
 

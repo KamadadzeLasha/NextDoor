@@ -1,8 +1,6 @@
 package com.nextdoor.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.HttpMethod;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nextdoor.api.response.NextDoorAPIRequestNode;
 import com.nextdoor.api.share.NextDoorAPIRequest;
 import com.nextdoor.auth.NextDoorAPIAuth;
@@ -38,7 +36,7 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
 
             try {
                 return sendHttpRequest(HttpMethod.GET, getPath());
-            } catch (UnirestException | JsonProcessingException | APIRequestException e) {
+            } catch (APIRequestException e) {
                 throw new CampaignCreationException("Can't get user info, because of: " + e.getLocalizedMessage());
             }
         }

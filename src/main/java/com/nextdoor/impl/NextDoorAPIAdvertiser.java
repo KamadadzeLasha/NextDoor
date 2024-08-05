@@ -1,8 +1,6 @@
 package com.nextdoor.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.HttpMethod;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nextdoor.api.response.NextDoorAPIRequestNode;
 import com.nextdoor.api.share.NextDoorAPICreate;
 import com.nextdoor.api.share.NextDoorAPIRequest;
@@ -67,7 +65,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
 
             try {
                 return sendHttpRequest(HttpMethod.POST);
-            } catch (UnirestException | JsonProcessingException | APIRequestException e) {
+            } catch (APIRequestException e) {
                 throw new CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
             }
         }

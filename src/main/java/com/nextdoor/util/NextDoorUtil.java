@@ -7,6 +7,10 @@ public final class NextDoorUtil {
         }
     }
 
+    public static void ensureStringNotNull(Object str, String name) {
+        ensureStringNotNull(String.valueOf(str), name);
+    }
+
     public static void ensureObjectNotNull(Object object, String name) {
         if (object == null) {
             throw new IllegalArgumentException(name + " can not be null.");

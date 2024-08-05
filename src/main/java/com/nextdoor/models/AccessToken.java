@@ -1,10 +1,11 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nextdoor.api.response.NextDoorAPIRequestNode;
 
 import java.io.Serializable;
 
-public class AccessToken implements Serializable {
+public class AccessToken extends NextDoorAPIRequestNode implements Serializable {
     @JsonProperty("access_token")
     private String accessToken;
 
