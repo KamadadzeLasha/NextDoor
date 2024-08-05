@@ -10,23 +10,42 @@ import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.AccessToken;
 import com.nextdoor.models.ConversionType;
 import com.nextdoor.util.NextDoorUtil;
+import org.apache.commons.codec.binary.Base64;
 
 public class NextDoorAPIAccessToken {
-    public NextDoorAPIAccessToken() {
+    private final String authorizationHeader;
 
+    public NextDoorAPIAccessToken() {
+        this.authorizationHeader = "";
+    }
+
+    public NextDoorAPIAccessToken(String userName, String password) {
+        NextDoorUtil.ensureStringNotNull(userName, "userName");
+        NextDoorUtil.ensureStringNotNull(password, "password");
+
+        this.authorizationHeader = this.createBasicHeaderValue(userName, password);
     }
 
     public NextDoorAPIAccessTokenGenerate generate() {
-        return new NextDoorAPIAccessTokenGenerate();
+        return new NextDoorAPIAccessTokenGenerate(this.authorizationHeader);
     }
 
     public NextDoorAPIAccessTokenRefresh refresh() {
-        return new NextDoorAPIAccessTokenRefresh();
+        return new NextDoorAPIAccessTokenRefresh(this.authorizationHeader);
+    }
+
+    private String createBasicHeaderValue(String userName, String password) {
+        return new Base64().encodeToString((userName + ":" + password).getBytes());
     }
 
     public static class NextDoorAPIAccessTokenGenerate extends NextDoorAPIRequest<AccessToken> implements NextDoorAPICreate<AccessToken> {
-        public NextDoorAPIAccessTokenGenerate() {
+        private final String authorizationHeader;
+
+        public NextDoorAPIAccessTokenGenerate(String authorizationHeader) {
             super(AccessToken.class, NextDoorAPIAuth.defaultNextDoorAPIAuth());
+            NextDoorUtil.ensureStringNotNull(authorizationHeader, "Authorization header");
+
+            this.authorizationHeader = authorizationHeader;
         }
 
         public NextDoorAPIAccessTokenGenerate grantType(AccessToken.GrantType grantType) {
@@ -56,6 +75,8 @@ public class NextDoorAPIAccessToken {
         @Override
         public AccessToken create() throws APIRequestException {
             validateRequiredParams();
+            this.addHeader("authorization", this.authorizationHeader);
+
             try {
                 return sendHttpRequest(HttpMethod.POST, ConversionType.URL_ENCODED);
             } catch (APIRequestException e) {
@@ -99,8 +120,13 @@ public class NextDoorAPIAccessToken {
     }
 
     public static class NextDoorAPIAccessTokenRefresh extends NextDoorAPIRequest<AccessToken> implements NextDoorAPIUpdate<AccessToken> {
-        public NextDoorAPIAccessTokenRefresh() {
+        private final String authorizationHeader;
+
+        public NextDoorAPIAccessTokenRefresh(String authorizationHeader) {
             super(AccessToken.class, NextDoorAPIAuth.defaultNextDoorAPIAuth());
+            NextDoorUtil.ensureStringNotNull(authorizationHeader, "Authorization header");
+
+            this.authorizationHeader = authorizationHeader;
         }
 
         public NextDoorAPIAccessTokenRefresh grantType(AccessToken.GrantType grantType) {
@@ -136,6 +162,8 @@ public class NextDoorAPIAccessToken {
         @Override
         public AccessToken update() throws APIRequestException {
             validateRequiredParams();
+            this.addHeader("authorization", this.authorizationHeader);
+
             try {
                 return sendHttpRequest(HttpMethod.POST, ConversionType.URL_ENCODED);
             } catch (APIRequestException e) {
