@@ -1,21 +1,18 @@
 package com.nextdoor.internal;
 
-import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.nextdoor.models.ConversionType;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpClient {
     public HttpResponse<JsonNode> sendPostRequest(String url, String body, Map<String, String> headers) throws UnirestException {
-        Map<String, String> allHeaders = new HashMap<>(headers);
-        allHeaders.putAll(this.getDefaultHeadersForPostRequest());
-
         return Unirest.post(url)
-                .headers(allHeaders)
+                .headers(headers)
                 .body(body)
                 .asJson();
     }
@@ -29,6 +26,17 @@ public class HttpClient {
                 .asJson();
     }
 
+    public Map<String, String> getHeadersByConversionType(ConversionType conversionType) {
+        switch (conversionType) {
+            case JSON:
+                return this.getDefaultHeadersForJsonPostRequest();
+            case URL_ENCODED:
+                return this.getDefaultHeadersForUrlEncodedPostRequest();
+            default:
+                return new HashMap<>();
+        }
+    }
+
     private Map<String, String> getDefaultHeadersForGetRequest() {
         Map<String, String> headers = new HashMap<>();
 
@@ -37,11 +45,20 @@ public class HttpClient {
         return headers;
     }
 
-    private Map<String, String> getDefaultHeadersForPostRequest() {
+    private Map<String, String> getDefaultHeadersForJsonPostRequest() {
         Map<String, String> headers = new HashMap<>();
 
         headers.put("accept", "application/json");
         headers.put("content-type", "application/json");
+
+        return headers;
+    }
+
+    private Map<String, String> getDefaultHeadersForUrlEncodedPostRequest() {
+        Map<String, String> headers = new HashMap<>();
+
+        headers.put("accept", "application/json");
+        headers.put("content-type", "application/x-www-form-urlencoded");
 
         return headers;
     }

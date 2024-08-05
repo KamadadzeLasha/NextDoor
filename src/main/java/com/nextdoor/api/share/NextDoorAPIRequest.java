@@ -119,8 +119,10 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
     private HttpResponse<JsonNode> getHttpResponseJsonNode(HttpMethod httpMethod, String path, ConversionType conversionType) throws HTTPRequestFailureException {
         try {
             switch (httpMethod) {
-                case POST:
-                    return httpClient.sendPostRequest(path, getBody(conversionType), additionalHeaders);
+                case POST: {
+                    addAdditionalPostRequestHeaders(conversionType);
+                    return httpClient.sendPostRequest(path, getBody(conversionType), this.additionalHeaders);
+                }
                 case GET:
                     return httpClient.sendGetRequest(path, additionalHeaders);
                 default:
@@ -129,6 +131,10 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         } catch (UnirestException | JsonProcessingException | RuntimeException | UnsupportedEncodingException e) {
             throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + e.getLocalizedMessage());
         }
+    }
+
+    private void addAdditionalPostRequestHeaders(ConversionType conversionType) {
+        this.additionalHeaders.putAll(httpClient.getHeadersByConversionType(conversionType));
     }
 
     private String getBody(ConversionType conversionType) throws JsonProcessingException, UnsupportedEncodingException {
