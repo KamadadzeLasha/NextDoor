@@ -6,8 +6,6 @@ import com.nextdoor.api.share.NextDoorAPIRequest;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.exception.CampaignCreationException;
-import com.nextdoor.models.ConversionType;
 import com.nextdoor.models.NextDoorUser;
 
 public class NextDoorAPIUser extends NextDoorAPIRequestNode {
@@ -32,13 +30,13 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
             this.nextDoorAPIUser = nextDoorAPIUser;
         }
 
-        public NextDoorUser get() throws CampaignCreationException {
+        public NextDoorUser get() throws UserGetException {
             this.addHeader(this.nextDoorAPIUser.nextDoorAPIAuth.getTokenHeader());
 
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
-                throw new CampaignCreationException("Can't get user info, because of: " + e.getLocalizedMessage());
+                throw new UserGetException("Can't get user info, because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -50,6 +48,27 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
         @Override
         protected void validateRequiredParams() {
 
+        }
+
+        public static class UserGetException extends APIRequestException {
+            public UserGetException() {
+            }
+
+            public UserGetException(String s) {
+                super(s);
+            }
+
+            public UserGetException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public UserGetException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public UserGetException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
         }
     }
 }

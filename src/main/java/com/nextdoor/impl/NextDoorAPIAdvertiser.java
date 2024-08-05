@@ -7,7 +7,6 @@ import com.nextdoor.api.share.NextDoorAPIRequest;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.exception.CampaignCreationException;
 import com.nextdoor.models.Advertiser;
 import com.nextdoor.models.ConversionType;
 import com.nextdoor.util.NextDoorUtil;
@@ -59,7 +58,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Advertiser create() throws CampaignCreationException {
+        public Advertiser create() throws AdvertiserCreationException {
             validateRequiredParams();
 
             this.addHeader(this.nextDoorAPIAdvertiser.nextDoorAPIAuth.getTokenHeader());
@@ -67,7 +66,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
             } catch (APIRequestException e) {
-                throw new CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new AdvertiserCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -79,6 +78,27 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         @Override
         protected void validateRequiredParams() {
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal("name"), "name");
+        }
+
+        public static class AdvertiserCreationException extends APIRequestException {
+            public AdvertiserCreationException() {
+            }
+
+            public AdvertiserCreationException(String s) {
+                super(s);
+            }
+
+            public AdvertiserCreationException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AdvertiserCreationException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AdvertiserCreationException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
         }
     }
 }

@@ -1,8 +1,6 @@
 package com.nextdoor.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.HttpMethod;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nextdoor.api.response.NextDoorAPIRequestNode;
 import com.nextdoor.api.share.NextDoorAPICreate;
 import com.nextdoor.api.share.NextDoorAPIRequest;
@@ -10,8 +8,6 @@ import com.nextdoor.api.share.NextDoorAPIUpdate;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.exception.CampaignCreationException;
-import com.nextdoor.exception.CampaignUpdateException;
 import com.nextdoor.models.Campaign;
 import com.nextdoor.models.ConversionType;
 import com.nextdoor.util.NextDoorUtil;
@@ -91,6 +87,27 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal("name"), "name");
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal("objective"), "objective");
         }
+
+        public static class CampaignCreationException extends APIRequestException {
+            public CampaignCreationException() {
+            }
+
+            public CampaignCreationException(String s) {
+                super(s);
+            }
+
+            public CampaignCreationException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public CampaignCreationException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public CampaignCreationException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
     }
 
     public static class NextDoorAPIUpdateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPIUpdate<Campaign> {
@@ -166,6 +183,27 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         private String updateStatusPath() {
             return DefaultURLS.DEFAULT_FULL_API_URL + "campaign/status/update";
+        }
+
+        public static class CampaignUpdateException extends APIRequestException {
+            public CampaignUpdateException() {
+            }
+
+            public CampaignUpdateException(String s) {
+                super(s);
+            }
+
+            public CampaignUpdateException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public CampaignUpdateException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public CampaignUpdateException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
         }
     }
 }
