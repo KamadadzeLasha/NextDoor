@@ -6,7 +6,7 @@ import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.nextdoor.api.response.NextDoorAPIRequestNode;
+import com.nextdoor.api.response.NextDoorModel;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.exception.HTTPRequestFailureException;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
-public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
+public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
     private Map<String, Object> params = new HashMap<>();
     private Map<String, String> additionalHeaders = new HashMap<>();
 

@@ -1,13 +1,13 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nextdoor.api.response.NextDoorAPIRequestNode;
+import com.nextdoor.api.response.NextDoorModel;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class NextDoorUser extends NextDoorAPIRequestNode implements Serializable {
+public class NextDoorUser extends NextDoorModel implements Serializable {
     @JsonProperty("user")
     private User currentUser;
 

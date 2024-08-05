@@ -1,12 +1,12 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nextdoor.api.response.NextDoorAPIRequestNode;
+import com.nextdoor.api.response.NextDoorModel;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class Campaign extends NextDoorAPIRequestNode implements Serializable {
+public class Campaign extends NextDoorModel implements Serializable {
     @JsonProperty("id")
     private String id;
 

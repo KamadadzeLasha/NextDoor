@@ -1,11 +1,11 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nextdoor.api.response.NextDoorAPIRequestNode;
+import com.nextdoor.api.response.NextDoorModel;
 
 import java.io.Serializable;
 
-public class Profile extends NextDoorAPIRequestNode implements Serializable {
+public class Profile extends NextDoorModel implements Serializable {
     @JsonProperty("id")
     private String id;
 
@@ -65,7 +65,7 @@ public class Profile extends NextDoorAPIRequestNode implements Serializable {
 
     @JsonProperty("agency_city")
     private String agencyCity;
-    
+
     @JsonProperty("agency_state")
     private String agencyState;
 

@@ -1,11 +1,11 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nextdoor.api.response.NextDoorAPIRequestNode;
+import com.nextdoor.api.response.NextDoorModel;
 
 import java.io.Serializable;
 
-public class AccessToken extends NextDoorAPIRequestNode implements Serializable {
+public class AccessToken extends NextDoorModel implements Serializable {
     @JsonProperty("access_token")
     private String accessToken;
 
@@ -73,7 +73,8 @@ public class AccessToken extends NextDoorAPIRequestNode implements Serializable 
 
     public enum GrantType {
         REFRESH_TOKEN("refresh_token"),
-        AUTHORIZATION_CODE("authorization_code"),;
+        AUTHORIZATION_CODE("authorization_code"),
+        ;
 
         private final String formData;
 
