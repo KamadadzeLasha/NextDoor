@@ -42,6 +42,10 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         this.objectMapper = objectMapper;
     }
 
+    public NextDoorAPIAuth getNextDoorAPIAuth() {
+        return nextDoorAPIAuth;
+    }
+
     public void setParamInternal(String param, Object value) {
         this.params.put(param, value);
     }

@@ -18,20 +18,20 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
     }
 
     public NextDoorAPIUserInfo getUserInfo() {
-        return new NextDoorAPIUserInfo(this.nextDoorAPIAuth, this);
+        return new NextDoorAPIUserInfo(this);
     }
 
     public static class NextDoorAPIUserInfo extends NextDoorAPIRequest<NextDoorUser> {
         private final NextDoorAPIUser nextDoorAPIUser;
 
-        public NextDoorAPIUserInfo(NextDoorAPIAuth nextDoorAPIAuth, NextDoorAPIUser nextDoorAPIUser) {
-            super(NextDoorUser.class, nextDoorAPIAuth);
+        public NextDoorAPIUserInfo(NextDoorAPIUser nextDoorAPIUser) {
+            super(NextDoorUser.class, nextDoorAPIUser.getNextDoorAPIAuth());
 
             this.nextDoorAPIUser = nextDoorAPIUser;
         }
 
         public NextDoorUser get() throws APIRequestException {
-            this.addHeader(this.nextDoorAPIUser.nextDoorAPIAuth.getTokenHeader());
+            this.addHeader(this.nextDoorAPIUser.getNextDoorAPIAuth().getTokenHeader());
 
             try {
                 return sendHttpRequest(HttpMethod.GET);
@@ -42,7 +42,7 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
 
         @Override
         protected String getPath() {
-            return DefaultURLS.DEFAULT_FULL_API_URL + "me";
+            return DefaultURLS.DEFAULT_FULL_ADS_API_URL + "me";
         }
 
         @Override

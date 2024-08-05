@@ -21,14 +21,14 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
     }
 
     public NextDoorAPICreateAdvertiser createAdvertiser() {
-        return new NextDoorAPICreateAdvertiser(this.nextDoorAPIAuth, this);
+        return new NextDoorAPICreateAdvertiser(this);
     }
 
     public static class NextDoorAPICreateAdvertiser extends NextDoorAPIRequest<Advertiser> implements NextDoorAPICreate<Advertiser> {
         private final NextDoorAPIAdvertiser nextDoorAPIAdvertiser;
 
-        public NextDoorAPICreateAdvertiser(NextDoorAPIAuth nextDoorAPIAuth, NextDoorAPIAdvertiser nextDoorAPIAdvertiser) {
-            super(Advertiser.class, nextDoorAPIAuth);
+        public NextDoorAPICreateAdvertiser(NextDoorAPIAdvertiser nextDoorAPIAdvertiser) {
+            super(Advertiser.class, nextDoorAPIAdvertiser.getNextDoorAPIAuth());
 
             this.nextDoorAPIAdvertiser = nextDoorAPIAdvertiser;
         }
@@ -61,7 +61,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         public Advertiser create() throws APIRequestException {
             validateRequiredParams();
 
-            this.addHeader(this.nextDoorAPIAdvertiser.nextDoorAPIAuth.getTokenHeader());
+            this.addHeader(this.nextDoorAPIAdvertiser.getNextDoorAPIAuth().getTokenHeader());
 
             try {
                 return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
@@ -72,7 +72,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
 
         @Override
         protected String getPath() {
-            return DefaultURLS.DEFAULT_FULL_API_URL + "advertiser/create";
+            return DefaultURLS.DEFAULT_FULL_ADS_API_URL + "advertiser/create";
         }
 
         @Override
