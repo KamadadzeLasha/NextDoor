@@ -9,6 +9,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nextdoor.api.response.NextDoorAPIRequestNode;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.exception.HTTPRequestFailureException;
 import com.nextdoor.internal.HttpClient;
 import com.nextdoor.util.NextDoorUtil;
 
@@ -77,23 +78,12 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         return sendHttpRequest(httpMethod, getPath());
     }
 
-    protected T sendHttpRequest(HttpMethod httpMethod, String path) throws UnirestException, JsonProcessingException, APIRequestException {
+    protected T sendHttpRequest(HttpMethod httpMethod, String path) throws APIRequestException {
         nextDoorAPIAuth.log("======================= NEXTDOOR API {0} START =======================", httpMethod);
 
         nextDoorAPIAuth.log("Sending HTTP {0} request to {1}", httpMethod, path);
 
-        HttpResponse<JsonNode> response;
-
-        switch (httpMethod) {
-            case POST:
-                response = httpClient.sendPostRequest(path, objectMapper.writeValueAsString(this.params), additionalHeaders);
-                break;
-            case GET:
-                response = httpClient.sendGetRequest(path, additionalHeaders);
-                break;
-            default:
-                throw new APIRequestException("Unsupported HTTP method");
-        }
+        HttpResponse<JsonNode> response = getHttpResponseJsonNode(httpMethod, path);
 
         params.clear();
         additionalHeaders.clear();
@@ -105,21 +95,41 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         String body = jsonNodeBody.getObject().get("message").toString();
 
         if (status != 200) {
-            nextDoorAPIAuth.log("======================= NEXTDOOR API POST FAILED =======================");
-            throw new APIRequestException("HTTP " + httpMethod + " request failed " + body);
+            nextDoorAPIAuth.log("======================= NEXTDOOR API {0} FAILED =======================", httpMethod);
+            throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + body);
         }
 
         nextDoorAPIAuth.log("Ended successfully, converting to JSON {0}", jsonNodeBody.toString());
         nextDoorAPIAuth.log("======================= NEXTDOOR API {0} ENDED SUCCESSFULLY =======================", httpMethod);
-        return objectMapper.readValue(body, responseClass);
+        try {
+            return objectMapper.readValue(body, responseClass);
+        } catch (JsonProcessingException e) {
+            throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + e.getLocalizedMessage());
+        }
+    }
+
+    private HttpResponse<JsonNode> getHttpResponseJsonNode(HttpMethod httpMethod, String path) throws HTTPRequestFailureException {
+        try {
+            switch (httpMethod) {
+                case POST:
+                    return httpClient.sendPostRequest(path, objectMapper.writeValueAsString(this.params), additionalHeaders);
+                case GET:
+                    return httpClient.sendGetRequest(path, additionalHeaders);
+                default:
+                    throw new RuntimeException("Unsupported HTTP method");
+            }
+        } catch (UnirestException | JsonProcessingException | RuntimeException e) {
+            throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + e.getLocalizedMessage());
+        }
     }
 
     protected void validateParams(String... params) {
-        for(String param : params) {
+        for (String param : params) {
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal(param), param);
         }
     }
 
     protected abstract String getPath();
+
     protected abstract void validateRequiredParams();
 }

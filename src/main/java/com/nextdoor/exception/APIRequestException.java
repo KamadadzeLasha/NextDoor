@@ -1,6 +1,6 @@
 package com.nextdoor.exception;
 
-public class APIRequestException extends Exception {
+public abstract class APIRequestException extends Exception {
     public APIRequestException() {
     }
 
