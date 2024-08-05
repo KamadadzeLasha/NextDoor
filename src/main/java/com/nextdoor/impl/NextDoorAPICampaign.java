@@ -63,7 +63,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Campaign create() throws CampaignCreationException {
+        public Campaign create() throws APIRequestException {
             this.setParamInternal("advertiser_id", nextDoorAPICampaign.advertiserId);
             this.addHeader(nextDoorAPICampaign.nextDoorAPIAuth.getTokenHeader());
 
@@ -140,7 +140,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Campaign update() throws CampaignUpdateException {
+        public Campaign update() throws APIRequestException {
             this.setParamInternal("advertiser_id", this.nextDoorAPICampaign.advertiserId);
             this.setParamInternal("id", this.campaignId);
 

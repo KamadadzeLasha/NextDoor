@@ -30,7 +30,7 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
             this.nextDoorAPIUser = nextDoorAPIUser;
         }
 
-        public NextDoorUser get() throws UserGetException {
+        public NextDoorUser get() throws APIRequestException {
             this.addHeader(this.nextDoorAPIUser.nextDoorAPIAuth.getTokenHeader());
 
             try {

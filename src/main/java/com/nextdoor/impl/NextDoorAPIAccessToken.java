@@ -1,9 +1,11 @@
 package com.nextdoor.impl;
 
+import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.api.share.NextDoorAPICreate;
 import com.nextdoor.api.share.NextDoorAPIRequest;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.AccessToken;
+import com.nextdoor.models.ConversionType;
 import com.nextdoor.util.NextDoorUtil;
 
 public class NextDoorAPIAccessToken {
@@ -42,7 +44,12 @@ public class NextDoorAPIAccessToken {
 
         @Override
         public AccessToken create() throws APIRequestException {
-            return null;
+            validateRequiredParams();
+            try {
+                return sendHttpRequest(HttpMethod.POST, ConversionType.URL_ENCODED);
+            } catch (APIRequestException e) {
+                throw new AccessTokenCreationException("Can't generate access token because of: ", e);
+            }
         }
 
         @Override
@@ -56,6 +63,27 @@ public class NextDoorAPIAccessToken {
             NextDoorUtil.ensureStringNotNull(this.getParamInternal("code"), "code");
             NextDoorUtil.ensureStringNotNull(this.getParamInternal("client_id"), "client_id");
             NextDoorUtil.ensureStringNotNull(this.getParamInternal("redirect_uri"), "redirect_uri");
+        }
+
+        public static class AccessTokenCreationException extends APIRequestException {
+            public AccessTokenCreationException() {
+            }
+
+            public AccessTokenCreationException(String s) {
+                super(s);
+            }
+
+            public AccessTokenCreationException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AccessTokenCreationException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AccessTokenCreationException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
         }
     }
 }

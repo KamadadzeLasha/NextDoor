@@ -58,7 +58,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Advertiser create() throws AdvertiserCreationException {
+        public Advertiser create() throws APIRequestException {
             validateRequiredParams();
 
             this.addHeader(this.nextDoorAPIAdvertiser.nextDoorAPIAuth.getTokenHeader());
@@ -66,7 +66,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
             } catch (APIRequestException e) {
-                throw new AdvertiserCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new AdvertiserCreationException("Can't create advertiser campaign, because of: " + e.getLocalizedMessage());
             }
         }
 
