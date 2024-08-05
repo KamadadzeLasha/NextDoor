@@ -3,6 +3,7 @@ package com.nextdoor.impl;
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.api.share.NextDoorAPICreate;
 import com.nextdoor.api.share.NextDoorAPIRequest;
+import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.AccessToken;
 import com.nextdoor.models.ConversionType;
@@ -54,7 +55,7 @@ public class NextDoorAPIAccessToken {
 
         @Override
         protected String getPath() {
-            return "";
+            return DefaultURLS.DEFAULT_AUTH_FULL_API_URL + "token";
         }
 
         @Override
