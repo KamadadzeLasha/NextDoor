@@ -99,18 +99,17 @@ public abstract class NextDoorAPIRequest<T extends NextDoorAPIRequestNode> {
         int status = response.getStatus();
         nextDoorAPIAuth.log("HTTP Request sended with status {0}", status);
 
-        JsonNode jsonNodeBody = response.getBody();
-        String body = jsonNodeBody.getObject().get("message").toString();
+        String responseJsonAsString = response.getBody().toString();
 
         if (status != 200) {
             nextDoorAPIAuth.log("======================= NEXTDOOR API {0} FAILED =======================", httpMethod);
-            throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + body);
+            throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + responseJsonAsString);
         }
 
-        nextDoorAPIAuth.log("Ended successfully, converting to JSON {0}", jsonNodeBody.toString());
+        nextDoorAPIAuth.log("Ended successfully, converting to JSON {0}", responseJsonAsString);
         nextDoorAPIAuth.log("======================= NEXTDOOR API {0} ENDED SUCCESSFULLY =======================", httpMethod);
         try {
-            return objectMapper.readValue(body, responseClass);
+            return objectMapper.readValue(responseJsonAsString, responseClass);
         } catch (JsonProcessingException e) {
             throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + e.getLocalizedMessage());
         }
