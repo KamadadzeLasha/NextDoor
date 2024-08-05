@@ -74,7 +74,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
             try {
                 return sendHttpRequest(HttpMethod.POST, getPath());
-            } catch (UnirestException | JsonProcessingException | APIRequestException e) {
+            } catch (APIRequestException e) {
                 throw new CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
             }
         }
