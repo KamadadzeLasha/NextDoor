@@ -9,6 +9,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.exception.HTTPRequestFailureException;
+import com.nextdoor.exception.HTTPRequestNotSupportedException;
 import com.nextdoor.internal.HttpClient;
 import com.nextdoor.models.ConversionType;
 import com.nextdoor.models.NextDoorModel;
@@ -83,7 +84,14 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
     }
 
     protected T sendHttpRequest(HttpMethod httpMethod) throws APIRequestException {
-        return sendHttpRequest(httpMethod, getPath(), null);
+        switch (httpMethod) {
+            case GET:
+                return sendHttpRequest(httpMethod, getPath(), null);
+            case POST:
+                return sendHttpRequest(httpMethod, getPath(), ConversionType.JSON);
+            default:
+                throw new HTTPRequestNotSupportedException("HTTP request not supported: " + httpMethod);
+        }
     }
 
     protected T sendHttpRequest(HttpMethod httpMethod, ConversionType conversionType) throws APIRequestException {
