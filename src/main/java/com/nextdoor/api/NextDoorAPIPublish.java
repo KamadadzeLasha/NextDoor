@@ -1,8 +1,8 @@
-package com.nextdoor.impl;
+package com.nextdoor.api;
 
-import com.nextdoor.api.response.NextDoorAPIRequestNode;
-import com.nextdoor.api.share.NextDoorAPIGet;
-import com.nextdoor.api.share.NextDoorAPIRequest;
+import com.nextdoor.share.NextDoorAPIRequestNode;
+import com.nextdoor.share.NextDoorAPIGet;
+import com.nextdoor.share.NextDoorAPIRequest;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Profile;

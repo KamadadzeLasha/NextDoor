@@ -1,4 +1,4 @@
-package com.nextdoor.api.response;
+package com.nextdoor.models;
 
 public abstract class NextDoorModel {
 }

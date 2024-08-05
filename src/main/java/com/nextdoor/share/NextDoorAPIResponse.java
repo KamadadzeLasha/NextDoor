@@ -1,4 +1,4 @@
-package com.nextdoor.api.response;
+package com.nextdoor.share;
 
 public interface NextDoorAPIResponse {
 }

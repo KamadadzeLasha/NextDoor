@@ -1,4 +1,4 @@
-package com.nextdoor.api.share;
+package com.nextdoor.share;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,12 +6,12 @@ import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.nextdoor.api.response.NextDoorModel;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.exception.HTTPRequestFailureException;
 import com.nextdoor.internal.HttpClient;
 import com.nextdoor.models.ConversionType;
+import com.nextdoor.models.NextDoorModel;
 import com.nextdoor.util.NextDoorUtil;
 
 import java.io.UnsupportedEncodingException;

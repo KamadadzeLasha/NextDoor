@@ -1,10 +1,10 @@
-package com.nextdoor.impl;
+package com.nextdoor.api;
 
 import com.mashape.unirest.http.HttpMethod;
-import com.nextdoor.api.response.NextDoorAPIRequestNode;
-import com.nextdoor.api.share.NextDoorAPICreate;
-import com.nextdoor.api.share.NextDoorAPIRequest;
-import com.nextdoor.api.share.NextDoorAPIUpdate;
+import com.nextdoor.share.NextDoorAPIRequestNode;
+import com.nextdoor.share.NextDoorAPICreate;
+import com.nextdoor.share.NextDoorAPIRequest;
+import com.nextdoor.share.NextDoorAPIUpdate;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;

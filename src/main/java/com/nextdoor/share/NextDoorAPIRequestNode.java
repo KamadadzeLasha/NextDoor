@@ -1,4 +1,4 @@
-package com.nextdoor.api.response;
+package com.nextdoor.share;
 
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.util.NextDoorUtil;
