@@ -1,15 +1,15 @@
 package com.nextdoor.api;
 
 import com.mashape.unirest.http.HttpMethod;
-import com.nextdoor.share.NextDoorAPIRequestNode;
-import com.nextdoor.share.NextDoorAPICreate;
-import com.nextdoor.share.NextDoorAPIRequest;
-import com.nextdoor.share.NextDoorAPIUpdate;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Campaign;
 import com.nextdoor.models.ConversionType;
+import com.nextdoor.share.NextDoorAPICreate;
+import com.nextdoor.share.NextDoorAPIRequest;
+import com.nextdoor.share.NextDoorAPIRequestNode;
+import com.nextdoor.share.NextDoorAPIUpdate;
 import com.nextdoor.util.NextDoorUtil;
 
 public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
@@ -65,8 +65,8 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         @Override
         public Campaign create() throws APIRequestException {
-            this.setParamInternal("advertiser_id", nextDoorAPICampaign.advertiserId);
-            this.addHeader(nextDoorAPICampaign.getNextDoorAPIAuth().getTokenHeader());
+            this.setParamInternal("advertiser_id", nextDoorAPICampaign.getAdvertiserId());
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             validateRequiredParams();
 
@@ -142,12 +142,12 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         @Override
         public Campaign update() throws APIRequestException {
-            this.setParamInternal("advertiser_id", this.nextDoorAPICampaign.advertiserId);
+            this.setParamInternal("advertiser_id", this.nextDoorAPICampaign.getAdvertiserId());
             this.setParamInternal("id", this.campaignId);
 
             validateRequiredParams();
 
-            this.addHeader(this.nextDoorAPICampaign.getNextDoorAPIAuth().getTokenHeader());
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             try {
                 if (this.containsParamInternal("user_status") && !this.containsParamInternal("objective")) {

@@ -1,12 +1,12 @@
 package com.nextdoor.api;
 
 import com.mashape.unirest.http.HttpMethod;
-import com.nextdoor.share.NextDoorAPIRequestNode;
-import com.nextdoor.share.NextDoorAPIRequest;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.NextDoorUser;
+import com.nextdoor.share.NextDoorAPIRequest;
+import com.nextdoor.share.NextDoorAPIRequestNode;
 
 public class NextDoorAPIUser extends NextDoorAPIRequestNode {
     public NextDoorAPIUser() {
@@ -22,16 +22,12 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
     }
 
     public static class NextDoorAPIUserInfo extends NextDoorAPIRequest<NextDoorUser> {
-        private final NextDoorAPIUser nextDoorAPIUser;
-
         public NextDoorAPIUserInfo(NextDoorAPIUser nextDoorAPIUser) {
             super(NextDoorUser.class, nextDoorAPIUser.getNextDoorAPIAuth());
-
-            this.nextDoorAPIUser = nextDoorAPIUser;
         }
 
         public NextDoorUser get() throws APIRequestException {
-            this.addHeader(this.nextDoorAPIUser.getNextDoorAPIAuth().getTokenHeader());
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             try {
                 return sendHttpRequest(HttpMethod.GET);
