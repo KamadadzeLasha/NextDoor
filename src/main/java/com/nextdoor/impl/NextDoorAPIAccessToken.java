@@ -3,6 +3,8 @@ package com.nextdoor.impl;
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.api.share.NextDoorAPICreate;
 import com.nextdoor.api.share.NextDoorAPIRequest;
+import com.nextdoor.api.share.NextDoorAPIUpdate;
+import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.AccessToken;
@@ -14,13 +16,21 @@ public class NextDoorAPIAccessToken {
 
     }
 
+    public NextDoorAPIAccessTokenGenerate generate() {
+        return new NextDoorAPIAccessTokenGenerate();
+    }
+
+    public NextDoorAPIAccessTokenRefresh refresh() {
+        return new NextDoorAPIAccessTokenRefresh();
+    }
+
     public static class NextDoorAPIAccessTokenGenerate extends NextDoorAPIRequest<AccessToken> implements NextDoorAPICreate<AccessToken> {
         public NextDoorAPIAccessTokenGenerate() {
-            super(AccessToken.class, null);
+            super(AccessToken.class, NextDoorAPIAuth.defaultNextDoorAPIAuth());
         }
 
-        public NextDoorAPIAccessTokenGenerate grantType(String grantType) {
-            this.setParamInternal("grant_type", grantType);
+        public NextDoorAPIAccessTokenGenerate grantType(AccessToken.GrantType grantType) {
+            this.setParamInternal("grant_type", grantType.getFormData());
 
             return this;
         }
@@ -83,6 +93,73 @@ public class NextDoorAPIAccessToken {
             }
 
             public AccessTokenCreationException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
+    }
+
+    public static class NextDoorAPIAccessTokenRefresh extends NextDoorAPIRequest<AccessToken> implements NextDoorAPIUpdate<AccessToken> {
+        public NextDoorAPIAccessTokenRefresh() {
+            super(AccessToken.class, NextDoorAPIAuth.defaultNextDoorAPIAuth());
+        }
+
+        public NextDoorAPIAccessTokenRefresh grantType(AccessToken.GrantType grantType) {
+            this.setParamInternal("grant_type", grantType.getFormData());
+
+            return this;
+        }
+
+        public NextDoorAPIAccessTokenRefresh refreshToken(String accessToken) {
+            this.setParamInternal("refresh_token", accessToken);
+
+            return this;
+        }
+
+        public NextDoorAPIAccessTokenRefresh scope(String scope) {
+            this.setParamInternal("scope", scope);
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return DefaultURLS.DEFAULT_AUTH_FULL_API_URL + "token";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("grant_type"), "grant_type");
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("refresh_token"), "refresh_token");
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("scope"), "scope");
+        }
+
+        @Override
+        public AccessToken update() throws APIRequestException {
+            validateRequiredParams();
+            try {
+                return sendHttpRequest(HttpMethod.POST, ConversionType.URL_ENCODED);
+            } catch (APIRequestException e) {
+                throw new AccessTokenRefreshException("Access token can't be refreshed beacuse of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AccessTokenRefreshException extends APIRequestException {
+            public AccessTokenRefreshException() {
+            }
+
+            public AccessTokenRefreshException(String s) {
+                super(s);
+            }
+
+            public AccessTokenRefreshException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AccessTokenRefreshException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AccessTokenRefreshException(String s, Throwable throwable, boolean b, boolean b1) {
                 super(s, throwable, b, b1);
             }
         }

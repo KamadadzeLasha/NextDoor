@@ -65,7 +65,7 @@ public class NextDoorAPIAuth {
     }
 
     public void log(String message, Object... objects) {
-        for(int index = 0; index < objects.length; index++) {
+        for (int index = 0; index < objects.length; index++) {
             message = message.replace("{" + index + "}", objects[index].toString());
         }
 
@@ -78,5 +78,9 @@ public class NextDoorAPIAuth {
         header.put("authorization", "Bearer " + this.token);
 
         return header;
+    }
+
+    public static NextDoorAPIAuth defaultNextDoorAPIAuth() {
+        return new NextDoorAPIAuth();
     }
 }

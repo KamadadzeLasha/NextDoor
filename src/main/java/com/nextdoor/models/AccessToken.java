@@ -70,4 +70,19 @@ public class AccessToken extends NextDoorAPIRequestNode implements Serializable 
                 ", expiresIn=" + expiresIn +
                 '}';
     }
+
+    public enum GrantType {
+        REFRESH_TOKEN("refresh_token"),
+        AUTHORIZATION_CODE("authorization_code"),;
+
+        private final String formData;
+
+        GrantType(String formData) {
+            this.formData = formData;
+        }
+
+        public String getFormData() {
+            return formData;
+        }
+    }
 }
