@@ -43,6 +43,10 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         return new NextDoorAPIFSFPost(this.getNextDoorAPIAuth());
     }
 
+    public NextDoorAPICommentToPostOrReplyToComment commentToPostOrReplyToComment() {
+        return new NextDoorAPICommentToPostOrReplyToComment(this.getNextDoorAPIAuth());
+    }
+
     public static class NextDoorAPIDefaultPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
         public NextDoorAPIDefaultPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
