@@ -3,11 +3,9 @@ package com.nextdoor.api;
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.models.CommentToPostOrReplyToComment;
-import com.nextdoor.models.Event;
-import com.nextdoor.models.FSF;
-import com.nextdoor.models.Post;
+import com.nextdoor.models.*;
 import com.nextdoor.share.NextDoorAPICreate;
+import com.nextdoor.share.NextDoorAPIGet;
 import com.nextdoor.share.NextDoorAPIRequest;
 import com.nextdoor.share.NextDoorAPIRequestNode;
 import com.nextdoor.util.NextDoorUtil;
@@ -19,6 +17,8 @@ import java.util.Collections;
 import static com.nextdoor.constants.DefaultURLS.DEFAULT_FULL_EXTERNAL_API_URL;
 
 public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
+    private static final String POST_PREFIX = "post";
+
     public NextDoorAPIPosts() {
         super(NextDoorAPIAuth.defaultNextDoorAPIAuth());
     }
@@ -47,6 +47,10 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         return new NextDoorAPICommentToPostOrReplyToComment(this.getNextDoorAPIAuth());
     }
 
+    public NextDoorAPIGetAllPosts getAllPosts() {
+        return new NextDoorAPIGetAllPosts(this.getNextDoorAPIAuth());
+    }
+
     public static class NextDoorAPIDefaultPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
         public NextDoorAPIDefaultPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
@@ -66,7 +70,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
         public NextDoorAPIDefaultPost setMediaAttachments(String mediaAttachment) {
             if (mediaAttachment == null || mediaAttachment.isEmpty()) {
-                this.getNextDoorAPIAuth().log("Cannot attach attachment to post");
+                this.getNextDoorAPIAuth().log("Cannot attach attachment to " + POST_PREFIX);
                 return this;
             }
 
@@ -75,7 +79,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
         public NextDoorAPIDefaultPost setMediaAttachments(Collection<String> mediaAttachments) {
             if (mediaAttachments == null || mediaAttachments.size() > 10) {
-                this.getNextDoorAPIAuth().log("Cannot attach attachments to post");
+                this.getNextDoorAPIAuth().log("Cannot attach attachments to " + POST_PREFIX);
 
                 return this;
             }
@@ -117,13 +121,13 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.POST);
             } catch (APIRequestException e) {
-                throw new PostCreationException("Cannot create default post because of: " + e.getLocalizedMessage());
+                throw new PostCreationException("Cannot create default " + POST_PREFIX + " because of: " + e.getLocalizedMessage());
             }
         }
 
         @Override
         protected String getPath() {
-            return DEFAULT_FULL_EXTERNAL_API_URL + "post/create";
+            return DEFAULT_FULL_EXTERNAL_API_URL + POST_PREFIX + "/create";
         }
 
         @Override
@@ -151,7 +155,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
         public NextDoorAPIAgencyPost setMediaAttachments(String mediaAttachment) {
             if (mediaAttachment == null || mediaAttachment.isEmpty()) {
-                this.getNextDoorAPIAuth().log("Cannot attach attachment to post");
+                this.getNextDoorAPIAuth().log("Cannot attach attachment to " + POST_PREFIX);
                 return this;
             }
 
@@ -160,7 +164,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
         public NextDoorAPIAgencyPost setMediaAttachments(Collection<String> mediaAttachments) {
             if (mediaAttachments == null || mediaAttachments.size() > 10) {
-                this.getNextDoorAPIAuth().log("Cannot attach attachments to post");
+                this.getNextDoorAPIAuth().log("Cannot attach attachments to " + POST_PREFIX);
 
                 return this;
             }
@@ -189,7 +193,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
         public NextDoorAPIAgencyPost setGroupIDs(Collection<Integer> groupIDs) {
             if (groupIDs == null) {
-                this.getNextDoorAPIAuth().log("Cannot attach attachments to post");
+                this.getNextDoorAPIAuth().log("Cannot attach attachments to " + POST_PREFIX);
 
                 return this;
             }
@@ -214,13 +218,13 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.POST);
             } catch (APIRequestException e) {
-                throw new PostCreationException("Cannot agency default post because of: " + e.getLocalizedMessage());
+                throw new PostCreationException("Cannot agency default " + POST_PREFIX + " because of: " + e.getLocalizedMessage());
             }
         }
 
         @Override
         protected String getPath() {
-            return DEFAULT_FULL_EXTERNAL_API_URL + "post/create";
+            return DEFAULT_FULL_EXTERNAL_API_URL + POST_PREFIX + "/create";
         }
 
         @Override
@@ -256,7 +260,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
         public NextDoorAPIEventPost setMediaAttachments(String mediaAttachment) {
             if (mediaAttachment == null || mediaAttachment.isEmpty()) {
-                this.getNextDoorAPIAuth().log("Cannot attach attachment to post");
+                this.getNextDoorAPIAuth().log("Cannot attach attachment to " + POST_PREFIX);
                 return this;
             }
 
@@ -265,7 +269,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
         public NextDoorAPIEventPost setMediaAttachments(Collection<String> mediaAttachments) {
             if (mediaAttachments == null || mediaAttachments.size() > 10) {
-                this.getNextDoorAPIAuth().log("Cannot attach attachments to post");
+                this.getNextDoorAPIAuth().log("Cannot attach attachments to " + POST_PREFIX);
 
                 return this;
             }
@@ -306,13 +310,13 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.POST, getPath() + "?" + EVENT_NAME + "=" + ((Event) this.getParamInternal(EVENT_NAME)).toUrlEncodedString());
             } catch (APIRequestException | IllegalAccessException | UnsupportedEncodingException e) {
-                throw new PostCreationException("Cannot agency default post because of: " + e.getLocalizedMessage());
+                throw new PostCreationException("Cannot agency default " + POST_PREFIX + " because of: " + e.getLocalizedMessage());
             }
         }
 
         @Override
         protected String getPath() {
-            return DEFAULT_FULL_EXTERNAL_API_URL + "post/" + EVENT_NAME + "/";
+            return DEFAULT_FULL_EXTERNAL_API_URL + POST_PREFIX + "/" + EVENT_NAME + "/";
         }
 
         @Override
@@ -366,13 +370,13 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.POST, getPath() + "?" + FSF_NAME + "=" + ((FSF) this.getParamInternal(FSF_NAME)).toUrlEncodedString());
             } catch (APIRequestException | IllegalAccessException | UnsupportedEncodingException e) {
-                throw new PostCreationException("Cannot agency default post because of: " + e.getLocalizedMessage());
+                throw new PostCreationException("Cannot agency default " + POST_PREFIX + " because of: " + e.getLocalizedMessage());
             }
         }
 
         @Override
         protected String getPath() {
-            return DEFAULT_FULL_EXTERNAL_API_URL + "post/" + FSF_NAME + "/";
+            return DEFAULT_FULL_EXTERNAL_API_URL + POST_PREFIX + "/" + FSF_NAME + "/";
         }
 
         @Override
@@ -389,7 +393,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             Collection<String> imageAttachments = fsf.getImageAttachments();
             NextDoorUtil.ensureObjectNotNull(imageAttachments, FSF_NAME + ".image_attachments");
             if (imageAttachments.size() > 10) {
-                throw new RuntimeException("Cannot attach attachments to post, because there are more than 10 images");
+                throw new RuntimeException("Cannot attach attachments to " + POST_PREFIX + ", because there are more than 10 images");
             }
         }
     }
@@ -436,7 +440,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.POST);
             } catch (APIRequestException e) {
-                throw new CommentToAPostOrReplyToACommentExcepton("Cannot reply to a comment or create comment to post, because of: " + e.getLocalizedMessage());
+                throw new CommentToAPostOrReplyToACommentExcepton("Cannot reply to a comment or create comment to " + POST_PREFIX + ", because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -470,6 +474,60 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             public CommentToAPostOrReplyToACommentExcepton(String s, Throwable throwable, boolean b, boolean b1) {
                 super(s, throwable, b, b1);
             }
+        }
+    }
+
+    public static class NextDoorAPIGetAllPosts extends NextDoorAPIRequest<Posts> implements NextDoorAPIGet<Posts> {
+        public NextDoorAPIGetAllPosts(NextDoorAPIAuth nextDoorAPIAuth) {
+            super(Posts.class, nextDoorAPIAuth);
+        }
+
+        public NextDoorAPIGetAllPosts setSecureProfileID(String secureProfileID) {
+            this.addHeader("secure_profile_id", secureProfileID);
+
+            return this;
+        }
+
+        @Override
+        public Posts get() throws APIRequestException {
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new PostException("Cannot get all posts, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_EXTERNAL_API_URL + POST_PREFIX;
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+    }
+
+    public static class PostException extends APIRequestException {
+        public PostException() {
+        }
+
+        public PostException(String s) {
+            super(s);
+        }
+
+        public PostException(String s, Throwable throwable) {
+            super(s, throwable);
+        }
+
+        public PostException(Throwable throwable) {
+            super(throwable);
+        }
+
+        public PostException(String s, Throwable throwable, boolean b, boolean b1) {
+            super(s, throwable, b, b1);
         }
     }
 
