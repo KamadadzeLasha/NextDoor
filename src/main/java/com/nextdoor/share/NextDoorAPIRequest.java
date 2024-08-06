@@ -47,27 +47,27 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         return nextDoorAPIAuth;
     }
 
-    public void setParamInternal(String param, Object value) {
+    protected void setParamInternal(String param, Object value) {
         this.params.put(param, value);
     }
 
-    public void setParamInternal(Map<String, Object> params) {
+    protected void setParamInternal(Map<String, Object> params) {
         this.params.putAll(params);
     }
 
-    public void writeParamInternal(Map<String, Object> params) {
+    protected void writeParamInternal(Map<String, Object> params) {
         this.params = params;
     }
 
-    public boolean containsParamInternal(String param) {
+    protected boolean containsParamInternal(String param) {
         return this.params.containsKey(param);
     }
 
-    public void removeParamInternal(String param) {
+    protected void removeParamInternal(String param) {
         this.params.remove(param);
     }
 
-    public Object getParamInternal(String param) {
+    protected Object getParamInternal(String param) {
         return this.params.get(param);
     }
 
@@ -75,11 +75,11 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         this.additionalHeaders.put(key, value);
     }
 
-    public void addHeader(Map<String, String> additionalHeaders) {
+    protected void addHeader(Map<String, String> additionalHeaders) {
         this.additionalHeaders.putAll(additionalHeaders);
     }
 
-    public void writeHeader(Map<String, String> additionalHeaders) {
+    protected void writeHeader(Map<String, String> additionalHeaders) {
         this.additionalHeaders = additionalHeaders;
     }
 

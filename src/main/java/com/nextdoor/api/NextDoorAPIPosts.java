@@ -10,6 +10,7 @@ import com.nextdoor.share.NextDoorAPIRequestNode;
 import com.nextdoor.util.NextDoorUtil;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import static com.nextdoor.constants.DefaultURLS.DEFAULT_FULL_EXTERNAL_API_URL;
 
@@ -43,19 +44,28 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             super(Post.class, nextDoorAPIAuth);
         }
 
-        public NextDoorAPIDefaultPost bodyText(String bodyText) {
+        public NextDoorAPIDefaultPost setBodyText(String bodyText) {
             this.setParamInternal("body_text", bodyText);
 
             return this;
         }
 
-        public NextDoorAPIDefaultPost hashtag(String hashtag) {
+        public NextDoorAPIDefaultPost setHashtag(String hashtag) {
             this.setParamInternal("hashtag", hashtag.trim());
 
             return this;
         }
 
-        public NextDoorAPIDefaultPost mediaAttachments(Collection<String> mediaAttachments) {
+        public NextDoorAPIDefaultPost setMediaAttachments(String mediaAttachment) {
+            if (mediaAttachment == null || mediaAttachment.isEmpty()) {
+                this.getNextDoorAPIAuth().log("Cannot attach attachment to post");
+                return this;
+            }
+
+            return setMediaAttachments(Collections.singleton(mediaAttachment));
+        }
+
+        public NextDoorAPIDefaultPost setMediaAttachments(Collection<String> mediaAttachments) {
             if (mediaAttachments == null || mediaAttachments.size() > 10) {
                 this.getNextDoorAPIAuth().log("Cannot attach attachments to post");
 
@@ -66,25 +76,25 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             return this;
         }
 
-        public NextDoorAPIDefaultPost latitude(float latitude) {
+        public NextDoorAPIDefaultPost setLatitude(float latitude) {
             this.setParamInternal("lat", latitude);
 
             return this;
         }
 
-        public NextDoorAPIDefaultPost longitude(float longitude) {
+        public NextDoorAPIDefaultPost setLongitude(float longitude) {
             this.setParamInternal("lon", longitude);
 
             return this;
         }
 
-        public NextDoorAPIDefaultPost smartLinkUrl(String smartLinkUrl) {
+        public NextDoorAPIDefaultPost setSmartLinkUrl(String smartLinkUrl) {
             this.setParamInternal("smartlink_url", smartLinkUrl);
 
             return this;
         }
 
-        public NextDoorAPIDefaultPost secureProfileId(String secureProfileId) {
+        public NextDoorAPIDefaultPost setSecureProfileId(String secureProfileId) {
             this.setParamInternal("secure_profile_id", secureProfileId);
 
             return this;

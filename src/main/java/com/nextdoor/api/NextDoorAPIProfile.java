@@ -10,12 +10,12 @@ import com.nextdoor.share.NextDoorAPIGet;
 import com.nextdoor.share.NextDoorAPIRequest;
 import com.nextdoor.share.NextDoorAPIRequestNode;
 
-public class NextDoorAPIPublish extends NextDoorAPIRequestNode {
-    public NextDoorAPIPublish() {
+public class NextDoorAPIProfile extends NextDoorAPIRequestNode {
+    public NextDoorAPIProfile() {
         super(NextDoorAPIAuth.defaultNextDoorAPIAuth());
     }
 
-    public NextDoorAPIPublish(NextDoorAPIAuth nextDoorAPIAuth) {
+    public NextDoorAPIProfile(NextDoorAPIAuth nextDoorAPIAuth) {
         super(nextDoorAPIAuth);
     }
 

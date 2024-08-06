@@ -29,26 +29,20 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             super(Advertiser.class, nextDoorAPIAuth);
         }
 
-        public NextDoorAPICreateAdvertiser name(String name) {
+        public NextDoorAPICreateAdvertiser setName(String name) {
             this.setParamInternal("name", name);
 
             return this;
         }
 
-        public NextDoorAPICreateAdvertiser websiteUrl(String websiteUrl) {
+        public NextDoorAPICreateAdvertiser setWebsiteUrl(String websiteUrl) {
             this.setParamInternal("website_url", websiteUrl);
 
             return this;
         }
 
-        public NextDoorAPICreateAdvertiser categoryId(String categoryId) {
+        public NextDoorAPICreateAdvertiser setCategoryId(String categoryId) {
             this.setParamInternal("category_id", categoryId);
-
-            return this;
-        }
-
-        public NextDoorAPICreateAdvertiser address(Advertiser.Address address) {
-            this.setParamInternal("address", address);
 
             return this;
         }

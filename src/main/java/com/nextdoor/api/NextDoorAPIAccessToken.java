@@ -1,14 +1,14 @@
 package com.nextdoor.api;
 
 import com.mashape.unirest.http.HttpMethod;
-import com.nextdoor.share.NextDoorAPICreate;
-import com.nextdoor.share.NextDoorAPIRequest;
-import com.nextdoor.share.NextDoorAPIUpdate;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.AccessToken;
 import com.nextdoor.models.ConversionType;
+import com.nextdoor.share.NextDoorAPICreate;
+import com.nextdoor.share.NextDoorAPIRequest;
+import com.nextdoor.share.NextDoorAPIUpdate;
 import com.nextdoor.util.NextDoorUtil;
 import org.apache.commons.codec.binary.Base64;
 
@@ -48,25 +48,25 @@ public class NextDoorAPIAccessToken {
             this.authorizationHeader = authorizationHeader;
         }
 
-        public NextDoorAPIAccessTokenGenerate grantType(AccessToken.GrantType grantType) {
+        public NextDoorAPIAccessTokenGenerate setGrantType(AccessToken.GrantType grantType) {
             this.setParamInternal("grant_type", grantType.getFormData());
 
             return this;
         }
 
-        public NextDoorAPIAccessTokenGenerate code(String code) {
+        public NextDoorAPIAccessTokenGenerate setCode(String code) {
             this.setParamInternal("code", code);
 
             return this;
         }
 
-        public NextDoorAPIAccessTokenGenerate clientId(String clientId) {
+        public NextDoorAPIAccessTokenGenerate setClientId(String clientId) {
             this.setParamInternal("client_id", clientId);
 
             return this;
         }
 
-        public NextDoorAPIAccessTokenGenerate redirectUri(String redirectUri) {
+        public NextDoorAPIAccessTokenGenerate setRedirectUri(String redirectUri) {
             this.setParamInternal("redirect_uri", redirectUri);
 
             return this;
@@ -129,19 +129,19 @@ public class NextDoorAPIAccessToken {
             this.authorizationHeader = authorizationHeader;
         }
 
-        public NextDoorAPIAccessTokenRefresh grantType(AccessToken.GrantType grantType) {
+        public NextDoorAPIAccessTokenRefresh setGrantType(AccessToken.GrantType grantType) {
             this.setParamInternal("grant_type", grantType.getFormData());
 
             return this;
         }
 
-        public NextDoorAPIAccessTokenRefresh refreshToken(String accessToken) {
+        public NextDoorAPIAccessTokenRefresh setRefreshToken(String accessToken) {
             this.setParamInternal("refresh_token", accessToken);
 
             return this;
         }
 
-        public NextDoorAPIAccessTokenRefresh scope(String scope) {
+        public NextDoorAPIAccessTokenRefresh setScope(String scope) {
             this.setParamInternal("scope", scope);
 
             return this;
