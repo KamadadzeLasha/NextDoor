@@ -1,6 +1,11 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nextdoor.auth.NextDoorAPIAuth;
+import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.share.NextDoorAPIRequest;
+import com.nextdoor.share.NextDoorAPIUpdateEdit;
+import com.nextdoor.util.NextDoorUtil;
 
 import java.io.Serializable;
 
@@ -42,5 +47,35 @@ public class Post extends NextDoorModel implements Serializable {
                 "result='" + result + '\'' +
                 ", linkToPost='" + linkToPost + '\'' +
                 '}';
+    }
+
+    public static PostEdit edit(String postId, NextDoorAPIAuth nextDoorAPIAuth) {
+        return new PostEdit(postId, nextDoorAPIAuth);
+    }
+
+    public static class PostEdit extends NextDoorAPIRequest<Post> implements NextDoorAPIUpdateEdit<Post> {
+        private final String postId;
+
+        public PostEdit(String postId, NextDoorAPIAuth nextDoorAPIAuth) {
+            super(Post.class, nextDoorAPIAuth);
+
+            NextDoorUtil.ensureStringNotNull(postId, "postId");
+            this.postId = postId;
+        }
+
+        @Override
+        protected String getPath() {
+            return "";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public Post update() throws APIRequestException {
+            return null;
+        }
     }
 }
