@@ -3,6 +3,7 @@ package com.nextdoor.api;
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.models.CommentToPostOrReplyToComment;
 import com.nextdoor.models.Event;
 import com.nextdoor.models.FSF;
 import com.nextdoor.models.Post;
@@ -97,8 +98,8 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             return this;
         }
 
-        public NextDoorAPIDefaultPost setSecureProfileId(String secureProfileId) {
-            this.setParamInternal("secure_profile_id", secureProfileId);
+        public NextDoorAPIDefaultPost setSecureProfileID(String secureProfileID) {
+            this.setParamInternal("secure_profile_id", secureProfileID);
 
             return this;
         }
@@ -182,14 +183,14 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             return this;
         }
 
-        public NextDoorAPIAgencyPost setGroupIds(Collection<Integer> groupIds) {
-            if (groupIds == null) {
+        public NextDoorAPIAgencyPost setGroupIDs(Collection<Integer> groupIDs) {
+            if (groupIDs == null) {
                 this.getNextDoorAPIAuth().log("Cannot attach attachments to post");
 
                 return this;
             }
 
-            this.setParamInternal("group_ids", groupIds);
+            this.setParamInternal("group_ids", groupIDs);
 
             return this;
         }
@@ -385,6 +386,85 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             NextDoorUtil.ensureObjectNotNull(imageAttachments, FSF_NAME + ".image_attachments");
             if (imageAttachments.size() > 10) {
                 throw new RuntimeException("Cannot attach attachments to post, because there are more than 10 images");
+            }
+        }
+    }
+
+    public static class NextDoorAPICommentToPostOrReplyToComment extends NextDoorAPIRequest<CommentToPostOrReplyToComment> implements NextDoorAPICreate<CommentToPostOrReplyToComment> {
+        public NextDoorAPICommentToPostOrReplyToComment(NextDoorAPIAuth nextDoorAPIAuth) {
+            super(CommentToPostOrReplyToComment.class, nextDoorAPIAuth);
+        }
+
+        public NextDoorAPICommentToPostOrReplyToComment setPostOrCommentID(String postOrCommentID) {
+            this.setParamInternal("id", postOrCommentID);
+
+            return this;
+        }
+
+        public NextDoorAPICommentToPostOrReplyToComment setBodyText(String bodyText) {
+            this.setParamInternal("body_text", bodyText);
+
+            return this;
+        }
+
+        public NextDoorAPICommentToPostOrReplyToComment setMediaAttachments(Collection<String> mediaAttachments) {
+            this.setParamInternal("media_attachments", mediaAttachments);
+
+            return this;
+        }
+
+        public NextDoorAPICommentToPostOrReplyToComment setParentCommentID(String parentCommentID) {
+            this.setParamInternal("parent_comment_id", parentCommentID);
+
+            return this;
+        }
+
+        public NextDoorAPICommentToPostOrReplyToComment setSecureProfileID(String secureProfileID) {
+            this.setParamInternal("secure_profile_id", secureProfileID);
+
+            return this;
+        }
+
+        @Override
+        public CommentToPostOrReplyToComment create() throws APIRequestException {
+            validateRequiredParams();
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            try {
+                return sendHttpRequest(HttpMethod.POST);
+            } catch (APIRequestException e) {
+                throw new CommentToAPostOrReplyToACommentExcepton("Cannot reply to a comment or create comment to post, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_EXTERNAL_API_URL + "comment/";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("id"), "id");
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("body_text"), "body_text");
+        }
+
+        public static class CommentToAPostOrReplyToACommentExcepton extends APIRequestException {
+            public CommentToAPostOrReplyToACommentExcepton() {
+            }
+
+            public CommentToAPostOrReplyToACommentExcepton(String s) {
+                super(s);
+            }
+
+            public CommentToAPostOrReplyToACommentExcepton(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public CommentToAPostOrReplyToACommentExcepton(Throwable throwable) {
+                super(throwable);
+            }
+
+            public CommentToAPostOrReplyToACommentExcepton(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
