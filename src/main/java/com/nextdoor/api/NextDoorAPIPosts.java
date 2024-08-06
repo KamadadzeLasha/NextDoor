@@ -4,10 +4,7 @@ import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.*;
-import com.nextdoor.share.NextDoorAPICreate;
-import com.nextdoor.share.NextDoorAPIGet;
-import com.nextdoor.share.NextDoorAPIRequest;
-import com.nextdoor.share.NextDoorAPIRequestNode;
+import com.nextdoor.share.*;
 import com.nextdoor.util.NextDoorUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -472,6 +469,95 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             }
 
             public CommentToAPostOrReplyToACommentExcepton(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
+    }
+
+    public static class NextDoorAPIEditPost extends NextDoorAPIRequest<Post> implements NextDoorAPIEdit<Post> {
+        public NextDoorAPIEditPost(Posts.ExistedPost existedPost) {
+            super(Post.class, existedPost.getNextDoorAPIAuth());
+
+            NextDoorUtil.ensureObjectNotNull(existedPost, "existedPost");
+            String postId = existedPost.getId();
+            NextDoorUtil.ensureStringNotNull(postId, "postId");
+            this.setParamInternal("id", postId);
+        }
+
+        public NextDoorAPIEditPost setBodyText(String bodyText) {
+            this.setParamInternal("body_text", bodyText);
+
+            return this;
+        }
+
+        public NextDoorAPIEditPost setHashtag(String hashtag) {
+            this.setParamInternal("hashtag", hashtag.trim());
+
+            return this;
+        }
+
+        public NextDoorAPIEditPost setLatitude(float latitude) {
+            this.setParamInternal("lat", latitude);
+
+            return this;
+        }
+
+        public NextDoorAPIEditPost setLongitude(float longitude) {
+            this.setParamInternal("lon", longitude);
+
+            return this;
+        }
+
+        public NextDoorAPIEditPost setSmartLinkUrl(String smartLinkUrl) {
+            this.setParamInternal("smartlink_url", smartLinkUrl);
+
+            return this;
+        }
+
+        public NextDoorAPIEditPost setSecureProfileID(String secureProfileID) {
+            this.setParamInternal("secure_profile_id", secureProfileID);
+
+            return this;
+        }
+
+        @Override
+        public Post edit() throws APIRequestException {
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            try {
+                return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new PostEditException("Cannot get all posts, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_EXTERNAL_API_URL + POST_PREFIX;
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        public static class PostEditException extends APIRequestException {
+            public PostEditException() {
+            }
+
+            public PostEditException(String s) {
+                super(s);
+            }
+
+            public PostEditException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public PostEditException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public PostEditException(String s, Throwable throwable, boolean b, boolean b1) {
                 super(s, throwable, b, b1);
             }
         }

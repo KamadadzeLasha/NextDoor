@@ -1,6 +1,8 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nextdoor.api.NextDoorAPIPosts;
+import com.nextdoor.share.NextDoorAPIRequestNode;
 
 import java.io.Serializable;
 import java.util.List;
@@ -45,7 +47,7 @@ public class Posts extends NextDoorModel implements Serializable {
                 '}';
     }
 
-    public static class ExistedPost implements Serializable {
+    public static class ExistedPost extends NextDoorAPIRequestNode implements Serializable {
         @JsonProperty("author_id")
         private long authorId;
 
@@ -186,6 +188,10 @@ public class Posts extends NextDoorModel implements Serializable {
                     ", media=" + media +
                     ", title='" + title + '\'' +
                     '}';
+        }
+
+        public NextDoorAPIPosts.NextDoorAPIEditPost editPost() {
+            return new NextDoorAPIPosts.NextDoorAPIEditPost(this);
         }
     }
 

@@ -59,6 +59,8 @@ public class Post extends NextDoorModel implements Serializable {
             throw new APIRequestException("No post with id " + postId + " found");
         }
 
-        return filteredPost.get(0);
+        Posts.ExistedPost existedPost = filteredPost.get(0);
+        existedPost.setNextDoorAPIAuth(nextDoorAPIAuth);
+        return existedPost;
     }
 }
