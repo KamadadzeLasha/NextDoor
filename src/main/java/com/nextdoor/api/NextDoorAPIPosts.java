@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Event;
+import com.nextdoor.models.FSF;
 import com.nextdoor.models.Post;
 import com.nextdoor.share.NextDoorAPICreate;
 import com.nextdoor.share.NextDoorAPIRequest;
@@ -224,12 +225,14 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
     }
 
     public static class NextDoorAPIEventPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
+        private static final String EVENT_NAME = "event";
+
         public NextDoorAPIEventPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
         }
 
         public NextDoorAPIEventPost setEvent(Event event) {
-            this.setParamInternal("event", event);
+            this.setParamInternal(EVENT_NAME, event);
 
             return this;
         }
@@ -296,7 +299,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
             try {
-                return sendHttpRequest(HttpMethod.POST, getPath() + "?event=" + ((Event) this.getParamInternal("event")).toUrlEncodedString());
+                return sendHttpRequest(HttpMethod.POST, getPath() + "?" + EVENT_NAME + "=" + ((Event) this.getParamInternal(EVENT_NAME)).toUrlEncodedString());
             } catch (APIRequestException | IllegalAccessException | UnsupportedEncodingException e) {
                 throw new PostCreationException("Cannot agency default post because of: " + e.getLocalizedMessage());
             }
@@ -304,39 +307,85 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
         @Override
         protected String getPath() {
-            return DEFAULT_FULL_EXTERNAL_API_URL + "post/event/";
+            return DEFAULT_FULL_EXTERNAL_API_URL + "post/" + EVENT_NAME + "/";
         }
 
         @Override
         protected void validateRequiredParams() {
             NextDoorUtil.ensureStringNotNull(this.getParamInternal("body_text"), "body_text");
-            Event event = (Event) this.getParamInternal("event");
-            NextDoorUtil.ensureObjectNotNull(event, "event");
+            Event event = (Event) this.getParamInternal(EVENT_NAME);
+            NextDoorUtil.ensureObjectNotNull(event, EVENT_NAME);
 
-            NextDoorUtil.ensureStringNotNull(event.getTitle(), "event.title");
-            NextDoorUtil.ensureStringNotNull(event.getDescription(), "event.description");
-            NextDoorUtil.ensureObjectNotNull(event.getStartTime(), "event.startTime");
+            NextDoorUtil.ensureStringNotNull(event.getTitle(), EVENT_NAME + ".title");
+            NextDoorUtil.ensureStringNotNull(event.getDescription(), EVENT_NAME + ".description");
+            NextDoorUtil.ensureObjectNotNull(event.getStartTime(), EVENT_NAME + ".startTime");
         }
     }
 
     public static class NextDoorAPIFSFPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
+        private static final String FSF_NAME = "fsf";
+
         public NextDoorAPIFSFPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
         }
 
+        public NextDoorAPIFSFPost setFSF(FSF fsf) {
+            this.setParamInternal(FSF_NAME, fsf);
+
+            return this;
+        }
+
+        public NextDoorAPIFSFPost setBodyText(String bodyText) {
+            this.setParamInternal("body_text", bodyText);
+
+            return this;
+        }
+
+        public NextDoorAPIFSFPost setHashtag(String hashtag) {
+            this.setParamInternal("hashtag", hashtag.trim());
+
+            return this;
+        }
+
+        public NextDoorAPIFSFPost setSmartLinkUrl(String smartLinkUrl) {
+            this.setParamInternal("smartlink_url", smartLinkUrl);
+
+            return this;
+        }
+
         @Override
         public Post create() throws APIRequestException {
-            return null;
+            validateRequiredParams();
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            try {
+                return sendHttpRequest(HttpMethod.POST, getPath() + "?" + FSF_NAME + "=" + ((FSF) this.getParamInternal(FSF_NAME)).toUrlEncodedString());
+            } catch (APIRequestException | IllegalAccessException | UnsupportedEncodingException e) {
+                throw new PostCreationException("Cannot agency default post because of: " + e.getLocalizedMessage());
+            }
         }
 
         @Override
         protected String getPath() {
-            return "";
+            return DEFAULT_FULL_EXTERNAL_API_URL + "post/" + FSF_NAME + "/";
         }
 
         @Override
         protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("body_text"), "body_text");
+            FSF fsf = (FSF) this.getParamInternal(FSF_NAME);
+            NextDoorUtil.ensureObjectNotNull(fsf, FSF_NAME);
 
+            NextDoorUtil.ensureStringNotNull(fsf.getTitle(), FSF_NAME + ".title");
+            NextDoorUtil.ensureStringNotNull(fsf.getDescription(), FSF_NAME + ".description");
+            NextDoorUtil.ensureStringNotNull(fsf.getPrice(), FSF_NAME + ".price");
+            NextDoorUtil.ensureStringNotNull(fsf.getCategory(), FSF_NAME + ".category");
+
+            Collection<String> imageAttachments = fsf.getImageAttachments();
+            NextDoorUtil.ensureObjectNotNull(imageAttachments, FSF_NAME + ".image_attachments");
+            if (imageAttachments.size() > 10) {
+                throw new RuntimeException("Cannot attach attachments to post, because there are more than 10 images");
+            }
         }
     }
 
