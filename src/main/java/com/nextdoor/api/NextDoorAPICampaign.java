@@ -154,15 +154,12 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
                     validateParams("user_status");
                     return sendHttpRequest(HttpMethod.POST, updateStatusPath(), ConversionType.JSON);
                 } else if (!this.containsParamInternal("user_status") && this.containsParamInternal("objective")) {
-                    validateParams("objective");
-                    validateParams("name");
+                    validateParams("objective", "name");
 
                     return sendHttpRequest(HttpMethod.POST, getPath(), ConversionType.JSON);
                 }
 
-                validateParams("objective");
-                validateParams("name");
-                validateParams("user_status");
+                validateParams("objective", "name", "user_status");
 
                 sendHttpRequest(HttpMethod.POST, getPath(), ConversionType.JSON);
                 return sendHttpRequest(HttpMethod.POST, updateStatusPath(), ConversionType.JSON);

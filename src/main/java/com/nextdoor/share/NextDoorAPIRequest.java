@@ -84,18 +84,22 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
     }
 
     protected T sendHttpRequest(HttpMethod httpMethod) throws APIRequestException {
-        switch (httpMethod) {
-            case GET:
-                return sendHttpRequest(httpMethod, getPath(), null);
-            case POST:
-                return sendHttpRequest(httpMethod, getPath(), ConversionType.JSON);
-            default:
-                throw new HTTPRequestNotSupportedException("HTTP request not supported: " + httpMethod);
-        }
+        return sendHttpRequest(httpMethod, getPath());
     }
 
     protected T sendHttpRequest(HttpMethod httpMethod, ConversionType conversionType) throws APIRequestException {
         return sendHttpRequest(httpMethod, getPath(), conversionType);
+    }
+
+    protected T sendHttpRequest(HttpMethod httpMethod, String path) throws APIRequestException {
+        switch (httpMethod) {
+            case GET:
+                return sendHttpRequest(httpMethod, path, null);
+            case POST:
+                return sendHttpRequest(httpMethod, path, ConversionType.JSON);
+            default:
+                throw new HTTPRequestNotSupportedException("HTTP request not supported: " + httpMethod);
+        }
     }
 
     protected T sendHttpRequest(HttpMethod httpMethod, String path, ConversionType conversionType) throws APIRequestException {
@@ -158,7 +162,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         return null;
     }
 
-    public String toUrlEncodedString(Map<String, Object> map) throws UnsupportedEncodingException {
+    private String toUrlEncodedString(Map<String, Object> map) throws UnsupportedEncodingException {
         StringJoiner stringJoiner = new StringJoiner("&");
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             stringJoiner.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue().toString(), "UTF-8"));

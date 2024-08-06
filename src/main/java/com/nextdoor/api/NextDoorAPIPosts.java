@@ -3,12 +3,14 @@ package com.nextdoor.api;
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.models.Event;
 import com.nextdoor.models.Post;
 import com.nextdoor.share.NextDoorAPICreate;
 import com.nextdoor.share.NextDoorAPIRequest;
 import com.nextdoor.share.NextDoorAPIRequestNode;
 import com.nextdoor.util.NextDoorUtil;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -129,19 +131,95 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             super(Post.class, nextDoorAPIAuth);
         }
 
+        public NextDoorAPIAgencyPost setBodyText(String bodyText) {
+            this.setParamInternal("body_text", bodyText);
+
+            return this;
+        }
+
+        public NextDoorAPIAgencyPost setHashtag(String hashtag) {
+            this.setParamInternal("hashtag", hashtag.trim());
+
+            return this;
+        }
+
+        public NextDoorAPIAgencyPost setMediaAttachments(String mediaAttachment) {
+            if (mediaAttachment == null || mediaAttachment.isEmpty()) {
+                this.getNextDoorAPIAuth().log("Cannot attach attachment to post");
+                return this;
+            }
+
+            return setMediaAttachments(Collections.singleton(mediaAttachment));
+        }
+
+        public NextDoorAPIAgencyPost setMediaAttachments(Collection<String> mediaAttachments) {
+            if (mediaAttachments == null || mediaAttachments.size() > 10) {
+                this.getNextDoorAPIAuth().log("Cannot attach attachments to post");
+
+                return this;
+            }
+
+            this.setParamInternal("media_attachments", mediaAttachments);
+            return this;
+        }
+
+        public NextDoorAPIAgencyPost setLatitude(float latitude) {
+            this.setParamInternal("lat", latitude);
+
+            return this;
+        }
+
+        public NextDoorAPIAgencyPost setLongitude(float longitude) {
+            this.setParamInternal("lon", longitude);
+
+            return this;
+        }
+
+        public NextDoorAPIAgencyPost setRadius(String radius) {
+            this.setParamInternal("radius", radius);
+
+            return this;
+        }
+
+        public NextDoorAPIAgencyPost setGroupIds(Collection<Integer> groupIds) {
+            if (groupIds == null) {
+                this.getNextDoorAPIAuth().log("Cannot attach attachments to post");
+
+                return this;
+            }
+
+            this.setParamInternal("group_ids", groupIds);
+
+            return this;
+        }
+
+        public NextDoorAPIAgencyPost setSmartLinkUrl(String smartLinkUrl) {
+            this.setParamInternal("smartlink_url", smartLinkUrl);
+
+            return this;
+        }
+
         @Override
         public Post create() throws APIRequestException {
-            return null;
+            validateRequiredParams();
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            try {
+                return sendHttpRequest(HttpMethod.POST);
+            } catch (APIRequestException e) {
+                throw new PostCreationException("Cannot agency default post because of: " + e.getLocalizedMessage());
+            }
         }
 
         @Override
         protected String getPath() {
-            return "";
+            return DEFAULT_FULL_EXTERNAL_API_URL + "post/create";
         }
 
         @Override
         protected void validateRequiredParams() {
-
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("body_text"), "body_text");
         }
     }
 
@@ -150,19 +228,94 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             super(Post.class, nextDoorAPIAuth);
         }
 
+        public NextDoorAPIEventPost setEvent(Event event) {
+            this.setParamInternal("event", event);
+
+            return this;
+        }
+
+        public NextDoorAPIEventPost setBodyText(String bodyText) {
+            this.setParamInternal("body_text", bodyText);
+
+            return this;
+        }
+
+        public NextDoorAPIEventPost setHashtag(String hashtag) {
+            this.setParamInternal("hashtag", hashtag.trim());
+
+            return this;
+        }
+
+        public NextDoorAPIEventPost setMediaAttachments(String mediaAttachment) {
+            if (mediaAttachment == null || mediaAttachment.isEmpty()) {
+                this.getNextDoorAPIAuth().log("Cannot attach attachment to post");
+                return this;
+            }
+
+            return setMediaAttachments(Collections.singleton(mediaAttachment));
+        }
+
+        public NextDoorAPIEventPost setMediaAttachments(Collection<String> mediaAttachments) {
+            if (mediaAttachments == null || mediaAttachments.size() > 10) {
+                this.getNextDoorAPIAuth().log("Cannot attach attachments to post");
+
+                return this;
+            }
+
+            this.setParamInternal("media_attachments", mediaAttachments);
+            return this;
+        }
+
+        public NextDoorAPIEventPost setLatitude(float latitude) {
+            this.setParamInternal("lat", latitude);
+
+            return this;
+        }
+
+        public NextDoorAPIEventPost setLongitude(float longitude) {
+            this.setParamInternal("lon", longitude);
+
+            return this;
+        }
+
+        public NextDoorAPIEventPost setRadius(String radius) {
+            this.setParamInternal("radius", radius);
+
+            return this;
+        }
+
+        public NextDoorAPIEventPost setSmartLinkUrl(String smartLinkUrl) {
+            this.setParamInternal("smartlink_url", smartLinkUrl);
+
+            return this;
+        }
+
         @Override
         public Post create() throws APIRequestException {
-            return null;
+            validateRequiredParams();
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            try {
+                return sendHttpRequest(HttpMethod.POST, getPath() + "?event=" + ((Event) this.getParamInternal("event")).toUrlEncodedString());
+            } catch (APIRequestException | IllegalAccessException | UnsupportedEncodingException e) {
+                throw new PostCreationException("Cannot agency default post because of: " + e.getLocalizedMessage());
+            }
         }
 
         @Override
         protected String getPath() {
-            return "";
+            return DEFAULT_FULL_EXTERNAL_API_URL + "post/event/";
         }
 
         @Override
         protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("body_text"), "body_text");
+            Event event = (Event) this.getParamInternal("event");
+            NextDoorUtil.ensureObjectNotNull(event, "event");
 
+            NextDoorUtil.ensureStringNotNull(event.getTitle(), "event.title");
+            NextDoorUtil.ensureStringNotNull(event.getDescription(), "event.description");
+            NextDoorUtil.ensureObjectNotNull(event.getStartTime(), "event.startTime");
         }
     }
 
