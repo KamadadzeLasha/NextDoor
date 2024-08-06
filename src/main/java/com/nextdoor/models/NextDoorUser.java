@@ -224,7 +224,7 @@ public class NextDoorUser extends NextDoorModel implements Serializable {
         }
 
         public static class AdvertisersWithAccess implements Serializable {
-            @JsonProperty("advertiser_id")
+            @JsonProperty("id")
             private String advertiserId;
 
             @JsonProperty("role")

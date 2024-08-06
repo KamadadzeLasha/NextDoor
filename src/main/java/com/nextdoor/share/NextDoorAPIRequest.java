@@ -1,7 +1,5 @@
 package com.nextdoor.share;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -10,6 +8,7 @@ import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.exception.HTTPRequestFailureException;
 import com.nextdoor.exception.HTTPRequestNotSupportedException;
+import com.nextdoor.internal.DataParser;
 import com.nextdoor.internal.HttpClient;
 import com.nextdoor.models.ConversionType;
 import com.nextdoor.models.NextDoorModel;
@@ -25,7 +24,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
     private Map<String, Object> params = new HashMap<>();
     private Map<String, String> additionalHeaders = new HashMap<>();
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final DataParser dataParser = new DataParser();
     private final HttpClient httpClient = new HttpClient();
     private final NextDoorAPIAuth nextDoorAPIAuth;
     private final Class<T> responseClass;
@@ -35,16 +34,12 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         this.nextDoorAPIAuth = nextDoorAPIAuth;
     }
 
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
-    }
-
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
     public NextDoorAPIAuth getNextDoorAPIAuth() {
         return nextDoorAPIAuth;
+    }
+
+    public void addHeader(String key, String value) {
+        this.additionalHeaders.put(key, value);
     }
 
     protected void setParamInternal(String param, Object value) {
@@ -69,10 +64,6 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
 
     protected Object getParamInternal(String param) {
         return this.params.get(param);
-    }
-
-    public void addHeader(String key, String value) {
-        this.additionalHeaders.put(key, value);
     }
 
     protected void addHeader(Map<String, String> additionalHeaders) {
@@ -125,9 +116,15 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         nextDoorAPIAuth.log("Ended successfully, converting to JSON {0}", responseJsonAsString);
         nextDoorAPIAuth.log("======================= NEXTDOOR API {0} ENDED SUCCESSFULLY =======================", httpMethod);
         try {
-            return objectMapper.readValue(responseJsonAsString, responseClass);
-        } catch (JsonProcessingException e) {
+            return dataParser.parseToObject(responseJsonAsString, responseClass);
+        } catch (DataParser.DataParserException e) {
             throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + e.getLocalizedMessage());
+        }
+    }
+
+    protected void validateParams(String... params) {
+        for (String param : params) {
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal(param), param);
         }
     }
 
@@ -143,7 +140,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
                 default:
                     throw new RuntimeException("Unsupported HTTP method");
             }
-        } catch (UnirestException | JsonProcessingException | RuntimeException | UnsupportedEncodingException e) {
+        } catch (UnirestException | RuntimeException | UnsupportedEncodingException | DataParser.DataParserException e) {
             throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + e.getLocalizedMessage());
         }
     }
@@ -152,12 +149,12 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         this.additionalHeaders.putAll(httpClient.getHeadersByConversionType(conversionType));
     }
 
-    private String getBody(ConversionType conversionType) throws JsonProcessingException, UnsupportedEncodingException {
+    private String getBody(ConversionType conversionType) throws UnsupportedEncodingException, DataParser.DataParserException {
         switch (conversionType) {
             case URL_ENCODED:
                 return this.toUrlEncodedString(this.params);
             case JSON:
-                return this.objectMapper.writeValueAsString(this.params);
+                return this.dataParser.convertObjectToJsonString(this.params);
         }
         return null;
     }
@@ -168,12 +165,6 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
             stringJoiner.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
         }
         return stringJoiner.toString();
-    }
-
-    protected void validateParams(String... params) {
-        for (String param : params) {
-            NextDoorUtil.ensureObjectNotNull(this.getParamInternal(param), param);
-        }
     }
 
     protected abstract String getPath();
