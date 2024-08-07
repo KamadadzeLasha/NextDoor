@@ -42,7 +42,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         this.additionalHeaders.put(key, value);
     }
 
-    protected void setParamInternal(String param, Object value) {
+    public void setParamInternal(String param, Object value) {
         this.params.put(param, value);
     }
 
