@@ -44,6 +44,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         return new NextDoorAPIGetAllPosts(this.getNextDoorAPIAuth());
     }
 
+    @Deprecated
     public NextDoorAPIGetAgencyBoundaries getAgencyBoundaries() {
         return new NextDoorAPIGetAgencyBoundaries(this.getNextDoorAPIAuth());
     }
@@ -81,6 +82,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
+    @Deprecated
     public static class NextDoorAPIGetAgencyBoundaries extends NextDoorAPIRequest<AgencyBoundaries> implements NextDoorAPIGet<AgencyBoundaries> {
         public NextDoorAPIGetAgencyBoundaries(NextDoorAPIAuth nextDoorAPIAuth) {
             super(AgencyBoundaries.class, nextDoorAPIAuth);
