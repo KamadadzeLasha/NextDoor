@@ -87,6 +87,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
             case GET:
                 return sendHttpRequest(httpMethod, path, null);
             case POST:
+            case PUT:
                 return sendHttpRequest(httpMethod, path, ConversionType.JSON);
             default:
                 throw new HTTPRequestNotSupportedException("HTTP request not supported: " + httpMethod);
@@ -131,6 +132,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
     private HttpResponse<JsonNode> getHttpResponseJsonNode(HttpMethod httpMethod, String path, ConversionType conversionType) throws HTTPRequestFailureException {
         try {
             switch (httpMethod) {
+                case PUT:
                 case POST: {
                     addAdditionalPostRequestHeaders(conversionType);
                     return httpClient.sendPostRequest(path, getBody(conversionType), this.additionalHeaders);
@@ -140,7 +142,8 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
                 default:
                     throw new RuntimeException("Unsupported HTTP method");
             }
-        } catch (UnirestException | RuntimeException | UnsupportedEncodingException | DataParser.DataParserException e) {
+        } catch (UnirestException | RuntimeException | UnsupportedEncodingException |
+                 DataParser.DataParserException e) {
             throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + e.getLocalizedMessage());
         }
     }

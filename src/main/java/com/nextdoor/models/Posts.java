@@ -2,7 +2,9 @@ package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nextdoor.api.NextDoorAPIPosts;
+import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.share.NextDoorAPIRequestNode;
+import com.nextdoor.util.NextDoorUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -195,7 +197,7 @@ public class Posts extends NextDoorModel implements Serializable {
         }
     }
 
-    public static class Comment implements Serializable {
+    public static class Comment extends NextDoorAPIRequestNode implements Serializable {
         @JsonProperty("id")
         private long id;
 
@@ -258,6 +260,15 @@ public class Posts extends NextDoorModel implements Serializable {
                     ", creationDateEpochSeconds=" + creationDateEpochSeconds +
                     ", parentCommentId=" + parentCommentId +
                     '}';
+        }
+
+        public static NextDoorAPIPosts.NextDoorAPIEditComment editComment(String commentId, NextDoorAPIAuth nextDoorAPIAuth) {
+            NextDoorUtil.ensureStringNotNull(commentId, "commentId");
+
+            Comment comment = new Comment();
+            comment.setId(Long.parseLong(commentId));
+            comment.setNextDoorAPIAuth(nextDoorAPIAuth);
+            return new NextDoorAPIPosts.NextDoorAPIEditComment(comment);
         }
     }
 

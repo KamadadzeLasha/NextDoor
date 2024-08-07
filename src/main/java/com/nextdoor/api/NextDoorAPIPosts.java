@@ -563,6 +563,67 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
+    public static class NextDoorAPIEditComment extends NextDoorAPIRequest<EditedComment> implements NextDoorAPIEdit<EditedComment> {
+        public NextDoorAPIEditComment(Posts.Comment comment) {
+            super(EditedComment.class, comment.getNextDoorAPIAuth());
+        }
+
+        public NextDoorAPIEditComment setBodyText(String bodyText) {
+            this.setParamInternal("body_text", bodyText);
+
+            return this;
+        }
+
+        public NextDoorAPIEditComment setSecureProfileID(String secureProfileID) {
+            this.setParamInternal("secure_profile_id", secureProfileID);
+
+            return this;
+        }
+
+        @Override
+        public EditedComment edit() throws APIRequestException {
+            validateRequiredParams();
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            try {
+                return sendHttpRequest(HttpMethod.PUT, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new CommentEditException("Cannot edit comment, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_EXTERNAL_API_URL + "comment/";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("body_text"), "body_text");
+        }
+
+        public static class CommentEditException extends APIRequestException {
+            public CommentEditException() {
+            }
+
+            public CommentEditException(String s) {
+                super(s);
+            }
+
+            public CommentEditException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public CommentEditException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public CommentEditException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
+    }
+
     public static class NextDoorAPIGetAllPosts extends NextDoorAPIRequest<Posts> implements NextDoorAPIGet<Posts> {
         public NextDoorAPIGetAllPosts(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Posts.class, nextDoorAPIAuth);
