@@ -4,14 +4,16 @@ import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.*;
-import com.nextdoor.share.interfaces.NextDoorAPIExecute;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.share.interfaces.NextDoorAPIExecuteList;
 import com.nextdoor.util.NextDoorUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import static com.nextdoor.constants.DefaultURLS.DEFAULT_FULL_EXTERNAL_API_URL;
 
@@ -85,7 +87,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
     }
 
     @Deprecated
-    public static class NextDoorAPIGetAgencyBoundaries extends NextDoorAPIRequest<AgencyBoundaries> implements NextDoorAPIExecute<AgencyBoundaries> {
+    public static class NextDoorAPIGetAgencyBoundaries extends NextDoorAPIRequest<AgencyBoundaries> implements NextDoorAPIExecuteList<AgencyBoundaries> {
         public NextDoorAPIGetAgencyBoundaries(NextDoorAPIAuth nextDoorAPIAuth) {
             super(AgencyBoundaries.class, nextDoorAPIAuth);
         }
@@ -106,14 +108,14 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public AgencyBoundaries execute() throws APIRequestException {
+        public List<AgencyBoundaries> execute() throws APIRequestException {
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             checkAndReplaceOrAddParameter("show_geometries", "true");
             checkAndReplaceOrAddParameter("enable_pagination", "true");
 
             try {
-                return sendHttpRequest(HttpMethod.GET);
+                return sendHttpRequestForList(HttpMethod.GET, getPath(), ConversionType.NONE);
             } catch (APIRequestException e) {
                 throw new AgencyBoundariesGetException("Cannot get agency boundaries, because of: " + e.getLocalizedMessage());
             }
