@@ -24,20 +24,20 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         super(nextDoorAPIAuth);
     }
 
-    public NextDoorAPIDefaultPost createDefaultPost() {
-        return new NextDoorAPIDefaultPost(this.getNextDoorAPIAuth());
+    public NextDoorAPICreateDefaultPost createDefaultPost() {
+        return new NextDoorAPICreateDefaultPost(this.getNextDoorAPIAuth());
     }
 
-    public NextDoorAPIAgencyPost createAgencyPost() {
-        return new NextDoorAPIAgencyPost(this.getNextDoorAPIAuth());
+    public NextDoorAPICreateAgencyPost createAgencyPost() {
+        return new NextDoorAPICreateAgencyPost(this.getNextDoorAPIAuth());
     }
 
-    public NextDoorAPIEventPost createEventPost() {
-        return new NextDoorAPIEventPost(this.getNextDoorAPIAuth());
+    public NextDoorAPICreateEventPost createEventPost() {
+        return new NextDoorAPICreateEventPost(this.getNextDoorAPIAuth());
     }
 
-    public NextDoorAPIFSFPost createFSFPost() {
-        return new NextDoorAPIFSFPost(this.getNextDoorAPIAuth());
+    public NextDoorAPICreateFSFPost createFSFPost() {
+        return new NextDoorAPICreateFSFPost(this.getNextDoorAPIAuth());
     }
 
     public NextDoorAPICommentToPostOrReplyToComment commentToPostOrReplyToComment() {
@@ -48,24 +48,57 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         return new NextDoorAPIGetAllPosts(this.getNextDoorAPIAuth());
     }
 
-    public static class NextDoorAPIDefaultPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
-        public NextDoorAPIDefaultPost(NextDoorAPIAuth nextDoorAPIAuth) {
+    public static class NextDoorAPIGetAllPosts extends NextDoorAPIRequest<Posts> implements NextDoorAPIGet<Posts> {
+        public NextDoorAPIGetAllPosts(NextDoorAPIAuth nextDoorAPIAuth) {
+            super(Posts.class, nextDoorAPIAuth);
+        }
+
+        public NextDoorAPIGetAllPosts setSecureProfileID(String secureProfileID) {
+            this.addHeader("secure_profile_id", secureProfileID);
+
+            return this;
+        }
+
+        @Override
+        public Posts get() throws APIRequestException {
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new PostException("Cannot get all posts, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_EXTERNAL_API_URL + POST_PREFIX;
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+    }
+
+    public static class NextDoorAPICreateDefaultPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
+        public NextDoorAPICreateDefaultPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
         }
 
-        public NextDoorAPIDefaultPost setBodyText(String bodyText) {
+        public NextDoorAPICreateDefaultPost setBodyText(String bodyText) {
             this.setParamInternal("body_text", bodyText);
 
             return this;
         }
 
-        public NextDoorAPIDefaultPost setHashtag(String hashtag) {
+        public NextDoorAPICreateDefaultPost setHashtag(String hashtag) {
             this.setParamInternal("hashtag", hashtag.trim());
 
             return this;
         }
 
-        public NextDoorAPIDefaultPost setMediaAttachments(String mediaAttachment) {
+        public NextDoorAPICreateDefaultPost setMediaAttachments(String mediaAttachment) {
             if (mediaAttachment == null || mediaAttachment.isEmpty()) {
                 this.getNextDoorAPIAuth().log("Cannot attach attachment to " + POST_PREFIX);
                 return this;
@@ -74,7 +107,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             return setMediaAttachments(Collections.singleton(mediaAttachment));
         }
 
-        public NextDoorAPIDefaultPost setMediaAttachments(Collection<String> mediaAttachments) {
+        public NextDoorAPICreateDefaultPost setMediaAttachments(Collection<String> mediaAttachments) {
             if (mediaAttachments == null || mediaAttachments.size() > 10) {
                 this.getNextDoorAPIAuth().log("Cannot attach attachments to " + POST_PREFIX);
 
@@ -85,25 +118,25 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             return this;
         }
 
-        public NextDoorAPIDefaultPost setLatitude(float latitude) {
+        public NextDoorAPICreateDefaultPost setLatitude(float latitude) {
             this.setParamInternal("lat", latitude);
 
             return this;
         }
 
-        public NextDoorAPIDefaultPost setLongitude(float longitude) {
+        public NextDoorAPICreateDefaultPost setLongitude(float longitude) {
             this.setParamInternal("lon", longitude);
 
             return this;
         }
 
-        public NextDoorAPIDefaultPost setSmartLinkUrl(String smartLinkUrl) {
+        public NextDoorAPICreateDefaultPost setSmartLinkUrl(String smartLinkUrl) {
             this.setParamInternal("smartlink_url", smartLinkUrl);
 
             return this;
         }
 
-        public NextDoorAPIDefaultPost setSecureProfileID(String secureProfileID) {
+        public NextDoorAPICreateDefaultPost setSecureProfileID(String secureProfileID) {
             this.setParamInternal("secure_profile_id", secureProfileID);
 
             return this;
@@ -133,24 +166,24 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIAgencyPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
-        public NextDoorAPIAgencyPost(NextDoorAPIAuth nextDoorAPIAuth) {
+    public static class NextDoorAPICreateAgencyPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
+        public NextDoorAPICreateAgencyPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
         }
 
-        public NextDoorAPIAgencyPost setBodyText(String bodyText) {
+        public NextDoorAPICreateAgencyPost setBodyText(String bodyText) {
             this.setParamInternal("body_text", bodyText);
 
             return this;
         }
 
-        public NextDoorAPIAgencyPost setHashtag(String hashtag) {
+        public NextDoorAPICreateAgencyPost setHashtag(String hashtag) {
             this.setParamInternal("hashtag", hashtag.trim());
 
             return this;
         }
 
-        public NextDoorAPIAgencyPost setMediaAttachments(String mediaAttachment) {
+        public NextDoorAPICreateAgencyPost setMediaAttachments(String mediaAttachment) {
             if (mediaAttachment == null || mediaAttachment.isEmpty()) {
                 this.getNextDoorAPIAuth().log("Cannot attach attachment to " + POST_PREFIX);
                 return this;
@@ -159,7 +192,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             return setMediaAttachments(Collections.singleton(mediaAttachment));
         }
 
-        public NextDoorAPIAgencyPost setMediaAttachments(Collection<String> mediaAttachments) {
+        public NextDoorAPICreateAgencyPost setMediaAttachments(Collection<String> mediaAttachments) {
             if (mediaAttachments == null || mediaAttachments.size() > 10) {
                 this.getNextDoorAPIAuth().log("Cannot attach attachments to " + POST_PREFIX);
 
@@ -170,25 +203,25 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             return this;
         }
 
-        public NextDoorAPIAgencyPost setLatitude(float latitude) {
+        public NextDoorAPICreateAgencyPost setLatitude(float latitude) {
             this.setParamInternal("lat", latitude);
 
             return this;
         }
 
-        public NextDoorAPIAgencyPost setLongitude(float longitude) {
+        public NextDoorAPICreateAgencyPost setLongitude(float longitude) {
             this.setParamInternal("lon", longitude);
 
             return this;
         }
 
-        public NextDoorAPIAgencyPost setRadius(String radius) {
+        public NextDoorAPICreateAgencyPost setRadius(String radius) {
             this.setParamInternal("radius", radius);
 
             return this;
         }
 
-        public NextDoorAPIAgencyPost setGroupIDs(Collection<Integer> groupIDs) {
+        public NextDoorAPICreateAgencyPost setGroupIDs(Collection<Integer> groupIDs) {
             if (groupIDs == null) {
                 this.getNextDoorAPIAuth().log("Cannot attach attachments to " + POST_PREFIX);
 
@@ -200,7 +233,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             return this;
         }
 
-        public NextDoorAPIAgencyPost setSmartLinkUrl(String smartLinkUrl) {
+        public NextDoorAPICreateAgencyPost setSmartLinkUrl(String smartLinkUrl) {
             this.setParamInternal("smartlink_url", smartLinkUrl);
 
             return this;
@@ -230,32 +263,32 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIEventPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
+    public static class NextDoorAPICreateEventPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
         private static final String EVENT_NAME = "event";
 
-        public NextDoorAPIEventPost(NextDoorAPIAuth nextDoorAPIAuth) {
+        public NextDoorAPICreateEventPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
         }
 
-        public NextDoorAPIEventPost setEvent(Event event) {
+        public NextDoorAPICreateEventPost setEvent(Event event) {
             this.setParamInternal(EVENT_NAME, event);
 
             return this;
         }
 
-        public NextDoorAPIEventPost setBodyText(String bodyText) {
+        public NextDoorAPICreateEventPost setBodyText(String bodyText) {
             this.setParamInternal("body_text", bodyText);
 
             return this;
         }
 
-        public NextDoorAPIEventPost setHashtag(String hashtag) {
+        public NextDoorAPICreateEventPost setHashtag(String hashtag) {
             this.setParamInternal("hashtag", hashtag.trim());
 
             return this;
         }
 
-        public NextDoorAPIEventPost setMediaAttachments(String mediaAttachment) {
+        public NextDoorAPICreateEventPost setMediaAttachments(String mediaAttachment) {
             if (mediaAttachment == null || mediaAttachment.isEmpty()) {
                 this.getNextDoorAPIAuth().log("Cannot attach attachment to " + POST_PREFIX);
                 return this;
@@ -264,7 +297,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             return setMediaAttachments(Collections.singleton(mediaAttachment));
         }
 
-        public NextDoorAPIEventPost setMediaAttachments(Collection<String> mediaAttachments) {
+        public NextDoorAPICreateEventPost setMediaAttachments(Collection<String> mediaAttachments) {
             if (mediaAttachments == null || mediaAttachments.size() > 10) {
                 this.getNextDoorAPIAuth().log("Cannot attach attachments to " + POST_PREFIX);
 
@@ -275,25 +308,25 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             return this;
         }
 
-        public NextDoorAPIEventPost setLatitude(float latitude) {
+        public NextDoorAPICreateEventPost setLatitude(float latitude) {
             this.setParamInternal("lat", latitude);
 
             return this;
         }
 
-        public NextDoorAPIEventPost setLongitude(float longitude) {
+        public NextDoorAPICreateEventPost setLongitude(float longitude) {
             this.setParamInternal("lon", longitude);
 
             return this;
         }
 
-        public NextDoorAPIEventPost setRadius(String radius) {
+        public NextDoorAPICreateEventPost setRadius(String radius) {
             this.setParamInternal("radius", radius);
 
             return this;
         }
 
-        public NextDoorAPIEventPost setSmartLinkUrl(String smartLinkUrl) {
+        public NextDoorAPICreateEventPost setSmartLinkUrl(String smartLinkUrl) {
             this.setParamInternal("smartlink_url", smartLinkUrl);
 
             return this;
@@ -328,32 +361,32 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIFSFPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
+    public static class NextDoorAPICreateFSFPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
         private static final String FSF_NAME = "fsf";
 
-        public NextDoorAPIFSFPost(NextDoorAPIAuth nextDoorAPIAuth) {
+        public NextDoorAPICreateFSFPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
         }
 
-        public NextDoorAPIFSFPost setFSF(FSF fsf) {
+        public NextDoorAPICreateFSFPost setFSF(FSF fsf) {
             this.setParamInternal(FSF_NAME, fsf);
 
             return this;
         }
 
-        public NextDoorAPIFSFPost setBodyText(String bodyText) {
+        public NextDoorAPICreateFSFPost setBodyText(String bodyText) {
             this.setParamInternal("body_text", bodyText);
 
             return this;
         }
 
-        public NextDoorAPIFSFPost setHashtag(String hashtag) {
+        public NextDoorAPICreateFSFPost setHashtag(String hashtag) {
             this.setParamInternal("hashtag", hashtag.trim());
 
             return this;
         }
 
-        public NextDoorAPIFSFPost setSmartLinkUrl(String smartLinkUrl) {
+        public NextDoorAPICreateFSFPost setSmartLinkUrl(String smartLinkUrl) {
             this.setParamInternal("smartlink_url", smartLinkUrl);
 
             return this;
@@ -564,8 +597,14 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
     }
 
     public static class NextDoorAPIEditComment extends NextDoorAPIRequest<EditedComment> implements NextDoorAPIEdit<EditedComment> {
+        public NextDoorAPIEditComment() {
+            super(EditedComment.class, NextDoorAPIAuth.defaultNextDoorAPIAuth());
+        }
+
         public NextDoorAPIEditComment(Posts.Comment comment) {
             super(EditedComment.class, comment.getNextDoorAPIAuth());
+
+            this.setParamInternal("id", comment.getId());
         }
 
         public NextDoorAPIEditComment setBodyText(String bodyText) {
@@ -624,25 +663,33 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIGetAllPosts extends NextDoorAPIRequest<Posts> implements NextDoorAPIGet<Posts> {
-        public NextDoorAPIGetAllPosts(NextDoorAPIAuth nextDoorAPIAuth) {
-            super(Posts.class, nextDoorAPIAuth);
+    public static class NextDoorAPIDeletePost extends NextDoorAPIRequest<DeletedModel> implements NextDoorAPIDelete<DeletedModel> {
+        private Posts.ExistedPost existedPost;
+
+        public NextDoorAPIDeletePost() {
+            super(DeletedModel.class, NextDoorAPIAuth.defaultNextDoorAPIAuth());
         }
 
-        public NextDoorAPIGetAllPosts setSecureProfileID(String secureProfileID) {
-            this.addHeader("secure_profile_id", secureProfileID);
+        public NextDoorAPIDeletePost(Posts.ExistedPost existedPost) {
+            super(DeletedModel.class, existedPost.getNextDoorAPIAuth());
+            this.existedPost = existedPost;
+        }
+
+        public NextDoorAPIDeletePost setSecureProfileID(String secureProfileID) {
+            this.setParamInternal("secure_profile_id", secureProfileID);
 
             return this;
         }
 
         @Override
-        public Posts get() throws APIRequestException {
+        public DeletedModel delete() throws APIRequestException {
+            validateRequiredParams();
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             try {
-                return sendHttpRequest(HttpMethod.GET);
+                return sendHttpRequest(HttpMethod.DELETE, getPath() + "?id=" + this.existedPost.getId());
             } catch (APIRequestException e) {
-                throw new PostException("Cannot get all posts, because of: " + e.getLocalizedMessage());
+                throw new PostDeleteException("Cannot delete post, because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -653,7 +700,28 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
         @Override
         protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("secure_profile_id"), "secure_profile_id");
+        }
 
+        public static class PostDeleteException extends APIRequestException {
+            public PostDeleteException() {
+            }
+
+            public PostDeleteException(String s) {
+                super(s);
+            }
+
+            public PostDeleteException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public PostDeleteException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public PostDeleteException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
         }
     }
 

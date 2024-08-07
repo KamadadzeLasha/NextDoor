@@ -86,6 +86,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         switch (httpMethod) {
             case GET:
                 return sendHttpRequest(httpMethod, path, null);
+            case DELETE:
             case POST:
             case PUT:
                 return sendHttpRequest(httpMethod, path, ConversionType.JSON);
@@ -132,6 +133,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
     private HttpResponse<JsonNode> getHttpResponseJsonNode(HttpMethod httpMethod, String path, ConversionType conversionType) throws HTTPRequestFailureException {
         try {
             switch (httpMethod) {
+                case DELETE:
                 case PUT:
                 case POST: {
                     addAdditionalPostRequestHeaders(conversionType);

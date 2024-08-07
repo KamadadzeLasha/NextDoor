@@ -195,6 +195,10 @@ public class Posts extends NextDoorModel implements Serializable {
         public NextDoorAPIPosts.NextDoorAPIEditPost editPost() {
             return new NextDoorAPIPosts.NextDoorAPIEditPost(this);
         }
+
+        public NextDoorAPIPosts.NextDoorAPIDeletePost deletePost() {
+            return new NextDoorAPIPosts.NextDoorAPIDeletePost(this);
+        }
     }
 
     public static class Comment extends NextDoorAPIRequestNode implements Serializable {
