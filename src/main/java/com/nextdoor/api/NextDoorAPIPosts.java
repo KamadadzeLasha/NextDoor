@@ -87,31 +87,26 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         public NextDoorAPIGetAgencyBoundaries setParameterShowGeometries(Boolean showGeometries) {
-            if (showGeometries == null) {
-                showGeometries = true;
-            }
-
-            this.addQueryString("show_geometries", showGeometries.toString());
+            this.addParameters("show_geometries", showGeometries.toString());
             return this;
         }
 
         public NextDoorAPIGetAgencyBoundaries setParameterEnablePagination(Boolean enablePagination) {
-            if (enablePagination == null) {
-                enablePagination = true;
-            }
-
-            this.addQueryString("enable_pagination", enablePagination.toString());
+            this.addParameters("enable_pagination", enablePagination.toString());
             return this;
         }
 
         public NextDoorAPIGetAgencyBoundaries setParameterAfter(String after) {
-            this.addQueryString("after", after);
+            this.addParameters("after", after);
             return this;
         }
 
         @Override
         public AgencyBoundaries get() throws APIRequestException {
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            checkAndReplaceOrAddParameter("show_geometries", "true");
+            checkAndReplaceOrAddParameter("enable_pagination", "true");
 
             try {
                 return sendHttpRequest(HttpMethod.GET);

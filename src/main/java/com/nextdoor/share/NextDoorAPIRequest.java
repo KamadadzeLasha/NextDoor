@@ -12,19 +12,10 @@ import com.nextdoor.internal.DataParser;
 import com.nextdoor.internal.HttpClient;
 import com.nextdoor.models.ConversionType;
 import com.nextdoor.models.NextDoorModel;
-import com.nextdoor.util.NextDoorUtil;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
 
-public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
-    private Map<String, Object> params = new HashMap<>();
-    private Map<String, String> additionalHeaders = new HashMap<>();
-    private Map<String, String> queryString = new HashMap<>();
-
+public abstract class NextDoorAPIRequest<T extends NextDoorModel> extends NextDoorAPIRequestData {
     private final DataParser dataParser = new DataParser();
     private final HttpClient httpClient = new HttpClient();
     private final NextDoorAPIAuth nextDoorAPIAuth;
@@ -37,54 +28,6 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
 
     public NextDoorAPIAuth getNextDoorAPIAuth() {
         return nextDoorAPIAuth;
-    }
-
-    public void addHeader(String key, String value) {
-        this.additionalHeaders.put(key, value);
-    }
-
-    public void setParamInternal(String param, Object value) {
-        this.params.put(param, value);
-    }
-
-    protected void setParamInternal(Map<String, Object> params) {
-        this.params.putAll(params);
-    }
-
-    protected void writeParamInternal(Map<String, Object> params) {
-        this.params = params;
-    }
-
-    protected boolean containsParamInternal(String param) {
-        return this.params.containsKey(param);
-    }
-
-    protected void removeParamInternal(String param) {
-        this.params.remove(param);
-    }
-
-    protected Object getParamInternal(String param) {
-        return this.params.get(param);
-    }
-
-    protected void addHeader(Map<String, String> additionalHeaders) {
-        this.additionalHeaders.putAll(additionalHeaders);
-    }
-
-    protected void writeHeader(Map<String, String> additionalHeaders) {
-        this.additionalHeaders = additionalHeaders;
-    }
-
-    protected void addQueryString(String key, String value) {
-        this.queryString.put(key, value);
-    }
-
-    protected void addQueryString(Map<String, String> queryString) {
-        this.queryString.putAll(queryString);
-    }
-
-    protected void writeQueryString(Map<String, String> queryString) {
-        this.queryString = queryString;
     }
 
     protected T sendHttpRequest(HttpMethod httpMethod) throws APIRequestException {
@@ -122,8 +65,7 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
 
         HttpResponse<JsonNode> response = getHttpResponseJsonNode(httpMethod, fullUrl, conversionType);
 
-        params.clear();
-        additionalHeaders.clear();
+        this.clearAllMaps();
 
         int status = response.getStatus();
         nextDoorAPIAuth.log("HTTP Request sended with status {0}", status);
@@ -144,12 +86,6 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         }
     }
 
-    protected void validateParams(String... params) {
-        for (String param : params) {
-            NextDoorUtil.ensureObjectNotNull(this.getParamInternal(param), param);
-        }
-    }
-
     private HttpResponse<JsonNode> getHttpResponseJsonNode(HttpMethod httpMethod, String path, ConversionType conversionType) throws HTTPRequestFailureException {
         try {
             switch (httpMethod) {
@@ -157,10 +93,10 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
                 case PUT:
                 case POST: {
                     addAdditionalPostRequestHeaders(conversionType);
-                    return httpClient.sendPostRequest(path, getBody(conversionType), this.additionalHeaders);
+                    return httpClient.sendPostRequest(path, getBody(conversionType), this.getAdditionalHeaders());
                 }
                 case GET:
-                    return httpClient.sendGetRequest(path, additionalHeaders);
+                    return httpClient.sendGetRequest(path, this.getAdditionalHeaders());
                 default:
                     throw new RuntimeException("Unsupported HTTP method");
             }
@@ -171,45 +107,18 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
     }
 
     private void addAdditionalPostRequestHeaders(ConversionType conversionType) {
-        this.additionalHeaders.putAll(httpClient.getHeadersByConversionType(conversionType));
+        this.getAdditionalHeaders().putAll(httpClient.getHeadersByConversionType(conversionType));
     }
 
     private String getBody(ConversionType conversionType) throws UnsupportedEncodingException, DataParser.DataParserException {
         switch (conversionType) {
             case URL_ENCODED:
-                return this.toUrlEncodedString(this.params);
+                return this.toUrlEncodedString(this.getParams());
             case JSON:
-                return this.dataParser.convertObjectToJsonString(this.params);
+                return this.dataParser.convertObjectToJsonString(this.getParams());
         }
+
         return null;
-    }
-
-    private String toUrlEncodedString(Map<String, Object> map) throws UnsupportedEncodingException {
-        StringJoiner stringJoiner = new StringJoiner("&");
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            stringJoiner.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
-        }
-        return stringJoiner.toString();
-    }
-
-    private String setQueryStrings(String url) throws UnsupportedEncodingException {
-        StringBuilder urlWithParams = new StringBuilder(url);
-
-        if (!this.queryString.isEmpty()) {
-            urlWithParams.append("?");
-            for (Map.Entry<String, String> entry : this.queryString.entrySet()) {
-                urlWithParams
-                        .append(URLEncoder.encode(entry.getKey(), "UTF-8"))
-                        .append("=")
-                        .append(URLEncoder.encode(entry.getValue(), "UTF-8"))
-                        .append("&");
-            }
-
-            // Remove the last '&' character
-            urlWithParams.deleteCharAt(urlWithParams.length() - 1);
-        }
-
-        return urlWithParams.toString();
     }
 
     protected abstract String getPath();
