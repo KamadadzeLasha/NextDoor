@@ -23,6 +23,7 @@ import java.util.StringJoiner;
 public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
     private Map<String, Object> params = new HashMap<>();
     private Map<String, String> additionalHeaders = new HashMap<>();
+    private Map<String, String> queryString = new HashMap<>();
 
     private final DataParser dataParser = new DataParser();
     private final HttpClient httpClient = new HttpClient();
@@ -74,6 +75,18 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         this.additionalHeaders = additionalHeaders;
     }
 
+    protected void addQueryString(String key, String value) {
+        this.queryString.put(key, value);
+    }
+
+    protected void addQueryString(Map<String, String> queryString) {
+        this.queryString.putAll(queryString);
+    }
+
+    protected void writeQueryString(Map<String, String> queryString) {
+        this.queryString = queryString;
+    }
+
     protected T sendHttpRequest(HttpMethod httpMethod) throws APIRequestException {
         return sendHttpRequest(httpMethod, getPath());
     }
@@ -95,12 +108,19 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
         }
     }
 
+    //TODO: Refactor method -- ??
     protected T sendHttpRequest(HttpMethod httpMethod, String path, ConversionType conversionType) throws APIRequestException {
         nextDoorAPIAuth.log("======================= NEXTDOOR API {0} START =======================", httpMethod);
 
-        nextDoorAPIAuth.log("Sending HTTP {0} request to {1}", httpMethod, path);
+        String fullUrl;
+        try {
+            fullUrl = setQueryStrings(path);
+        } catch (UnsupportedEncodingException e) {
+            throw new APIRequestException(e);
+        }
+        nextDoorAPIAuth.log("Sending HTTP {0} request to {1}", httpMethod, fullUrl);
 
-        HttpResponse<JsonNode> response = getHttpResponseJsonNode(httpMethod, path, conversionType);
+        HttpResponse<JsonNode> response = getHttpResponseJsonNode(httpMethod, fullUrl, conversionType);
 
         params.clear();
         additionalHeaders.clear();
@@ -170,6 +190,26 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> {
             stringJoiner.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
         }
         return stringJoiner.toString();
+    }
+
+    private String setQueryStrings(String url) throws UnsupportedEncodingException {
+        StringBuilder urlWithParams = new StringBuilder(url);
+
+        if (!this.queryString.isEmpty()) {
+            urlWithParams.append("?");
+            for (Map.Entry<String, String> entry : this.queryString.entrySet()) {
+                urlWithParams
+                        .append(URLEncoder.encode(entry.getKey(), "UTF-8"))
+                        .append("=")
+                        .append(URLEncoder.encode(entry.getValue(), "UTF-8"))
+                        .append("&");
+            }
+
+            // Remove the last '&' character
+            urlWithParams.deleteCharAt(urlWithParams.length() - 1);
+        }
+
+        return urlWithParams.toString();
     }
 
     protected abstract String getPath();

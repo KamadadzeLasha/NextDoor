@@ -44,6 +44,10 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         return new NextDoorAPIGetAllPosts(this.getNextDoorAPIAuth());
     }
 
+    public NextDoorAPIGetAgencyBoundaries getAgencyBoundaries() {
+        return new NextDoorAPIGetAgencyBoundaries(this.getNextDoorAPIAuth());
+    }
+
     public static class NextDoorAPIGetAllPosts extends NextDoorAPIRequest<Posts> implements NextDoorAPIGet<Posts> {
         public NextDoorAPIGetAllPosts(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Posts.class, nextDoorAPIAuth);
@@ -74,6 +78,77 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         @Override
         protected void validateRequiredParams() {
 
+        }
+    }
+
+    public static class NextDoorAPIGetAgencyBoundaries extends NextDoorAPIRequest<AgencyBoundaries> implements NextDoorAPIGet<AgencyBoundaries> {
+        public NextDoorAPIGetAgencyBoundaries(NextDoorAPIAuth nextDoorAPIAuth) {
+            super(AgencyBoundaries.class, nextDoorAPIAuth);
+        }
+
+        public NextDoorAPIGetAgencyBoundaries setParameterShowGeometries(Boolean showGeometries) {
+            if (showGeometries == null) {
+                showGeometries = true;
+            }
+
+            this.addQueryString("show_geometries", showGeometries.toString());
+            return this;
+        }
+
+        public NextDoorAPIGetAgencyBoundaries setParameterEnablePagination(Boolean enablePagination) {
+            if (enablePagination == null) {
+                enablePagination = true;
+            }
+
+            this.addQueryString("enable_pagination", enablePagination.toString());
+            return this;
+        }
+
+        public NextDoorAPIGetAgencyBoundaries setParameterAfter(String after) {
+            this.addQueryString("after", after);
+            return this;
+        }
+
+        @Override
+        public AgencyBoundaries get() throws APIRequestException {
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new AgencyBoundariesGetException("Cannot get agency boundaries, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_EXTERNAL_API_URL + "agency/boundary/";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        public static class AgencyBoundariesGetException extends APIRequestException {
+            public AgencyBoundariesGetException() {
+            }
+
+            public AgencyBoundariesGetException(String s) {
+                super(s);
+            }
+
+            public AgencyBoundariesGetException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AgencyBoundariesGetException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AgencyBoundariesGetException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
         }
     }
 
@@ -595,7 +670,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             super(s, throwable, b, b1);
         }
     }
-    
+
     public static class PostCreateException extends APIRequestException {
         public PostCreateException() {
         }
