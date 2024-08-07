@@ -6,9 +6,9 @@ import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Campaign;
 import com.nextdoor.models.ConversionType;
-import com.nextdoor.share.NextDoorAPIExecute;
-import com.nextdoor.share.NextDoorAPIRequest;
-import com.nextdoor.share.NextDoorAPIRequestNode;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.share.core.NextDoorAPIRequest;
+import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.util.NextDoorUtil;
 
 public class NextDoorAPICampaign extends NextDoorAPIRequestNode {

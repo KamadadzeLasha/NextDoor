@@ -6,9 +6,9 @@ import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Profile;
 import com.nextdoor.models.Profiles;
-import com.nextdoor.share.NextDoorAPIExecute;
-import com.nextdoor.share.NextDoorAPIRequest;
-import com.nextdoor.share.NextDoorAPIRequestNode;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.share.core.NextDoorAPIRequest;
+import com.nextdoor.share.core.NextDoorAPIRequestNode;
 
 public class NextDoorAPIProfile extends NextDoorAPIRequestNode {
     public NextDoorAPIProfile() {

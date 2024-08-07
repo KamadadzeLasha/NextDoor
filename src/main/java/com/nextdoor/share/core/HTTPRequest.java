@@ -1,4 +1,4 @@
-package com.nextdoor.share;
+package com.nextdoor.share.core;
 
 import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.HttpResponse;

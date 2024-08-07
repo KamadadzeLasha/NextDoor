@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nextdoor.api.NextDoorAPIComments;
 import com.nextdoor.api.NextDoorAPIPosts;
 import com.nextdoor.auth.NextDoorAPIAuth;
-import com.nextdoor.share.NextDoorAPIRequestNode;
+import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.util.NextDoorUtil;
 
 import java.io.Serializable;

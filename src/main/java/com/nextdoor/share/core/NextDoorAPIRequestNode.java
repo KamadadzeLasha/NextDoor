@@ -1,6 +1,7 @@
-package com.nextdoor.share;
+package com.nextdoor.share.core;
 
 import com.nextdoor.auth.NextDoorAPIAuth;
+import com.nextdoor.share.interfaces.NextDoorAPIResponse;
 import com.nextdoor.util.NextDoorUtil;
 
 public abstract class NextDoorAPIRequestNode implements NextDoorAPIResponse {

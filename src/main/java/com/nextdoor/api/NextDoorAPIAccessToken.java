@@ -6,8 +6,8 @@ import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.AccessToken;
 import com.nextdoor.models.ConversionType;
-import com.nextdoor.share.NextDoorAPIExecute;
-import com.nextdoor.share.NextDoorAPIRequest;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.util.NextDoorUtil;
 import org.apache.commons.codec.binary.Base64;
 

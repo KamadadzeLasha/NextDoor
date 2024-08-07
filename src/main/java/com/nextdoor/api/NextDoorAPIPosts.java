@@ -4,10 +4,9 @@ import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.*;
-import com.nextdoor.share.NextDoorAPICreate;
-import com.nextdoor.share.NextDoorAPIExecute;
-import com.nextdoor.share.NextDoorAPIRequest;
-import com.nextdoor.share.NextDoorAPIRequestNode;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.share.core.NextDoorAPIRequest;
+import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.util.NextDoorUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -237,7 +236,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPICreateAgencyPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
+    public static class NextDoorAPICreateAgencyPost extends NextDoorAPIRequest<Post> implements NextDoorAPIExecute<Post> {
         public NextDoorAPICreateAgencyPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
         }
@@ -311,7 +310,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Post create() throws APIRequestException {
+        public Post execute() throws APIRequestException {
             validateRequiredParams();
 
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
