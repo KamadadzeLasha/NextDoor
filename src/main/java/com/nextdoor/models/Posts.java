@@ -1,6 +1,7 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nextdoor.api.NextDoorAPIComments;
 import com.nextdoor.api.NextDoorAPIPosts;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.share.NextDoorAPIRequestNode;
@@ -266,22 +267,22 @@ public class Posts extends NextDoorModel implements Serializable {
                     '}';
         }
 
-        public static NextDoorAPIPosts.NextDoorAPIEditComment editComment(String commentId, NextDoorAPIAuth nextDoorAPIAuth) {
+        public static NextDoorAPIComments.NextDoorAPIEditComment editComment(String commentId, NextDoorAPIAuth nextDoorAPIAuth) {
             NextDoorUtil.ensureStringNotNull(commentId, "commentId");
 
             Comment comment = new Comment();
             comment.setId(Long.parseLong(commentId));
             comment.setNextDoorAPIAuth(nextDoorAPIAuth);
-            return new NextDoorAPIPosts.NextDoorAPIEditComment(comment);
+            return new NextDoorAPIComments.NextDoorAPIEditComment(comment);
         }
 
-        public static NextDoorAPIPosts.NextDoorAPIDeleteComment deleteComment(String commentId, NextDoorAPIAuth nextDoorAPIAuth) {
+        public static NextDoorAPIComments.NextDoorAPIDeleteComment deleteComment(String commentId, NextDoorAPIAuth nextDoorAPIAuth) {
             NextDoorUtil.ensureStringNotNull(commentId, "commentId");
 
             Comment comment = new Comment();
             comment.setId(Long.parseLong(commentId));
             comment.setNextDoorAPIAuth(nextDoorAPIAuth);
-            return new NextDoorAPIPosts.NextDoorAPIDeleteComment(comment);
+            return new NextDoorAPIComments.NextDoorAPIDeleteComment(comment);
         }
     }
 

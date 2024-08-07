@@ -40,10 +40,6 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         return new NextDoorAPICreateFSFPost(this.getNextDoorAPIAuth());
     }
 
-    public NextDoorAPICommentToPostOrReplyToComment commentToPostOrReplyToComment() {
-        return new NextDoorAPICommentToPostOrReplyToComment(this.getNextDoorAPIAuth());
-    }
-
     public NextDoorAPIGetAllPosts getAllPosts() {
         return new NextDoorAPIGetAllPosts(this.getNextDoorAPIAuth());
     }
@@ -66,7 +62,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
-                throw new PostException("Cannot get all posts, because of: " + e.getLocalizedMessage());
+                throw new PostCreateException("Cannot get all posts, because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -428,85 +424,6 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPICommentToPostOrReplyToComment extends NextDoorAPIRequest<CommentToPostOrReplyToComment> implements NextDoorAPICreate<CommentToPostOrReplyToComment> {
-        public NextDoorAPICommentToPostOrReplyToComment(NextDoorAPIAuth nextDoorAPIAuth) {
-            super(CommentToPostOrReplyToComment.class, nextDoorAPIAuth);
-        }
-
-        public NextDoorAPICommentToPostOrReplyToComment setPostOrCommentID(String postOrCommentID) {
-            this.setParamInternal("id", postOrCommentID);
-
-            return this;
-        }
-
-        public NextDoorAPICommentToPostOrReplyToComment setBodyText(String bodyText) {
-            this.setParamInternal("body_text", bodyText);
-
-            return this;
-        }
-
-        public NextDoorAPICommentToPostOrReplyToComment setMediaAttachments(Collection<String> mediaAttachments) {
-            this.setParamInternal("media_attachments", mediaAttachments);
-
-            return this;
-        }
-
-        public NextDoorAPICommentToPostOrReplyToComment setParentCommentID(String parentCommentID) {
-            this.setParamInternal("parent_comment_id", parentCommentID);
-
-            return this;
-        }
-
-        public NextDoorAPICommentToPostOrReplyToComment setSecureProfileID(String secureProfileID) {
-            this.setParamInternal("secure_profile_id", secureProfileID);
-
-            return this;
-        }
-
-        @Override
-        public CommentToPostOrReplyToComment create() throws APIRequestException {
-            validateRequiredParams();
-            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
-            try {
-                return sendHttpRequest(HttpMethod.POST);
-            } catch (APIRequestException e) {
-                throw new CommentToAPostOrReplyToACommentExcepton("Cannot reply to a comment or create comment to " + POST_PREFIX + ", because of: " + e.getLocalizedMessage());
-            }
-        }
-
-        @Override
-        protected String getPath() {
-            return DEFAULT_FULL_EXTERNAL_API_URL + "comment/";
-        }
-
-        @Override
-        protected void validateRequiredParams() {
-            NextDoorUtil.ensureStringNotNull(this.getParamInternal("id"), "id");
-            NextDoorUtil.ensureStringNotNull(this.getParamInternal("body_text"), "body_text");
-        }
-
-        public static class CommentToAPostOrReplyToACommentExcepton extends APIRequestException {
-            public CommentToAPostOrReplyToACommentExcepton() {
-            }
-
-            public CommentToAPostOrReplyToACommentExcepton(String s) {
-                super(s);
-            }
-
-            public CommentToAPostOrReplyToACommentExcepton(String s, Throwable throwable) {
-                super(s, throwable);
-            }
-
-            public CommentToAPostOrReplyToACommentExcepton(Throwable throwable) {
-                super(throwable);
-            }
-
-            public CommentToAPostOrReplyToACommentExcepton(String s, Throwable throwable, boolean b, boolean b1) {
-                super(s, throwable, b, b1);
-            }
-        }
-    }
-
     public static class NextDoorAPIEditPost extends NextDoorAPIRequest<Post> implements NextDoorAPIEdit<Post> {
         public NextDoorAPIEditPost(Posts.ExistedPost existedPost) {
             super(Post.class, existedPost.getNextDoorAPIAuth());
@@ -573,94 +490,6 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         protected void validateRequiredParams() {
 
         }
-
-        public static class PostEditException extends APIRequestException {
-            public PostEditException() {
-            }
-
-            public PostEditException(String s) {
-                super(s);
-            }
-
-            public PostEditException(String s, Throwable throwable) {
-                super(s, throwable);
-            }
-
-            public PostEditException(Throwable throwable) {
-                super(throwable);
-            }
-
-            public PostEditException(String s, Throwable throwable, boolean b, boolean b1) {
-                super(s, throwable, b, b1);
-            }
-        }
-    }
-
-    public static class NextDoorAPIEditComment extends NextDoorAPIRequest<EditedComment> implements NextDoorAPIEdit<EditedComment> {
-        public NextDoorAPIEditComment() {
-            super(EditedComment.class, NextDoorAPIAuth.defaultNextDoorAPIAuth());
-        }
-
-        public NextDoorAPIEditComment(Posts.Comment comment) {
-            super(EditedComment.class, comment.getNextDoorAPIAuth());
-
-            this.setParamInternal("id", comment.getId());
-        }
-
-        public NextDoorAPIEditComment setBodyText(String bodyText) {
-            this.setParamInternal("body_text", bodyText);
-
-            return this;
-        }
-
-        public NextDoorAPIEditComment setSecureProfileID(String secureProfileID) {
-            this.setParamInternal("secure_profile_id", secureProfileID);
-
-            return this;
-        }
-
-        @Override
-        public EditedComment edit() throws APIRequestException {
-            validateRequiredParams();
-            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
-
-            try {
-                return sendHttpRequest(HttpMethod.PUT, ConversionType.JSON);
-            } catch (APIRequestException e) {
-                throw new CommentEditException("Cannot edit comment, because of: " + e.getLocalizedMessage());
-            }
-        }
-
-        @Override
-        protected String getPath() {
-            return DEFAULT_FULL_EXTERNAL_API_URL + "comment/";
-        }
-
-        @Override
-        protected void validateRequiredParams() {
-            NextDoorUtil.ensureStringNotNull(this.getParamInternal("body_text"), "body_text");
-        }
-
-        public static class CommentEditException extends APIRequestException {
-            public CommentEditException() {
-            }
-
-            public CommentEditException(String s) {
-                super(s);
-            }
-
-            public CommentEditException(String s, Throwable throwable) {
-                super(s, throwable);
-            }
-
-            public CommentEditException(Throwable throwable) {
-                super(throwable);
-            }
-
-            public CommentEditException(String s, Throwable throwable, boolean b, boolean b1) {
-                super(s, throwable, b, b1);
-            }
-        }
     }
 
     public static class NextDoorAPIDeletePost extends NextDoorAPIRequest<DeletedModel> implements NextDoorAPIDelete<DeletedModel> {
@@ -689,7 +518,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.DELETE, getPath() + "?id=" + this.existedPost.getId());
             } catch (APIRequestException e) {
-                throw new DeleteException("Cannot delete post, because of: " + e.getLocalizedMessage());
+                throw new PostDeleteException("Cannot delete post, because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -704,85 +533,23 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIDeleteComment extends NextDoorAPIRequest<DeletedModel> implements NextDoorAPIDelete<DeletedModel> {
-        private Posts.Comment comment;
-
-        public NextDoorAPIDeleteComment() {
-            super(DeletedModel.class, NextDoorAPIAuth.defaultNextDoorAPIAuth());
+    public static class PostDeleteException extends APIRequestException {
+        public PostDeleteException() {
         }
 
-        public NextDoorAPIDeleteComment(Posts.Comment comment) {
-            super(DeletedModel.class, comment.getNextDoorAPIAuth());
-            this.comment = comment;
-        }
-
-        public NextDoorAPIDeleteComment setSecureProfileID(String secureProfileID) {
-            this.setParamInternal("secure_profile_id", secureProfileID);
-
-            return this;
-        }
-
-        @Override
-        public DeletedModel delete() throws APIRequestException {
-            validateRequiredParams();
-            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
-
-            try {
-                return sendHttpRequest(HttpMethod.DELETE, getPath() + "?id=" + this.comment.getId());
-            } catch (APIRequestException e) {
-                throw new DeleteException("Cannot delete comment, because of: " + e.getLocalizedMessage());
-            }
-        }
-
-        @Override
-        protected String getPath() {
-            return DEFAULT_FULL_EXTERNAL_API_URL + "comment/";
-        }
-
-        @Override
-        protected void validateRequiredParams() {
-            NextDoorUtil.ensureStringNotNull(this.getParamInternal("secure_profile_id"), "secure_profile_id");
-        }
-    }
-
-    public static class DeleteException extends APIRequestException {
-        public DeleteException() {
-        }
-
-        public DeleteException(String s) {
+        public PostDeleteException(String s) {
             super(s);
         }
 
-        public DeleteException(String s, Throwable throwable) {
+        public PostDeleteException(String s, Throwable throwable) {
             super(s, throwable);
         }
 
-        public DeleteException(Throwable throwable) {
+        public PostDeleteException(Throwable throwable) {
             super(throwable);
         }
 
-        public DeleteException(String s, Throwable throwable, boolean b, boolean b1) {
-            super(s, throwable, b, b1);
-        }
-    }
-
-    public static class PostException extends APIRequestException {
-        public PostException() {
-        }
-
-        public PostException(String s) {
-            super(s);
-        }
-
-        public PostException(String s, Throwable throwable) {
-            super(s, throwable);
-        }
-
-        public PostException(Throwable throwable) {
-            super(throwable);
-        }
-
-        public PostException(String s, Throwable throwable, boolean b, boolean b1) {
+        public PostDeleteException(String s, Throwable throwable, boolean b, boolean b1) {
             super(s, throwable, b, b1);
         }
     }
@@ -804,6 +571,48 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         public PostCreationException(String s, Throwable throwable, boolean b, boolean b1) {
+            super(s, throwable, b, b1);
+        }
+    }
+
+    public static class PostEditException extends APIRequestException {
+        public PostEditException() {
+        }
+
+        public PostEditException(String s) {
+            super(s);
+        }
+
+        public PostEditException(String s, Throwable throwable) {
+            super(s, throwable);
+        }
+
+        public PostEditException(Throwable throwable) {
+            super(throwable);
+        }
+
+        public PostEditException(String s, Throwable throwable, boolean b, boolean b1) {
+            super(s, throwable, b, b1);
+        }
+    }
+    
+    public static class PostCreateException extends APIRequestException {
+        public PostCreateException() {
+        }
+
+        public PostCreateException(String s) {
+            super(s);
+        }
+
+        public PostCreateException(String s, Throwable throwable) {
+            super(s, throwable);
+        }
+
+        public PostCreateException(Throwable throwable) {
+            super(throwable);
+        }
+
+        public PostCreateException(String s, Throwable throwable, boolean b, boolean b1) {
             super(s, throwable, b, b1);
         }
     }
