@@ -689,7 +689,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.DELETE, getPath() + "?id=" + this.existedPost.getId());
             } catch (APIRequestException e) {
-                throw new PostDeleteException("Cannot delete post, because of: " + e.getLocalizedMessage());
+                throw new DeleteException("Cannot delete post, because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -702,26 +702,67 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         protected void validateRequiredParams() {
             NextDoorUtil.ensureStringNotNull(this.getParamInternal("secure_profile_id"), "secure_profile_id");
         }
+    }
 
-        public static class PostDeleteException extends APIRequestException {
-            public PostDeleteException() {
-            }
+    public static class NextDoorAPIDeleteComment extends NextDoorAPIRequest<DeletedModel> implements NextDoorAPIDelete<DeletedModel> {
+        private Posts.Comment comment;
 
-            public PostDeleteException(String s) {
-                super(s);
-            }
+        public NextDoorAPIDeleteComment() {
+            super(DeletedModel.class, NextDoorAPIAuth.defaultNextDoorAPIAuth());
+        }
 
-            public PostDeleteException(String s, Throwable throwable) {
-                super(s, throwable);
-            }
+        public NextDoorAPIDeleteComment(Posts.Comment comment) {
+            super(DeletedModel.class, comment.getNextDoorAPIAuth());
+            this.comment = comment;
+        }
 
-            public PostDeleteException(Throwable throwable) {
-                super(throwable);
-            }
+        public NextDoorAPIDeleteComment setSecureProfileID(String secureProfileID) {
+            this.setParamInternal("secure_profile_id", secureProfileID);
 
-            public PostDeleteException(String s, Throwable throwable, boolean b, boolean b1) {
-                super(s, throwable, b, b1);
+            return this;
+        }
+
+        @Override
+        public DeletedModel delete() throws APIRequestException {
+            validateRequiredParams();
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            try {
+                return sendHttpRequest(HttpMethod.DELETE, getPath() + "?id=" + this.comment.getId());
+            } catch (APIRequestException e) {
+                throw new DeleteException("Cannot delete comment, because of: " + e.getLocalizedMessage());
             }
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_EXTERNAL_API_URL + "comment/";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("secure_profile_id"), "secure_profile_id");
+        }
+    }
+
+    public static class DeleteException extends APIRequestException {
+        public DeleteException() {
+        }
+
+        public DeleteException(String s) {
+            super(s);
+        }
+
+        public DeleteException(String s, Throwable throwable) {
+            super(s, throwable);
+        }
+
+        public DeleteException(Throwable throwable) {
+            super(throwable);
+        }
+
+        public DeleteException(String s, Throwable throwable, boolean b, boolean b1) {
+            super(s, throwable, b, b1);
         }
     }
 

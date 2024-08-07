@@ -274,6 +274,15 @@ public class Posts extends NextDoorModel implements Serializable {
             comment.setNextDoorAPIAuth(nextDoorAPIAuth);
             return new NextDoorAPIPosts.NextDoorAPIEditComment(comment);
         }
+
+        public static NextDoorAPIPosts.NextDoorAPIDeleteComment deleteComment(String commentId, NextDoorAPIAuth nextDoorAPIAuth) {
+            NextDoorUtil.ensureStringNotNull(commentId, "commentId");
+
+            Comment comment = new Comment();
+            comment.setId(Long.parseLong(commentId));
+            comment.setNextDoorAPIAuth(nextDoorAPIAuth);
+            return new NextDoorAPIPosts.NextDoorAPIDeleteComment(comment);
+        }
     }
 
     public static class Reaction implements Serializable {
