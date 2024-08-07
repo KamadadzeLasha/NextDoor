@@ -48,7 +48,6 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         return new NextDoorAPIGetAllPosts(this.getNextDoorAPIAuth());
     }
 
-    @Deprecated
     public NextDoorAPIGetAgencyBoundaries getAgencyBoundaries() {
         return new NextDoorAPIGetAgencyBoundaries(this.getNextDoorAPIAuth());
     }
@@ -86,7 +85,6 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    @Deprecated
     public static class NextDoorAPIGetAgencyBoundaries extends NextDoorAPIRequest<AgencyBoundaries> implements NextDoorAPIExecuteList<AgencyBoundaries> {
         public NextDoorAPIGetAgencyBoundaries(NextDoorAPIAuth nextDoorAPIAuth) {
             super(AgencyBoundaries.class, nextDoorAPIAuth);
@@ -111,8 +109,8 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         public List<AgencyBoundaries> execute() throws APIRequestException {
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
-            checkAndReplaceOrAddParameter("show_geometries", "true");
-            checkAndReplaceOrAddParameter("enable_pagination", "true");
+            this.checkAndReplaceOrAddParameter("show_geometries", "true");
+            this.checkAndReplaceOrAddParameter("enable_pagination", "true");
 
             try {
                 return sendHttpRequestForList(HttpMethod.GET, getPath(), ConversionType.NONE);
@@ -148,6 +146,56 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
             }
 
             public AgencyBoundariesGetException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
+    }
+
+    public static class NextDoorAPIGetAgencyNeighborhoodBoundaries extends NextDoorAPIRequest<AgencyNeighborhoodBoundaries> implements NextDoorAPIExecute<AgencyNeighborhoodBoundaries> {
+        public NextDoorAPIGetAgencyNeighborhoodBoundaries(NextDoorAPIAuth nextDoorAPIAuth) {
+            super(AgencyNeighborhoodBoundaries.class, nextDoorAPIAuth);
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_EXTERNAL_API_URL + "agency/neighborhood_boundary/";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public AgencyNeighborhoodBoundaries execute() throws APIRequestException {
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            this.addParameters("show_geometries", "true");
+
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new GetAgencyNeighborhoodBoundaries("Cannot get agency neighborhood, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class GetAgencyNeighborhoodBoundaries extends APIRequestException {
+            public GetAgencyNeighborhoodBoundaries() {
+            }
+
+            public GetAgencyNeighborhoodBoundaries(String s) {
+                super(s);
+            }
+
+            public GetAgencyNeighborhoodBoundaries(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public GetAgencyNeighborhoodBoundaries(Throwable throwable) {
+                super(throwable);
+            }
+
+            public GetAgencyNeighborhoodBoundaries(String s, Throwable throwable, boolean b, boolean b1) {
                 super(s, throwable, b, b1);
             }
         }
