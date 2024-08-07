@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.List;
+
 public class DataParser {
     private final ObjectMapper objectMapper = makeDefaultObjectMapper();
 
@@ -12,6 +14,14 @@ public class DataParser {
             return parse(from, tClass);
         } catch (Exception e) {
             throw new DataParserException("Cannot parse data " + from, e);
+        }
+    }
+
+    public <T> List<T> parseToList(String jsonString, Class<T> responseClass) throws DataParserException {
+        try {
+            return objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, responseClass));
+        } catch (Exception e) {
+            throw new DataParserException("Error parsing JSON to list: " + e.getMessage(), e);
         }
     }
 
