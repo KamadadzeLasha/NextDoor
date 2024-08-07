@@ -8,6 +8,8 @@ import com.nextdoor.internal.DataParser;
 import com.nextdoor.models.ConversionType;
 import com.nextdoor.models.NextDoorModel;
 
+import java.util.List;
+
 public abstract class NextDoorAPIRequest<T extends NextDoorModel> extends HTTPRequest {
     private final Class<T> responseClass;
 
@@ -32,6 +34,14 @@ public abstract class NextDoorAPIRequest<T extends NextDoorModel> extends HTTPRe
     protected T sendHttpRequest(HttpMethod httpMethod, String path, ConversionType conversionType) throws APIRequestException {
         try {
             return dataParser.parseToObject(sendAndReturnResponse(path, httpMethod, conversionType).toString(), this.responseClass);
+        } catch (DataParser.DataParserException e) {
+            throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + e.getLocalizedMessage());
+        }
+    }
+
+    protected List<T> sendHttpRequestForList(HttpMethod httpMethod, String path, ConversionType conversionType) throws APIRequestException {
+        try {
+            return dataParser.parseToList(sendAndReturnResponse(path, httpMethod, conversionType).toString(), this.responseClass);
         } catch (DataParser.DataParserException e) {
             throw new HTTPRequestFailureException("HTTP " + httpMethod + " request failed " + e.getLocalizedMessage());
         }
