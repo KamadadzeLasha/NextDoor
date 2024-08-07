@@ -6,7 +6,7 @@ import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Profile;
 import com.nextdoor.models.Profiles;
-import com.nextdoor.share.NextDoorAPIGet;
+import com.nextdoor.share.NextDoorAPIExecute;
 import com.nextdoor.share.NextDoorAPIRequest;
 import com.nextdoor.share.NextDoorAPIRequestNode;
 
@@ -23,13 +23,13 @@ public class NextDoorAPIProfile extends NextDoorAPIRequestNode {
         return new NextDoorAPIPublishProfileInfo(this.getNextDoorAPIAuth());
     }
 
-    public static class NextDoorAPIPublishProfileInfo extends NextDoorAPIRequest<Profile> implements NextDoorAPIGet<Profile> {
+    public static class NextDoorAPIPublishProfileInfo extends NextDoorAPIRequest<Profile> implements NextDoorAPIExecute<Profile> {
         public NextDoorAPIPublishProfileInfo(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Profile.class, nextDoorAPIAuth);
         }
 
         @Override
-        public Profile get() throws APIRequestException {
+        public Profile execute() throws APIRequestException {
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             try {
@@ -50,7 +50,7 @@ public class NextDoorAPIProfile extends NextDoorAPIRequestNode {
         }
 
         public Profiles getProfiles() throws APIRequestException {
-            return new NextDoorAPIPublishProfilesInfo(this.getNextDoorAPIAuth()).get();
+            return new NextDoorAPIPublishProfilesInfo(this.getNextDoorAPIAuth()).execute();
         }
 
         public static class ProifleGetException extends APIRequestException {
@@ -74,7 +74,7 @@ public class NextDoorAPIProfile extends NextDoorAPIRequestNode {
             }
         }
 
-        public static class NextDoorAPIPublishProfilesInfo extends NextDoorAPIRequest<Profiles> implements NextDoorAPIGet<Profiles> {
+        public static class NextDoorAPIPublishProfilesInfo extends NextDoorAPIRequest<Profiles> implements NextDoorAPIExecute<Profiles> {
             public NextDoorAPIPublishProfilesInfo(NextDoorAPIAuth nextDoorAPIAuth) {
                 super(Profiles.class, nextDoorAPIAuth);
             }
@@ -90,7 +90,7 @@ public class NextDoorAPIProfile extends NextDoorAPIRequestNode {
             }
 
             @Override
-            public Profiles get() throws APIRequestException {
+            public Profiles execute() throws APIRequestException {
                 this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
                 try {

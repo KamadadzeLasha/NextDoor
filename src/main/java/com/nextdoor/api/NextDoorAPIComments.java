@@ -4,7 +4,9 @@ import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.*;
-import com.nextdoor.share.*;
+import com.nextdoor.share.NextDoorAPIExecute;
+import com.nextdoor.share.NextDoorAPIRequest;
+import com.nextdoor.share.NextDoorAPIRequestNode;
 import com.nextdoor.util.NextDoorUtil;
 
 import java.util.Collection;
@@ -26,7 +28,7 @@ public class NextDoorAPIComments extends NextDoorAPIRequestNode {
         return new NextDoorAPICommentToPostOrReplyToComment(this.getNextDoorAPIAuth());
     }
 
-    public static class NextDoorAPICommentToPostOrReplyToComment extends NextDoorAPIRequest<CommentToPostOrReplyToComment> implements NextDoorAPICreate<CommentToPostOrReplyToComment> {
+    public static class NextDoorAPICommentToPostOrReplyToComment extends NextDoorAPIRequest<CommentToPostOrReplyToComment> implements NextDoorAPIExecute<CommentToPostOrReplyToComment> {
         public NextDoorAPICommentToPostOrReplyToComment(NextDoorAPIAuth nextDoorAPIAuth) {
             super(CommentToPostOrReplyToComment.class, nextDoorAPIAuth);
         }
@@ -62,7 +64,7 @@ public class NextDoorAPIComments extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public CommentToPostOrReplyToComment create() throws APIRequestException {
+        public CommentToPostOrReplyToComment execute() throws APIRequestException {
             validateRequiredParams();
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
             try {
@@ -105,7 +107,7 @@ public class NextDoorAPIComments extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIEditComment extends NextDoorAPIRequest<EditedComment> implements NextDoorAPIEdit<EditedComment> {
+    public static class NextDoorAPIEditComment extends NextDoorAPIRequest<EditedComment> implements NextDoorAPIExecute<EditedComment> {
         public NextDoorAPIEditComment() {
             super(EditedComment.class, NextDoorAPIAuth.defaultNextDoorAPIAuth());
         }
@@ -129,7 +131,7 @@ public class NextDoorAPIComments extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public EditedComment edit() throws APIRequestException {
+        public EditedComment execute() throws APIRequestException {
             validateRequiredParams();
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
@@ -172,7 +174,7 @@ public class NextDoorAPIComments extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIDeleteComment extends NextDoorAPIRequest<DeletedModel> implements NextDoorAPIDelete<DeletedModel> {
+    public static class NextDoorAPIDeleteComment extends NextDoorAPIRequest<DeletedModel> implements NextDoorAPIExecute<DeletedModel> {
         private Posts.Comment comment;
 
         public NextDoorAPIDeleteComment() {
@@ -191,7 +193,7 @@ public class NextDoorAPIComments extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public DeletedModel delete() throws APIRequestException {
+        public DeletedModel execute() throws APIRequestException {
             validateRequiredParams();
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 

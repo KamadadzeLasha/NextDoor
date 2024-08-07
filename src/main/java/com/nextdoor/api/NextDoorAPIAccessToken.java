@@ -6,9 +6,8 @@ import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.AccessToken;
 import com.nextdoor.models.ConversionType;
-import com.nextdoor.share.NextDoorAPICreate;
+import com.nextdoor.share.NextDoorAPIExecute;
 import com.nextdoor.share.NextDoorAPIRequest;
-import com.nextdoor.share.NextDoorAPIUpdate;
 import com.nextdoor.util.NextDoorUtil;
 import org.apache.commons.codec.binary.Base64;
 
@@ -38,7 +37,7 @@ public class NextDoorAPIAccessToken {
         return new Base64().encodeToString((userName + ":" + password).getBytes());
     }
 
-    public static class NextDoorAPIAccessTokenGenerate extends NextDoorAPIRequest<AccessToken> implements NextDoorAPICreate<AccessToken> {
+    public static class NextDoorAPIAccessTokenGenerate extends NextDoorAPIRequest<AccessToken> implements NextDoorAPIExecute<AccessToken> {
         private final String authorizationHeader;
 
         public NextDoorAPIAccessTokenGenerate(String authorizationHeader) {
@@ -73,7 +72,7 @@ public class NextDoorAPIAccessToken {
         }
 
         @Override
-        public AccessToken create() throws APIRequestException {
+        public AccessToken execute() throws APIRequestException {
             validateRequiredParams();
             this.addHeader("authorization", this.authorizationHeader);
 
@@ -119,7 +118,7 @@ public class NextDoorAPIAccessToken {
         }
     }
 
-    public static class NextDoorAPIAccessTokenRefresh extends NextDoorAPIRequest<AccessToken> implements NextDoorAPIUpdate<AccessToken> {
+    public static class NextDoorAPIAccessTokenRefresh extends NextDoorAPIRequest<AccessToken> implements NextDoorAPIExecute<AccessToken> {
         private final String authorizationHeader;
 
         public NextDoorAPIAccessTokenRefresh(String authorizationHeader) {
@@ -160,7 +159,7 @@ public class NextDoorAPIAccessToken {
         }
 
         @Override
-        public AccessToken update() throws APIRequestException {
+        public AccessToken execute() throws APIRequestException {
             validateRequiredParams();
             this.addHeader("authorization", this.authorizationHeader);
 

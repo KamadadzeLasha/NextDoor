@@ -4,7 +4,10 @@ import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.*;
-import com.nextdoor.share.*;
+import com.nextdoor.share.NextDoorAPICreate;
+import com.nextdoor.share.NextDoorAPIExecute;
+import com.nextdoor.share.NextDoorAPIRequest;
+import com.nextdoor.share.NextDoorAPIRequestNode;
 import com.nextdoor.util.NextDoorUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -49,7 +52,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         return new NextDoorAPIGetAgencyBoundaries(this.getNextDoorAPIAuth());
     }
 
-    public static class NextDoorAPIGetAllPosts extends NextDoorAPIRequest<Posts> implements NextDoorAPIGet<Posts> {
+    public static class NextDoorAPIGetAllPosts extends NextDoorAPIRequest<Posts> implements NextDoorAPIExecute<Posts> {
         public NextDoorAPIGetAllPosts(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Posts.class, nextDoorAPIAuth);
         }
@@ -61,7 +64,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Posts get() throws APIRequestException {
+        public Posts execute() throws APIRequestException {
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             try {
@@ -83,7 +86,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
     }
 
     @Deprecated
-    public static class NextDoorAPIGetAgencyBoundaries extends NextDoorAPIRequest<AgencyBoundaries> implements NextDoorAPIGet<AgencyBoundaries> {
+    public static class NextDoorAPIGetAgencyBoundaries extends NextDoorAPIRequest<AgencyBoundaries> implements NextDoorAPIExecute<AgencyBoundaries> {
         public NextDoorAPIGetAgencyBoundaries(NextDoorAPIAuth nextDoorAPIAuth) {
             super(AgencyBoundaries.class, nextDoorAPIAuth);
         }
@@ -104,7 +107,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public AgencyBoundaries get() throws APIRequestException {
+        public AgencyBoundaries execute() throws APIRequestException {
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             checkAndReplaceOrAddParameter("show_geometries", "true");
@@ -149,7 +152,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPICreateDefaultPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
+    public static class NextDoorAPICreateDefaultPost extends NextDoorAPIRequest<Post> implements NextDoorAPIExecute<Post> {
         public NextDoorAPICreateDefaultPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
         }
@@ -211,7 +214,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Post create() throws APIRequestException {
+        public Post execute() throws APIRequestException {
             validateRequiredParams();
 
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
@@ -331,7 +334,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPICreateEventPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
+    public static class NextDoorAPICreateEventPost extends NextDoorAPIRequest<Post> implements NextDoorAPIExecute<Post> {
         private static final String EVENT_NAME = "event";
 
         public NextDoorAPICreateEventPost(NextDoorAPIAuth nextDoorAPIAuth) {
@@ -401,7 +404,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Post create() throws APIRequestException {
+        public Post execute() throws APIRequestException {
             validateRequiredParams();
 
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
@@ -429,7 +432,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPICreateFSFPost extends NextDoorAPIRequest<Post> implements NextDoorAPICreate<Post> {
+    public static class NextDoorAPICreateFSFPost extends NextDoorAPIRequest<Post> implements NextDoorAPIExecute<Post> {
         private static final String FSF_NAME = "fsf";
 
         public NextDoorAPICreateFSFPost(NextDoorAPIAuth nextDoorAPIAuth) {
@@ -461,7 +464,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Post create() throws APIRequestException {
+        public Post execute() throws APIRequestException {
             validateRequiredParams();
 
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
@@ -496,7 +499,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIEditPost extends NextDoorAPIRequest<Post> implements NextDoorAPIEdit<Post> {
+    public static class NextDoorAPIEditPost extends NextDoorAPIRequest<Post> implements NextDoorAPIExecute<Post> {
         public NextDoorAPIEditPost(Posts.ExistedPost existedPost) {
             super(Post.class, existedPost.getNextDoorAPIAuth());
 
@@ -543,7 +546,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Post edit() throws APIRequestException {
+        public Post execute() throws APIRequestException {
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             try {
@@ -564,7 +567,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIDeletePost extends NextDoorAPIRequest<DeletedModel> implements NextDoorAPIDelete<DeletedModel> {
+    public static class NextDoorAPIDeletePost extends NextDoorAPIRequest<DeletedModel> implements NextDoorAPIExecute<DeletedModel> {
         private Posts.ExistedPost existedPost;
 
         public NextDoorAPIDeletePost() {
@@ -583,7 +586,7 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public DeletedModel delete() throws APIRequestException {
+        public DeletedModel execute() throws APIRequestException {
             validateRequiredParams();
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 

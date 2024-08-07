@@ -50,7 +50,7 @@ public class Post extends NextDoorModel implements Serializable {
     }
 
     public static Posts.ExistedPost fetchById(String postId, NextDoorAPIAuth nextDoorAPIAuth) throws APIRequestException {
-        Posts posts = new NextDoorAPIPosts(nextDoorAPIAuth).getAllPosts().get();
+        Posts posts = new NextDoorAPIPosts(nextDoorAPIAuth).getAllPosts().execute();
         List<Posts.ExistedPost> filteredPost = posts.getPosts()
                 .stream()
                 .filter(elem -> elem.getId().equals(postId)).collect(Collectors.toList());

@@ -6,10 +6,9 @@ import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Campaign;
 import com.nextdoor.models.ConversionType;
-import com.nextdoor.share.NextDoorAPICreate;
+import com.nextdoor.share.NextDoorAPIExecute;
 import com.nextdoor.share.NextDoorAPIRequest;
 import com.nextdoor.share.NextDoorAPIRequestNode;
-import com.nextdoor.share.NextDoorAPIUpdate;
 import com.nextdoor.util.NextDoorUtil;
 
 public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
@@ -42,7 +41,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         return new NextDoorAPIUpdateCampaign(this, campaignId);
     }
 
-    public static class NextDoorAPICreateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPICreate<Campaign> {
+    public static class NextDoorAPICreateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPIExecute<Campaign> {
         private final NextDoorAPICampaign nextDoorAPICampaign;
 
         public NextDoorAPICreateCampaign(NextDoorAPICampaign nextDoorAPICampaign) {
@@ -64,7 +63,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Campaign create() throws APIRequestException {
+        public Campaign execute() throws APIRequestException {
             this.setParamInternal("advertiser_id", nextDoorAPICampaign.getAdvertiserId());
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
@@ -111,7 +110,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIUpdateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPIUpdate<Campaign> {
+    public static class NextDoorAPIUpdateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPIExecute<Campaign> {
         private final NextDoorAPICampaign nextDoorAPICampaign;
         private final String campaignId;
 
@@ -141,7 +140,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Campaign update() throws APIRequestException {
+        public Campaign execute() throws APIRequestException {
             this.setParamInternal("advertiser_id", this.nextDoorAPICampaign.getAdvertiserId());
             this.setParamInternal("id", this.campaignId);
 

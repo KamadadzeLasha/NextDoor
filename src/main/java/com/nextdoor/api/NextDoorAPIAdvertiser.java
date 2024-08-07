@@ -6,7 +6,7 @@ import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Advertiser;
 import com.nextdoor.models.ConversionType;
-import com.nextdoor.share.NextDoorAPICreate;
+import com.nextdoor.share.NextDoorAPIExecute;
 import com.nextdoor.share.NextDoorAPIRequest;
 import com.nextdoor.share.NextDoorAPIRequestNode;
 import com.nextdoor.util.NextDoorUtil;
@@ -24,7 +24,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         return new NextDoorAPICreateAdvertiser(this.getNextDoorAPIAuth());
     }
 
-    public static class NextDoorAPICreateAdvertiser extends NextDoorAPIRequest<Advertiser> implements NextDoorAPICreate<Advertiser> {
+    public static class NextDoorAPICreateAdvertiser extends NextDoorAPIRequest<Advertiser> implements NextDoorAPIExecute<Advertiser> {
         public NextDoorAPICreateAdvertiser(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Advertiser.class, nextDoorAPIAuth);
         }
@@ -48,7 +48,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public Advertiser create() throws APIRequestException {
+        public Advertiser execute() throws APIRequestException {
             validateRequiredParams();
 
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
