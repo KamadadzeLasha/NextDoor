@@ -1,96 +1,498 @@
 package com.nextdoor.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-abstract class SearchPost {
-    @JsonProperty("body")
-    private String body;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
-    @JsonProperty("embed_url")
-    private String embedUrl;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SearchPost extends NextDoorModel implements Serializable {
+    @JsonProperty("postsLength")
+    private int postsLength;
 
-    @JsonProperty("has_geo_tag")
-    private boolean hasGeoTag;
-
-    @JsonProperty("id")
-    private String id;
-
-    @JsonProperty("url")
-    private String url;
-
-    @JsonProperty("title")
-    private String title;
+    @JsonProperty("posts")
+    private List<Post> posts;
 
     public SearchPost() {
 
     }
 
-    public SearchPost(String body, String embedUrl, boolean hasGeoTag, String id, String url, String title) {
-        this.body = body;
-        this.embedUrl = embedUrl;
-        this.hasGeoTag = hasGeoTag;
-        this.id = id;
-        this.url = url;
-        this.title = title;
+    public SearchPost(int postsLength, List<Post> posts) {
+        this.postsLength = postsLength;
+        this.posts = posts;
     }
 
-    public String getBody() {
-        return body;
+    public int getPostsLength() {
+        return postsLength;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setPostsLength(int postsLength) {
+        this.postsLength = postsLength;
     }
 
-    public String getEmbedUrl() {
-        return embedUrl;
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    public void setEmbedUrl(String embedUrl) {
-        this.embedUrl = embedUrl;
-    }
-
-    public boolean isHasGeoTag() {
-        return hasGeoTag;
-    }
-
-    public void setHasGeoTag(boolean hasGeoTag) {
-        this.hasGeoTag = hasGeoTag;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     @Override
     public String toString() {
         return "SearchPost{" +
-                "body='" + body + '\'' +
-                ", embedUrl='" + embedUrl + '\'' +
-                ", hasGeoTag=" + hasGeoTag +
-                ", id='" + id + '\'' +
-                ", url='" + url + '\'' +
-                ", title='" + title + '\'' +
+                "postsLength=" + postsLength +
+                ", posts=" + posts +
                 '}';
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class SearchPostData implements Serializable {
+        @JsonProperty("commentClosed")
+        private boolean commentClosed;
+
+        @JsonProperty("hasGeoTag")
+        private boolean hasGeoTag;
+
+        @JsonProperty("userEnteredSubject")
+        private boolean userEnteredSubject;
+
+        @JsonProperty("commentCount")
+        private int commentCount;
+
+        @JsonProperty("downvoteCount")
+        private int downvoteCount;
+
+        @JsonProperty("likeCount")
+        private int likeCount;
+
+        @JsonProperty("reportCount")
+        private int reportCount;
+
+        @JsonProperty("score")
+        private int score;
+
+        @JsonProperty("creationDateEpochSeconds")
+        private long creationDateEpochSeconds;
+
+        @JsonProperty("latitude")
+        private double latitude;
+
+        @JsonProperty("longitude")
+        private double longitude;
+
+        @JsonProperty("author")
+        private Author author;
+
+        @JsonProperty("body")
+        private String body;
+
+        @JsonProperty("category")
+        private String category;
+
+        @JsonProperty("embedUrl")
+        private String embedUrl;
+
+        @JsonProperty("id")
+        private String id;
+
+        @JsonProperty("publicPostUrl")
+        private String publicPostUrl;
+
+        @JsonProperty("scope")
+        private String scope;
+
+        @JsonProperty("title")
+        private String title;
+
+        @JsonProperty("url")
+        private String url;
+
+        @JsonProperty("videoPreviewUrl")
+        private String videoPreviewUrl;
+
+        @JsonProperty("comments")
+        private List<String> comments;
+
+        @JsonProperty("media")
+        private List<String> media;
+
+        @JsonProperty("mediaFocalArea")
+        private List<Object> mediaFocalArea;
+
+        @JsonProperty("reactionTypes")
+        private Map<String, Integer> reactionTypes;
+
+        @JsonProperty("scores")
+        private List<Object> scores;
+
+        public SearchPostData() {
+
+        }
+
+        public SearchPostData(boolean commentClosed, boolean hasGeoTag, boolean userEnteredSubject, int commentCount, int downvoteCount, int likeCount, int reportCount, int score, long creationDateEpochSeconds, double latitude, double longitude, Author author, String body, String category, String embedUrl, String id, String publicPostUrl, String scope, String title, String url, String videoPreviewUrl, List<String> comments, List<String> media, List<Object> mediaFocalArea, Map<String, Integer> reactionTypes, List<Object> scores) {
+            this.commentClosed = commentClosed;
+            this.hasGeoTag = hasGeoTag;
+            this.userEnteredSubject = userEnteredSubject;
+            this.commentCount = commentCount;
+            this.downvoteCount = downvoteCount;
+            this.likeCount = likeCount;
+            this.reportCount = reportCount;
+            this.score = score;
+            this.creationDateEpochSeconds = creationDateEpochSeconds;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.author = author;
+            this.body = body;
+            this.category = category;
+            this.embedUrl = embedUrl;
+            this.id = id;
+            this.publicPostUrl = publicPostUrl;
+            this.scope = scope;
+            this.title = title;
+            this.url = url;
+            this.videoPreviewUrl = videoPreviewUrl;
+            this.comments = comments;
+            this.media = media;
+            this.mediaFocalArea = mediaFocalArea;
+            this.reactionTypes = reactionTypes;
+            this.scores = scores;
+        }
+
+        public boolean isCommentClosed() {
+            return commentClosed;
+        }
+
+        public void setCommentClosed(boolean commentClosed) {
+            this.commentClosed = commentClosed;
+        }
+
+        public boolean isHasGeoTag() {
+            return hasGeoTag;
+        }
+
+        public void setHasGeoTag(boolean hasGeoTag) {
+            this.hasGeoTag = hasGeoTag;
+        }
+
+        public boolean isUserEnteredSubject() {
+            return userEnteredSubject;
+        }
+
+        public void setUserEnteredSubject(boolean userEnteredSubject) {
+            this.userEnteredSubject = userEnteredSubject;
+        }
+
+        public int getCommentCount() {
+            return commentCount;
+        }
+
+        public void setCommentCount(int commentCount) {
+            this.commentCount = commentCount;
+        }
+
+        public int getDownvoteCount() {
+            return downvoteCount;
+        }
+
+        public void setDownvoteCount(int downvoteCount) {
+            this.downvoteCount = downvoteCount;
+        }
+
+        public int getLikeCount() {
+            return likeCount;
+        }
+
+        public void setLikeCount(int likeCount) {
+            this.likeCount = likeCount;
+        }
+
+        public int getReportCount() {
+            return reportCount;
+        }
+
+        public void setReportCount(int reportCount) {
+            this.reportCount = reportCount;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public void setScore(int score) {
+            this.score = score;
+        }
+
+        public long getCreationDateEpochSeconds() {
+            return creationDateEpochSeconds;
+        }
+
+        public void setCreationDateEpochSeconds(long creationDateEpochSeconds) {
+            this.creationDateEpochSeconds = creationDateEpochSeconds;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(double latitude) {
+            this.latitude = latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public void setLongitude(double longitude) {
+            this.longitude = longitude;
+        }
+
+        public Author getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(Author author) {
+            this.author = author;
+        }
+
+        public String getBody() {
+            return body;
+        }
+
+        public void setBody(String body) {
+            this.body = body;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
+        }
+
+        public String getEmbedUrl() {
+            return embedUrl;
+        }
+
+        public void setEmbedUrl(String embedUrl) {
+            this.embedUrl = embedUrl;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getPublicPostUrl() {
+            return publicPostUrl;
+        }
+
+        public void setPublicPostUrl(String publicPostUrl) {
+            this.publicPostUrl = publicPostUrl;
+        }
+
+        public String getScope() {
+            return scope;
+        }
+
+        public void setScope(String scope) {
+            this.scope = scope;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getVideoPreviewUrl() {
+            return videoPreviewUrl;
+        }
+
+        public void setVideoPreviewUrl(String videoPreviewUrl) {
+            this.videoPreviewUrl = videoPreviewUrl;
+        }
+
+        public List<String> getComments() {
+            return comments;
+        }
+
+        public void setComments(List<String> comments) {
+            this.comments = comments;
+        }
+
+        public List<String> getMedia() {
+            return media;
+        }
+
+        public void setMedia(List<String> media) {
+            this.media = media;
+        }
+
+        public List<Object> getMediaFocalArea() {
+            return mediaFocalArea;
+        }
+
+        public void setMediaFocalArea(List<Object> mediaFocalArea) {
+            this.mediaFocalArea = mediaFocalArea;
+        }
+
+        public Map<String, Integer> getReactionTypes() {
+            return reactionTypes;
+        }
+
+        public void setReactionTypes(Map<String, Integer> reactionTypes) {
+            this.reactionTypes = reactionTypes;
+        }
+
+        public List<Object> getScores() {
+            return scores;
+        }
+
+        public void setScores(List<Object> scores) {
+            this.scores = scores;
+        }
+
+        @Override
+        public String toString() {
+            return "SearchPostData{" +
+                    "commentClosed=" + commentClosed +
+                    ", hasGeoTag=" + hasGeoTag +
+                    ", userEnteredSubject=" + userEnteredSubject +
+                    ", commentCount=" + commentCount +
+                    ", downvoteCount=" + downvoteCount +
+                    ", likeCount=" + likeCount +
+                    ", reportCount=" + reportCount +
+                    ", score=" + score +
+                    ", creationDateEpochSeconds=" + creationDateEpochSeconds +
+                    ", latitude=" + latitude +
+                    ", longitude=" + longitude +
+                    ", author=" + author +
+                    ", body='" + body + '\'' +
+                    ", category='" + category + '\'' +
+                    ", embedUrl='" + embedUrl + '\'' +
+                    ", id='" + id + '\'' +
+                    ", publicPostUrl='" + publicPostUrl + '\'' +
+                    ", scope='" + scope + '\'' +
+                    ", title='" + title + '\'' +
+                    ", url='" + url + '\'' +
+                    ", videoPreviewUrl='" + videoPreviewUrl + '\'' +
+                    ", comments=" + comments +
+                    ", media=" + media +
+                    ", mediaFocalArea=" + mediaFocalArea +
+                    ", reactionTypes=" + reactionTypes +
+                    ", scores=" + scores +
+                    '}';
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class Author {
+        @JsonProperty("agencyInfo")
+        private Object agencyInfo;
+
+        @JsonProperty("cityUrl")
+        private String cityUrl;
+
+        @JsonProperty("name")
+        private String name;
+
+        @JsonProperty("neighborhoodName")
+        private String neighborhoodName;
+
+        @JsonProperty("neighborhoodUrl")
+        private String neighborhoodUrl;
+
+        @JsonProperty("type")
+        private String type;
+
+        public Author() {
+
+        }
+
+        public Author(Object agencyInfo, String cityUrl, String name, String neighborhoodName, String neighborhoodUrl, String type) {
+            this.agencyInfo = agencyInfo;
+            this.cityUrl = cityUrl;
+            this.name = name;
+            this.neighborhoodName = neighborhoodName;
+            this.neighborhoodUrl = neighborhoodUrl;
+            this.type = type;
+        }
+
+        public Object getAgencyInfo() {
+            return agencyInfo;
+        }
+
+        public void setAgencyInfo(Object agencyInfo) {
+            this.agencyInfo = agencyInfo;
+        }
+
+        public String getCityUrl() {
+            return cityUrl;
+        }
+
+        public void setCityUrl(String cityUrl) {
+            this.cityUrl = cityUrl;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getNeighborhoodName() {
+            return neighborhoodName;
+        }
+
+        public void setNeighborhoodName(String neighborhoodName) {
+            this.neighborhoodName = neighborhoodName;
+        }
+
+        public String getNeighborhoodUrl() {
+            return neighborhoodUrl;
+        }
+
+        public void setNeighborhoodUrl(String neighborhoodUrl) {
+            this.neighborhoodUrl = neighborhoodUrl;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        @Override
+        public String toString() {
+            return "Author{" +
+                    "agencyInfo=" + agencyInfo +
+                    ", cityUrl='" + cityUrl + '\'' +
+                    ", name='" + name + '\'' +
+                    ", neighborhoodName='" + neighborhoodName + '\'' +
+                    ", neighborhoodUrl='" + neighborhoodUrl + '\'' +
+                    ", type='" + type + '\'' +
+                    '}';
+        }
     }
 }

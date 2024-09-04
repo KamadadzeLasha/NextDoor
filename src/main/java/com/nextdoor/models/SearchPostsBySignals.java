@@ -9,9 +9,5 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchPostsBySignals extends NextDoorModel implements Serializable {
     @JsonProperty("posts")
-    private List<SignalPost> posts;
-
-    public static class SignalPost extends SearchPost implements Serializable {
-
-    }
+    private List<SearchPosts> posts;
 }
