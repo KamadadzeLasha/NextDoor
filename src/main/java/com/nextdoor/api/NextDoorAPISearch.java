@@ -10,6 +10,8 @@ import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
 import com.nextdoor.util.NextDoorUtil;
 
+import java.util.Date;
+
 //TODO: Implementation to all classes!
 public class NextDoorAPISearch extends NextDoorAPIRequestNode {
     public NextDoorAPISearch() {
@@ -87,6 +89,24 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
         public static class NextDoorAPISearchPostsBySignals extends NextDoorAPIRequest<SearchPostsBySignals> implements NextDoorAPIExecute<SearchPostsBySignals> {
             public NextDoorAPISearchPostsBySignals(NextDoorAPIAuth nextDoorAPIAuth) {
                 super(SearchPostsBySignals.class, nextDoorAPIAuth);
+            }
+
+            public NextDoorAPISearchPostsBySignals setContentType(ContentType contentType) {
+                this.addParameters("content_type", contentType.name());
+
+                return this;
+            }
+
+            public NextDoorAPISearchPostsBySignals setIsodate(Date date) {
+                this.addParameters("isodate", date.toString());
+
+                return this;
+            }
+
+            public NextDoorAPISearchPostsBySignals setIsodate(String date) {
+                this.addParameters("isodate", date);
+
+                return this;
             }
 
             @Override
