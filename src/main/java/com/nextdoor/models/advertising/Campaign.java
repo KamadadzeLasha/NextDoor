@@ -1,6 +1,7 @@
-package com.nextdoor.models;
+package com.nextdoor.models.advertising;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nextdoor.models.NextDoorModel;
 
 import java.io.Serializable;
 import java.util.Date;

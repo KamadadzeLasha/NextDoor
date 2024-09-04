@@ -1,32 +1,33 @@
-package com.nextdoor.models;
+package com.nextdoor.models.advertising;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nextdoor.models.NextDoorModel;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class NextDoorUser extends NextDoorModel implements Serializable {
+public class User extends NextDoorModel implements Serializable {
     @JsonProperty("user")
-    private User currentUser;
+    private CurrentUser currentUser;
 
     @JsonProperty("profile")
     private Profile currentProfile;
 
-    public NextDoorUser() {
+    public User() {
 
     }
 
-    public NextDoorUser(User currentUser, Profile currentProfile) {
+    public User(CurrentUser currentUser, Profile currentProfile) {
         this.currentUser = currentUser;
         this.currentProfile = currentProfile;
     }
 
-    public User getCurrentUser() {
+    public CurrentUser getCurrentUser() {
         return currentUser;
     }
 
-    public void setCurrentUser(User currentUser) {
+    public void setCurrentUser(CurrentUser currentUser) {
         this.currentUser = currentUser;
     }
 
@@ -131,7 +132,7 @@ public class NextDoorUser extends NextDoorModel implements Serializable {
         }
     }
 
-    public static class User implements Serializable {
+    public static class CurrentUser implements Serializable {
         @JsonProperty("id")
         private String id;
 
@@ -147,11 +148,11 @@ public class NextDoorUser extends NextDoorModel implements Serializable {
         @JsonProperty("advertisers_with_access")
         private List<AdvertisersWithAccess> advertisersWithAccess;
 
-        public User() {
+        public CurrentUser() {
 
         }
 
-        public User(String id, String userName, String email, boolean emailConfirmed, List<AdvertisersWithAccess> advertisersWithAccess) {
+        public CurrentUser(String id, String userName, String email, boolean emailConfirmed, List<AdvertisersWithAccess> advertisersWithAccess) {
             this.id = id;
             this.userName = userName;
             this.email = email;
@@ -203,8 +204,8 @@ public class NextDoorUser extends NextDoorModel implements Serializable {
         public boolean equals(Object object) {
             if (this == object) return true;
             if (object == null || getClass() != object.getClass()) return false;
-            User user = (User) object;
-            return emailConfirmed == user.emailConfirmed && Objects.equals(id, user.id) && Objects.equals(userName, user.userName) && Objects.equals(email, user.email) && Objects.equals(advertisersWithAccess, user.advertisersWithAccess);
+            CurrentUser currentUser = (CurrentUser) object;
+            return emailConfirmed == currentUser.emailConfirmed && Objects.equals(id, currentUser.id) && Objects.equals(userName, currentUser.userName) && Objects.equals(email, currentUser.email) && Objects.equals(advertisersWithAccess, currentUser.advertisersWithAccess);
         }
 
         @Override

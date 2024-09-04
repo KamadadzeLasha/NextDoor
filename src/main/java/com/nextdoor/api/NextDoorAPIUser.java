@@ -4,7 +4,7 @@ import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.models.NextDoorUser;
+import com.nextdoor.models.advertising.User;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
@@ -22,13 +22,13 @@ public class NextDoorAPIUser extends NextDoorAPIRequestNode {
         return new NextDoorAPIUserInfo(this);
     }
 
-    public static class NextDoorAPIUserInfo extends NextDoorAPIRequest<NextDoorUser> implements NextDoorAPIExecute<NextDoorUser> {
+    public static class NextDoorAPIUserInfo extends NextDoorAPIRequest<User> implements NextDoorAPIExecute<User> {
         public NextDoorAPIUserInfo(NextDoorAPIUser nextDoorAPIUser) {
-            super(NextDoorUser.class, nextDoorAPIUser.getNextDoorAPIAuth());
+            super(User.class, nextDoorAPIUser.getNextDoorAPIAuth());
         }
 
         @Override
-        public NextDoorUser execute() throws APIRequestException {
+        public User execute() throws APIRequestException {
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             try {

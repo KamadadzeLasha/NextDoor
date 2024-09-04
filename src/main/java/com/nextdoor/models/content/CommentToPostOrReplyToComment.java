@@ -1,4 +1,6 @@
-package com.nextdoor.models;
+package com.nextdoor.models.content;
+
+import com.nextdoor.models.NextDoorModel;
 
 import java.io.Serializable;
 
