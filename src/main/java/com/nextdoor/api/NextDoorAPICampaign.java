@@ -4,7 +4,7 @@ import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.models.advertising.Campaign;
+import com.nextdoor.models.Campaign;
 import com.nextdoor.models.ConversionType;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
 import com.nextdoor.share.core.NextDoorAPIRequest;

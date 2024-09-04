@@ -1,6 +1,4 @@
-package com.nextdoor.models.content;
-
-import com.nextdoor.models.NextDoorURLEncodedModel;
+package com.nextdoor.models;
 
 import java.time.LocalDateTime;
 

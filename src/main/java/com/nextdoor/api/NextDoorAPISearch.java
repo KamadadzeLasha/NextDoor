@@ -2,8 +2,8 @@ package com.nextdoor.api;
 
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.models.search.SearchPosts;
-import com.nextdoor.models.search.SearchPostsBySignals;
+import com.nextdoor.models.SearchPosts;
+import com.nextdoor.models.SearchPostsBySignals;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;

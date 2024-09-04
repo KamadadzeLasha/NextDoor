@@ -1,11 +1,9 @@
-package com.nextdoor.models.advertising;
+package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nextdoor.api.NextDoorAPIPosts;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.models.NextDoorModel;
-import com.nextdoor.models.posts.Posts;
 
 import java.io.Serializable;
 import java.util.List;

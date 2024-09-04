@@ -1,4 +1,4 @@
-package com.nextdoor.models.search;
+package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
