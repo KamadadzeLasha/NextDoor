@@ -13,13 +13,13 @@ public class SearchPost extends NextDoorModel implements Serializable {
     private int postsLength;
 
     @JsonProperty("posts")
-    private List<Post> posts;
+    private List<Data> posts;
 
     public SearchPost() {
 
     }
 
-    public SearchPost(int postsLength, List<Post> posts) {
+    public SearchPost(int postsLength, List<Data> posts) {
         this.postsLength = postsLength;
         this.posts = posts;
     }
@@ -32,11 +32,11 @@ public class SearchPost extends NextDoorModel implements Serializable {
         this.postsLength = postsLength;
     }
 
-    public List<Post> getPosts() {
+    public List<Data> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(List<Data> posts) {
         this.posts = posts;
     }
 
@@ -49,7 +49,7 @@ public class SearchPost extends NextDoorModel implements Serializable {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class SearchPostData implements Serializable {
+    public static class Data implements Serializable {
         @JsonProperty("commentClosed")
         private boolean commentClosed;
 
@@ -128,11 +128,11 @@ public class SearchPost extends NextDoorModel implements Serializable {
         @JsonProperty("scores")
         private List<Object> scores;
 
-        public SearchPostData() {
+        public Data() {
 
         }
 
-        public SearchPostData(boolean commentClosed, boolean hasGeoTag, boolean userEnteredSubject, int commentCount, int downvoteCount, int likeCount, int reportCount, int score, long creationDateEpochSeconds, double latitude, double longitude, Author author, String body, String category, String embedUrl, String id, String publicPostUrl, String scope, String title, String url, String videoPreviewUrl, List<String> comments, List<String> media, List<Object> mediaFocalArea, Map<String, Integer> reactionTypes, List<Object> scores) {
+        public Data(boolean commentClosed, boolean hasGeoTag, boolean userEnteredSubject, int commentCount, int downvoteCount, int likeCount, int reportCount, int score, long creationDateEpochSeconds, double latitude, double longitude, Author author, String body, String category, String embedUrl, String id, String publicPostUrl, String scope, String title, String url, String videoPreviewUrl, List<String> comments, List<String> media, List<Object> mediaFocalArea, Map<String, Integer> reactionTypes, List<Object> scores) {
             this.commentClosed = commentClosed;
             this.hasGeoTag = hasGeoTag;
             this.userEnteredSubject = userEnteredSubject;
@@ -403,7 +403,7 @@ public class SearchPost extends NextDoorModel implements Serializable {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Author {
+    public static class Author {
         @JsonProperty("agencyInfo")
         private Object agencyInfo;
 
