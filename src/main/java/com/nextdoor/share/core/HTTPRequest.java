@@ -89,6 +89,10 @@ public abstract class HTTPRequest {
         this.queryString.put(key, value);
     }
 
+    protected void addParameters(String key, Object value) {
+        this.queryString.put(key, String.valueOf(value));
+    }
+
     protected void addParameters(Map<String, String> queryString) {
         this.queryString.putAll(queryString);
     }

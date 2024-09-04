@@ -1,11 +1,14 @@
 package com.nextdoor.api;
 
+import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
+import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.*;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.util.NextDoorUtil;
 
 //TODO: Implementation to all classes!
 public class NextDoorAPISearch extends NextDoorAPIRequestNode {
@@ -17,24 +20,68 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
         super(nextDoorAPIAuth);
     }
 
+    public NextDoorAPISearchPosts searchPosts() {
+        return new NextDoorAPISearchPosts(this.nextDoorAPIAuth);
+    }
+
     public static class NextDoorAPISearchPosts extends NextDoorAPIRequest<SearchPosts> implements NextDoorAPIExecute<SearchPosts> {
         public NextDoorAPISearchPosts(NextDoorAPIAuth nextDoorAPIAuth) {
             super(SearchPosts.class, nextDoorAPIAuth);
+
+            this.addHeader(nextDoorAPIAuth.getTokenHeader());
+        }
+
+        public NextDoorAPISearchPosts setLatitude(float latitude) {
+            this.addParameters("lat", latitude);
+
+            return this;
+        }
+
+        public NextDoorAPISearchPosts setLongitude(float longitude) {
+            this.addParameters("lon", longitude);
+
+            return this;
+        }
+
+        public NextDoorAPISearchPosts setRadius(float radius) {
+            this.addParameters("radius", radius);
+
+            return this;
+        }
+
+        public NextDoorAPISearchPosts setQuery(String query) {
+            this.addParameters("query", query);
+
+            return this;
+        }
+
+        public NextDoorAPISearchPosts setIncludeComments(boolean includeComments) {
+            this.addParameters("include_comments", includeComments);
+
+            return this;
         }
 
         @Override
         protected String getPath() {
-            return "";
+            return DefaultURLS.DEFAULT_URL + "content_api/v2/search_post";
         }
 
         @Override
         protected void validateRequiredParams() {
-
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("lat"), "lat");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("lon"), "lon");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("radius"), "radius");
         }
 
         @Override
         public SearchPosts execute() throws APIRequestException {
-            return null;
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+            }
         }
 
         public static class NextDoorAPISearchPostsBySignals extends NextDoorAPIRequest<SearchPostsBySignals> implements NextDoorAPIExecute<SearchPostsBySignals> {
@@ -44,7 +91,7 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
 
             @Override
             protected String getPath() {
-                return "";
+                return DefaultURLS.DEFAULT_URL + "content_api/v1/content_understanding";
             }
 
             @Override
@@ -65,7 +112,7 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
 
             @Override
             protected String getPath() {
-                return "";
+                return DefaultURLS.DEFAULT_URL + "content_api/v2/search_sale_item";
             }
 
             @Override
@@ -86,7 +133,7 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
 
             @Override
             protected String getPath() {
-                return "";
+                return DefaultURLS.DEFAULT_URL + "content_api/v2/search_event";
             }
 
             @Override
@@ -107,7 +154,7 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
 
             @Override
             protected String getPath() {
-                return "";
+                return DefaultURLS.DEFAULT_URL + "content_api/v2/search_business";
             }
 
             @Override
