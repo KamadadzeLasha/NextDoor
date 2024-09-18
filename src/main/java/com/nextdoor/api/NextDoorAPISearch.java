@@ -8,9 +8,11 @@ import com.nextdoor.models.*;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.share.interfaces.NextDoorAPIExecuteList;
 import com.nextdoor.util.NextDoorUtil;
 
 import java.util.Date;
+import java.util.List;
 
 //TODO: Implementation to all classes!
 public class NextDoorAPISearch extends NextDoorAPIRequestNode {
@@ -89,6 +91,8 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
         public static class NextDoorAPISearchPostsBySignals extends NextDoorAPIRequest<SearchPostsBySignals> implements NextDoorAPIExecute<SearchPostsBySignals> {
             public NextDoorAPISearchPostsBySignals(NextDoorAPIAuth nextDoorAPIAuth) {
                 super(SearchPostsBySignals.class, nextDoorAPIAuth);
+
+                this.addHeader(nextDoorAPIAuth.getTokenHeader());
             }
 
             public NextDoorAPISearchPostsBySignals setContentType(ContentType contentType) {
@@ -121,13 +125,45 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
 
             @Override
             public SearchPostsBySignals execute() throws APIRequestException {
-                return null;
+                validateRequiredParams();
+
+                try {
+                    return sendHttpRequest(HttpMethod.GET);
+                } catch (APIRequestException e) {
+                    throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                }
             }
         }
 
-        public static class NextDoorAPISearchFSFItems extends NextDoorAPIRequest<SearchFSFItems> implements NextDoorAPIExecute<SearchFSFItems> {
+        public static class NextDoorAPISearchFSFItems extends NextDoorAPIRequest<SearchFSFItems> implements NextDoorAPIExecuteList<SearchFSFItems> {
             public NextDoorAPISearchFSFItems(NextDoorAPIAuth nextDoorAPIAuth) {
                 super(SearchFSFItems.class, nextDoorAPIAuth);
+
+                this.addHeader(nextDoorAPIAuth.getTokenHeader());
+            }
+
+            public NextDoorAPISearchFSFItems setLatitude(float latitude) {
+                this.addParameters("lat", latitude);
+
+                return this;
+            }
+
+            public NextDoorAPISearchFSFItems setLongitude(float longitude) {
+                this.addParameters("lon", longitude);
+
+                return this;
+            }
+
+            public NextDoorAPISearchFSFItems setRadius(float radius) {
+                this.addParameters("radius", radius);
+
+                return this;
+            }
+
+            public NextDoorAPISearchFSFItems setQuery(String query) {
+                this.addParameters("query", query);
+
+                return this;
             }
 
             @Override
@@ -137,18 +173,52 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
 
             @Override
             protected void validateRequiredParams() {
-
+                NextDoorUtil.ensureObjectNotNull(this.getParamInternal("lat"), "lat");
+                NextDoorUtil.ensureObjectNotNull(this.getParamInternal("lon"), "lon");
+                NextDoorUtil.ensureObjectNotNull(this.getParamInternal("radius"), "radius");
             }
 
             @Override
-            public SearchFSFItems execute() throws APIRequestException {
-                return null;
+            public List<SearchFSFItems> execute() throws APIRequestException {
+                validateRequiredParams();
+
+                try {
+                    return sendHttpRequestForList(HttpMethod.GET, getPath(), ConversionType.URL_ENCODED);
+                } catch (APIRequestException e) {
+                    throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                }
             }
         }
 
-        public static class NextDoorAPISearchEvents extends NextDoorAPIRequest<SearchEvents> implements NextDoorAPIExecute<SearchEvents> {
+        public static class NextDoorAPISearchEvents extends NextDoorAPIRequest<SearchEvents> implements NextDoorAPIExecuteList<SearchEvents> {
             public NextDoorAPISearchEvents(NextDoorAPIAuth nextDoorAPIAuth) {
                 super(SearchEvents.class, nextDoorAPIAuth);
+
+                this.addHeader(nextDoorAPIAuth.getTokenHeader());
+            }
+
+            public NextDoorAPISearchEvents setLatitude(float latitude) {
+                this.addParameters("lat", latitude);
+
+                return this;
+            }
+
+            public NextDoorAPISearchEvents setLongitude(float longitude) {
+                this.addParameters("lon", longitude);
+
+                return this;
+            }
+
+            public NextDoorAPISearchEvents setRadius(float radius) {
+                this.addParameters("radius", radius);
+
+                return this;
+            }
+
+            public NextDoorAPISearchEvents setQuery(String query) {
+                this.addParameters("query", query);
+
+                return this;
             }
 
             @Override
@@ -158,18 +228,52 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
 
             @Override
             protected void validateRequiredParams() {
-
+                NextDoorUtil.ensureObjectNotNull(this.getParamInternal("lat"), "lat");
+                NextDoorUtil.ensureObjectNotNull(this.getParamInternal("lon"), "lon");
+                NextDoorUtil.ensureObjectNotNull(this.getParamInternal("radius"), "radius");
             }
 
             @Override
-            public SearchEvents execute() throws APIRequestException {
-                return null;
+            public List<SearchEvents> execute() throws APIRequestException {
+                validateRequiredParams();
+
+                try {
+                    return sendHttpRequestForList(HttpMethod.GET, getPath(), ConversionType.URL_ENCODED);
+                } catch (APIRequestException e) {
+                    throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                }
             }
         }
 
-        public static class NextDoorAPISearchBusinesses extends NextDoorAPIRequest<SearchBusinesses> implements NextDoorAPIExecute<SearchBusinesses> {
+        public static class NextDoorAPISearchBusinesses extends NextDoorAPIRequest<SearchBusinesses> implements NextDoorAPIExecuteList<SearchBusinesses> {
             public NextDoorAPISearchBusinesses(NextDoorAPIAuth nextDoorAPIAuth) {
                 super(SearchBusinesses.class, nextDoorAPIAuth);
+
+                this.addHeader(nextDoorAPIAuth.getTokenHeader());
+            }
+
+            public NextDoorAPISearchBusinesses setLatitude(float latitude) {
+                this.addParameters("lat", latitude);
+
+                return this;
+            }
+
+            public NextDoorAPISearchBusinesses setLongitude(float longitude) {
+                this.addParameters("lon", longitude);
+
+                return this;
+            }
+
+            public NextDoorAPISearchBusinesses setRadius(float radius) {
+                this.addParameters("radius", radius);
+
+                return this;
+            }
+
+            public NextDoorAPISearchBusinesses setQuery(String query) {
+                this.addParameters("query", query);
+
+                return this;
             }
 
             @Override
@@ -179,12 +283,21 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
 
             @Override
             protected void validateRequiredParams() {
-
+                NextDoorUtil.ensureObjectNotNull(this.getParamInternal("lat"), "lat");
+                NextDoorUtil.ensureObjectNotNull(this.getParamInternal("lon"), "lon");
+                NextDoorUtil.ensureObjectNotNull(this.getParamInternal("radius"), "radius");
+                NextDoorUtil.ensureObjectNotNull(this.getParamInternal("query"), "query");
             }
 
             @Override
-            public SearchBusinesses execute() throws APIRequestException {
-                return null;
+            public List<SearchBusinesses> execute() throws APIRequestException {
+                validateRequiredParams();
+
+                try {
+                    return sendHttpRequestForList(HttpMethod.GET, getPath(), ConversionType.URL_ENCODED);
+                } catch (APIRequestException e) {
+                    throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                }
             }
         }
     }
