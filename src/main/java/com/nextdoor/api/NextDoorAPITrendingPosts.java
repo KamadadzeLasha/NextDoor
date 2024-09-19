@@ -3,10 +3,7 @@ package com.nextdoor.api;
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.models.City;
-import com.nextdoor.models.ConversionType;
-import com.nextdoor.models.State;
-import com.nextdoor.models.TargetingPostsCity;
+import com.nextdoor.models.*;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
@@ -24,6 +21,22 @@ public class NextDoorAPITrendingPosts extends NextDoorAPIRequestNode {
 
     public NextDoorAPITrendingPosts(NextDoorAPIAuth nextDoorAPIAuth) {
         super(nextDoorAPIAuth);
+    }
+
+    public NextDoorAPISearchPosts searchPosts() {
+        return new NextDoorAPISearchPosts(this.nextDoorAPIAuth);
+    }
+
+    public NextDoorAPIStateList stateList() {
+        return new NextDoorAPIStateList(this.nextDoorAPIAuth);
+    }
+
+    public NextDoorAPITargetingPostsForCity targetingPostsForCity() {
+        return new NextDoorAPITargetingPostsForCity(this.nextDoorAPIAuth);
+    }
+
+    public NextDoorAPITargetingPostsForStateWithPagination targetingPostsForStateWithPagination() {
+        return new NextDoorAPITargetingPostsForStateWithPagination(this.nextDoorAPIAuth);
     }
 
     public static class NextDoorAPISearchPosts extends NextDoorAPIRequest<City> implements NextDoorAPIExecuteList<City> {
@@ -109,6 +122,46 @@ public class NextDoorAPITrendingPosts extends NextDoorAPIRequestNode {
 
         @Override
         public TargetingPostsCity execute() throws APIRequestException {
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new NextDoorAPIAdvertiser.NextDoorAPICreateAdvertiser.AdvertiserCreationException("Can't create advertiser campaign, because of: " + e.getLocalizedMessage());
+            }
+        }
+    }
+
+    public static class NextDoorAPITargetingPostsForStateWithPagination extends NextDoorAPIRequest<TargetingStateWithPagination> implements NextDoorAPIExecute<TargetingStateWithPagination> {
+        private String stateId;
+        private Integer pageNum;
+
+        public NextDoorAPITargetingPostsForStateWithPagination(NextDoorAPIAuth nextDoorAPIAuth) {
+            super(TargetingStateWithPagination.class, nextDoorAPIAuth);
+        }
+
+        public NextDoorAPITargetingPostsForStateWithPagination setStateId(String stateId) {
+            this.stateId = stateId;
+
+            return this;
+        }
+
+        public NextDoorAPITargetingPostsForStateWithPagination setPageNum(Integer pageNum) {
+            this.pageNum = pageNum;
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_URL + "partner_api/v1/state_digest/" + this.stateId + "/page/" + (this.pageNum == null ? "current_page" : this.pageNum);
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.stateId, "stateID");
+        }
+
+        @Override
+        public TargetingStateWithPagination execute() throws APIRequestException {
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
