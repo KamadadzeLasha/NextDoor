@@ -3,12 +3,12 @@ package com.nextdoor.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Map;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Author {
     @JsonProperty("agencyInfo")
-    private Map<String, Object> agencyInfo;
+    private AgencyInfo agencyInfo;
 
     @JsonProperty("cityUrl")
     private String cityUrl;
@@ -29,7 +29,7 @@ public class Author {
 
     }
 
-    public Author(Map<String, Object> agencyInfo, String cityUrl, String name, String neighborhoodName, String neighborhoodUrl, String type) {
+    public Author(AgencyInfo agencyInfo, String cityUrl, String name, String neighborhoodName, String neighborhoodUrl, String type) {
         this.agencyInfo = agencyInfo;
         this.cityUrl = cityUrl;
         this.name = name;
@@ -38,11 +38,11 @@ public class Author {
         this.type = type;
     }
 
-    public Map<String, Object> getAgencyInfo() {
+    public AgencyInfo getAgencyInfo() {
         return agencyInfo;
     }
 
-    public void setAgencyInfo(Map<String, Object> agencyInfo) {
+    public void setAgencyInfo(AgencyInfo agencyInfo) {
         this.agencyInfo = agencyInfo;
     }
 
@@ -96,5 +96,86 @@ public class Author {
                 ", neighborhoodUrl='" + neighborhoodUrl + '\'' +
                 ", type='" + type + '\'' +
                 '}';
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class AgencyInfo {
+        @JsonProperty("address")
+        private String address;
+
+        @JsonProperty("city")
+        private String city;
+
+        @JsonProperty("name")
+        private String name;
+
+        @JsonProperty("phone")
+        private String phone;
+
+        @JsonProperty("post_to_areas")
+        private List<AgencyPosts.PostArea> postToAreas;
+
+        public AgencyInfo() {
+
+        }
+
+        public AgencyInfo(String address, String city, String name, String phone, List<AgencyPosts.PostArea> postToAreas) {
+            this.address = address;
+            this.city = city;
+            this.name = name;
+            this.phone = phone;
+            this.postToAreas = postToAreas;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public List<AgencyPosts.PostArea> getPostToAreas() {
+            return postToAreas;
+        }
+
+        public void setPostToAreas(List<AgencyPosts.PostArea> postToAreas) {
+            this.postToAreas = postToAreas;
+        }
+
+        @Override
+        public String toString() {
+            return "AgencyInfo{" +
+                    "address='" + address + '\'' +
+                    ", city='" + city + '\'' +
+                    ", name='" + name + '\'' +
+                    ", phone='" + phone + '\'' +
+                    ", postToAreas=" + postToAreas +
+                    '}';
+        }
     }
 }

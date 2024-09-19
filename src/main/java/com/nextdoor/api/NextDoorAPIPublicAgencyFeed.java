@@ -3,9 +3,8 @@ package com.nextdoor.api;
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.models.ConversionType;
+import com.nextdoor.models.AgencyPosts;
 import com.nextdoor.models.LocationListByState;
-import com.nextdoor.models.Posts;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
@@ -49,6 +48,43 @@ public class NextDoorAPIPublicAgencyFeed extends NextDoorAPIRequestNode {
 
         @Override
         public LocationListByState execute() throws APIRequestException {
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+            }
+        }
+    }
+
+    public static class NextDoorAPIPostsForAnAgency extends NextDoorAPIRequest<AgencyPosts> implements NextDoorAPIExecute<AgencyPosts> {
+        private String id;
+
+        public NextDoorAPIPostsForAnAgency(NextDoorAPIAuth nextDoorAPIAuth) {
+            super(AgencyPosts.class, nextDoorAPIAuth);
+
+            this.addHeader(nextDoorAPIAuth.getTokenHeader());
+        }
+
+        public NextDoorAPIPostsForAnAgency setId(String id) {
+            this.id = id;
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_URL + "partner_api/v1/agency_digest/" + this.id;
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.id, "ID");
+        }
+
+        @Override
+        public AgencyPosts execute() throws APIRequestException {
             validateRequiredParams();
 
             try {
