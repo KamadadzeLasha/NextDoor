@@ -4,8 +4,6 @@ import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.*;
-import com.nextdoor.models.Post;
-import com.nextdoor.models.Posts;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
@@ -57,6 +55,8 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
     public static class NextDoorAPIGetAllPosts extends NextDoorAPIRequest<Posts> implements NextDoorAPIExecute<Posts> {
         public NextDoorAPIGetAllPosts(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Posts.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
         }
 
         public NextDoorAPIGetAllPosts setSecureProfileID(String secureProfileID) {
@@ -67,8 +67,6 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
 
         @Override
         public Posts execute() throws APIRequestException {
-            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
-
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
@@ -90,27 +88,30 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
     public static class NextDoorAPIGetAgencyBoundaries extends NextDoorAPIRequest<AgencyBoundaries> implements NextDoorAPIExecuteList<AgencyBoundaries> {
         public NextDoorAPIGetAgencyBoundaries(NextDoorAPIAuth nextDoorAPIAuth) {
             super(AgencyBoundaries.class, nextDoorAPIAuth);
+
+            this.addHeader(nextDoorAPIAuth.getTokenHeader());
         }
 
         public NextDoorAPIGetAgencyBoundaries setParameterShowGeometries(Boolean showGeometries) {
             this.addParameters("show_geometries", showGeometries.toString());
+
             return this;
         }
 
         public NextDoorAPIGetAgencyBoundaries setParameterEnablePagination(Boolean enablePagination) {
             this.addParameters("enable_pagination", enablePagination.toString());
+
             return this;
         }
 
         public NextDoorAPIGetAgencyBoundaries setParameterAfter(String after) {
             this.addParameters("after", after);
+
             return this;
         }
 
         @Override
         public List<AgencyBoundaries> execute() throws APIRequestException {
-            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
-
             this.checkAndReplaceOrAddParameter("show_geometries", "true");
             this.checkAndReplaceOrAddParameter("enable_pagination", "true");
 
