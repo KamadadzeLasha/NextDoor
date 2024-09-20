@@ -1,14 +1,21 @@
 package com.nextdoor.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.AdGroup;
+import com.nextdoor.models.ConversionType;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.util.NextDoorUtil;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+
+import static com.nextdoor.constants.DefaultURLS.DEFAULT_FULL_ADS_API_URL;
 
 public class NextDoorAPIAdGroup extends NextDoorAPIRequestNode {
     public NextDoorAPIAdGroup() {
@@ -57,8 +64,7 @@ public class NextDoorAPIAdGroup extends NextDoorAPIRequestNode {
         }
 
         public NextDoorAPIAdGroupCreate setStartTime(Date startTime) {
-            //TODO: Parse to String
-            this.setParamInternal("start_time", startTime.toString());
+            this.setParamInternal("start_time", NextDoorUtil.formatDate(startTime));
 
             return this;
         }
@@ -70,8 +76,7 @@ public class NextDoorAPIAdGroup extends NextDoorAPIRequestNode {
         }
 
         public NextDoorAPIAdGroupCreate setEndTime(Date endTime) {
-            //TODO: Parse to String
-            this.setParamInternal("end_time", endTime.toString());
+            this.setParamInternal("end_time", NextDoorUtil.formatDate(endTime));
 
             return this;
         }
@@ -88,19 +93,87 @@ public class NextDoorAPIAdGroup extends NextDoorAPIRequestNode {
             return this;
         }
 
+        public NextDoorAPIAdGroupCreate setTargeting(AdGroup.Targeting targeting) {
+            this.setParamInternal("targeting", targeting);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupCreate setCustomAudienceTargeting(CustomAudienceTargeting customAudienceTargeting) {
+            this.setParamInternal("custom_audience_targeting", customAudienceTargeting);
+
+            return this;
+        }
+
         @Override
         protected String getPath() {
-            return "";
+            return DEFAULT_FULL_ADS_API_URL + "adgroup/create";
         }
 
         @Override
         protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("advertiser_id"), "name");
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("campaign_id"), "campaign_id");
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("name"), "name");
 
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("placements"), "placements");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("bid"), "bid");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("budget"), "budget");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("start_time"), "start_time");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("end_time"), "end_time");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("frequency_caps"), "frequency_caps");
         }
 
         @Override
         public AdGroup execute() throws APIRequestException {
-            return null;
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new NextDoorAPIAdvertiser.NextDoorAPICreateAdvertiser.AdvertiserCreationException("Can't create advertiser campaign, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class CustomAudienceTargeting {
+            @JsonProperty("include")
+            private List<String> include;
+
+            @JsonProperty("exclude")
+            private List<String> exclude;
+
+            public CustomAudienceTargeting() {
+
+            }
+
+            public CustomAudienceTargeting(List<String> include, List<String> exclude) {
+                this.include = include;
+                this.exclude = exclude;
+            }
+
+            public List<String> getInclude() {
+                return include;
+            }
+
+            public void setInclude(List<String> include) {
+                this.include = include;
+            }
+
+            public List<String> getExclude() {
+                return exclude;
+            }
+
+            public void setExclude(List<String> exclude) {
+                this.exclude = exclude;
+            }
+
+            @Override
+            public String toString() {
+                return "CustomAudienceTargeting{" +
+                        "include=" + include +
+                        ", exclude=" + exclude +
+                        '}';
+            }
         }
     }
 }
