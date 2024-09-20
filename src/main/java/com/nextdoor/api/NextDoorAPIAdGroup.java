@@ -26,6 +26,10 @@ public class NextDoorAPIAdGroup extends NextDoorAPIRequestNode {
         super(nextDoorAPIAuth);
     }
 
+    public NextDoorAPIAdGroupCreate createAdGroup() {
+        return new NextDoorAPIAdGroupCreate(this.nextDoorAPIAuth);
+    }
+
     public static class NextDoorAPIAdGroupCreate extends NextDoorAPIRequest<AdGroup> implements NextDoorAPIExecute<AdGroup> {
         public NextDoorAPIAdGroupCreate(NextDoorAPIAuth nextDoorAPIAuth) {
             super(AdGroup.class, nextDoorAPIAuth);
@@ -112,7 +116,7 @@ public class NextDoorAPIAdGroup extends NextDoorAPIRequestNode {
 
         @Override
         protected void validateRequiredParams() {
-            NextDoorUtil.ensureStringNotNull(this.getParamInternal("advertiser_id"), "name");
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("advertiser_id"), "advertiser_id");
             NextDoorUtil.ensureStringNotNull(this.getParamInternal("campaign_id"), "campaign_id");
             NextDoorUtil.ensureStringNotNull(this.getParamInternal("name"), "name");
 
@@ -131,7 +135,28 @@ public class NextDoorAPIAdGroup extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
             } catch (APIRequestException e) {
-                throw new NextDoorAPIAdvertiser.NextDoorAPICreateAdvertiser.AdvertiserCreationException("Can't create advertiser campaign, because of: " + e.getLocalizedMessage());
+                throw new AdGroupCreateException("Can't create advertiser campaign, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AdGroupCreateException extends APIRequestException {
+            public AdGroupCreateException() {
+            }
+
+            public AdGroupCreateException(String s) {
+                super(s);
+            }
+
+            public AdGroupCreateException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AdGroupCreateException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AdGroupCreateException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
 
