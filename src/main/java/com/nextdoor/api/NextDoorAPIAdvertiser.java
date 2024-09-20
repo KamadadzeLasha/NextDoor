@@ -27,6 +27,8 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
     public static class NextDoorAPICreateAdvertiser extends NextDoorAPIRequest<Advertiser> implements NextDoorAPIExecute<Advertiser> {
         public NextDoorAPICreateAdvertiser(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Advertiser.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
         }
 
         public NextDoorAPICreateAdvertiser setName(String name) {
@@ -50,8 +52,6 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         @Override
         public Advertiser execute() throws APIRequestException {
             validateRequiredParams();
-
-            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             try {
                 return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);

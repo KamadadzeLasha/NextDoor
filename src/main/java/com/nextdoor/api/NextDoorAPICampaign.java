@@ -48,6 +48,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             super(Campaign.class, nextDoorAPICampaign.getNextDoorAPIAuth());
 
             this.nextDoorAPICampaign = nextDoorAPICampaign;
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
         }
 
         public NextDoorAPICreateCampaign setName(String name) {
@@ -65,7 +66,6 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
         @Override
         public Campaign execute() throws APIRequestException {
             this.setParamInternal("advertiser_id", nextDoorAPICampaign.getAdvertiserId());
-            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             validateRequiredParams();
 
