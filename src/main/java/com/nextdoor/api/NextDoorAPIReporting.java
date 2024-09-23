@@ -26,6 +26,10 @@ public class NextDoorAPIReporting extends NextDoorAPIRequestNode {
         super(nextDoorAPIAuth);
     }
 
+    public NextDoorAPIReportingCreate createReport() {
+        return new NextDoorAPIReportingCreate(this.nextDoorAPIAuth);
+    }
+
     public static class NextDoorAPIReportingCreate extends NextDoorAPIRequest<AdReporting> implements NextDoorAPIExecute<AdReporting> {
         public NextDoorAPIReportingCreate(NextDoorAPIAuth nextDoorAPIAuth) {
             super(AdReporting.class, nextDoorAPIAuth);

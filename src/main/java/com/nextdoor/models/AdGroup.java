@@ -379,13 +379,13 @@ public class AdGroup extends NextDoorModel implements Serializable {
         private int numTimeunits;
 
         @JsonProperty("timeunit")
-        private String timeunit;
+        private TimeUnit timeunit;
 
         public FrequencyCap() {
 
         }
 
-        public FrequencyCap(int maxImpressions, int numTimeunits, String timeunit) {
+        public FrequencyCap(int maxImpressions, int numTimeunits, TimeUnit timeunit) {
             this.maxImpressions = maxImpressions;
             this.numTimeunits = numTimeunits;
             this.timeunit = timeunit;
@@ -407,11 +407,11 @@ public class AdGroup extends NextDoorModel implements Serializable {
             this.numTimeunits = numTimeunits;
         }
 
-        public String getTimeunit() {
+        public TimeUnit getTimeunit() {
             return timeunit;
         }
 
-        public void setTimeunit(String timeunit) {
+        public void setTimeunit(TimeUnit timeunit) {
             this.timeunit = timeunit;
         }
 
@@ -426,6 +426,19 @@ public class AdGroup extends NextDoorModel implements Serializable {
                     ", numTimeunits=" + numTimeunits +
                     ", timeunit='" + timeunit + '\'' +
                     '}';
+        }
+
+        public enum TimeUnit {
+            MINUTE,
+            MINUTES,
+            HOUR,
+            HOURS,
+            DAY,
+            DAYS,
+            WEEK,
+            WEEKS,
+            MONTH,
+            MONTHS
         }
 
         public static class FrequencyCapBuilder {
@@ -447,7 +460,7 @@ public class AdGroup extends NextDoorModel implements Serializable {
                 return this;
             }
 
-            public FrequencyCapBuilder timeunit(String timeunit) {
+            public FrequencyCapBuilder timeunit(TimeUnit timeunit) {
                 this.frequencyCap.timeunit = timeunit;
 
                 return this;

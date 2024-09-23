@@ -19,6 +19,14 @@ public class NextDoorAPIMedia extends NextDoorAPIRequestNode {
         super(nextDoorAPIAuth);
     }
 
+    public NextDooAPIMediaLogoUpload uploadLogo() {
+        return new NextDooAPIMediaLogoUpload(this.nextDoorAPIAuth);
+    }
+
+    public NextDooAPIMediaCanvasUpload uploadCanvas() {
+        return new NextDooAPIMediaCanvasUpload(this.nextDoorAPIAuth);
+    }
+
     public static class NextDooAPIMediaLogoUpload extends NextDoorAPIRequest<AdFile> implements NextDoorAPIExecute<AdFile> {
         public NextDooAPIMediaLogoUpload(NextDoorAPIAuth nextDoorAPIAuth) {
             super(AdFile.class, nextDoorAPIAuth);

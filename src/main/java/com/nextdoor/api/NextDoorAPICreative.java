@@ -21,6 +21,10 @@ public class NextDoorAPICreative extends NextDoorAPIRequestNode {
         super(nextDoorAPIAuth);
     }
 
+    public NextDoorAPICreateCreative createCreative() {
+        return new NextDoorAPICreateCreative(this.nextDoorAPIAuth);
+    }
+
     public static class NextDoorAPICreateCreative extends NextDoorAPIRequest<AdCreative> implements NextDoorAPIExecute<AdCreative> {
         public NextDoorAPICreateCreative(NextDoorAPIAuth nextDoorAPIAuth) {
             super(AdCreative.class, nextDoorAPIAuth);

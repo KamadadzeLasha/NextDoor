@@ -30,6 +30,10 @@ public class NextDoorAPIAdGroup extends NextDoorAPIRequestNode {
         return new NextDoorAPIAdGroupCreate(this.nextDoorAPIAuth);
     }
 
+    public NextDoorAPIAdGroupUpdate updateAdGroup() {
+        return new NextDoorAPIAdGroupUpdate(this.nextDoorAPIAuth);
+    }
+
     public static class NextDoorAPIAdGroupCreate extends NextDoorAPIRequest<AdGroup> implements NextDoorAPIExecute<AdGroup> {
         public NextDoorAPIAdGroupCreate(NextDoorAPIAuth nextDoorAPIAuth) {
             super(AdGroup.class, nextDoorAPIAuth);
@@ -198,6 +202,113 @@ public class NextDoorAPIAdGroup extends NextDoorAPIRequestNode {
                         "include=" + include +
                         ", exclude=" + exclude +
                         '}';
+            }
+        }
+    }
+
+    public static class NextDoorAPIAdGroupUpdate extends NextDoorAPIRequest<AdGroup> implements NextDoorAPIExecute<AdGroup> {
+        public NextDoorAPIAdGroupUpdate(NextDoorAPIAuth nextDoorAPIAuth) {
+            super(AdGroup.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+        }
+
+        public NextDoorAPIAdGroupUpdate setAdvertiserId(String advertiserId) {
+            this.setParamInternal("advertiser_id", advertiserId);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setCampaignId(String campaignId) {
+            this.setParamInternal("campaign_id", campaignId);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setName(String name) {
+            this.setParamInternal("name", name);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setPlacements(Collection<String> placements) {
+            this.setParamInternal("placements", placements);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setBid(AdGroup.Bid bid) {
+            this.setParamInternal("bid", bid);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setBudget(Double budget) {
+            this.setParamInternal("budget", budget);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setStartTime(Date startTime) {
+            this.setParamInternal("start_time", NextDoorUtil.formatDate(startTime));
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setStartTime(String startTime) {
+            this.setParamInternal("start_time", startTime);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setEndTime(Date endTime) {
+            this.setParamInternal("end_time", NextDoorUtil.formatDate(endTime));
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setEndTime(String endTime) {
+            this.setParamInternal("end_time", endTime);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setFrequencyCaps(AdGroup.FrequencyCap frequencyCap) {
+            this.setParamInternal("frequency_cap", frequencyCap);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setTargeting(AdGroup.Targeting targeting) {
+            this.setParamInternal("targeting", targeting);
+
+            return this;
+        }
+
+        public NextDoorAPIAdGroupUpdate setCustomAudienceIds(Collection<String> customAudienceIds) {
+            this.setParamInternal("custom_audience_ids", customAudienceIds);
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_ADS_API_URL + "adgroup/update";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public AdGroup execute() throws APIRequestException {
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new NextDoorAPIAdGroupCreate.AdGroupCreateException("Can't create advertiser campaign, because of: " + e.getLocalizedMessage());
             }
         }
     }
