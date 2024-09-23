@@ -207,6 +207,8 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
     public static class NextDoorAPICreateDefaultPost extends NextDoorAPIRequest<Post> implements NextDoorAPIExecute<Post> {
         public NextDoorAPICreateDefaultPost(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Post.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
         }
 
         public NextDoorAPICreateDefaultPost setBodyText(String bodyText) {
@@ -268,8 +270,6 @@ public class NextDoorAPIPosts extends NextDoorAPIRequestNode {
         @Override
         public Post execute() throws APIRequestException {
             validateRequiredParams();
-
-            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
 
             try {
                 return sendHttpRequest(HttpMethod.POST);
