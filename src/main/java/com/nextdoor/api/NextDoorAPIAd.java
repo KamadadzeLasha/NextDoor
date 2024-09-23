@@ -29,6 +29,10 @@ public class NextDoorAPIAd extends NextDoorAPIRequestNode {
         return new NextDoorAPIUpdateAd(this.nextDoorAPIAuth);
     }
 
+    public NextDoorAPIUpdateAdStatus updateAdStatus() {
+        return new NextDoorAPIUpdateAdStatus(this.nextDoorAPIAuth);
+    }
+
     public static class NextDoorAPICreateAd extends NextDoorAPIRequest<Ad> implements NextDoorAPIExecute<Ad> {
         public NextDoorAPICreateAd(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Ad.class, nextDoorAPIAuth);
