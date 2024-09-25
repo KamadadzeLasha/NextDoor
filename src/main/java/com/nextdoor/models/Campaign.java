@@ -1,6 +1,13 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mashape.unirest.http.HttpMethod;
+import com.nextdoor.auth.NextDoorAPIAuth;
+import com.nextdoor.constants.DefaultURLS;
+import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.share.core.NextDoorAPIRequest;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.util.NextDoorUtil;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -106,5 +113,62 @@ public class Campaign extends NextDoorModel implements Serializable {
         ACTIVE,
         PAUSED,
         ARCHIVED
+    }
+
+    public static Campaign findById(String id, NextDoorAPIAuth nextDoorAPIAuth) throws APIRequestException {
+        return new NextDoorAPIFindCampaignById(nextDoorAPIAuth, id).execute();
+    }
+
+    static class NextDoorAPIFindCampaignById extends NextDoorAPIRequest<Campaign> implements NextDoorAPIExecute<Campaign> {
+        private final String id;
+
+        public NextDoorAPIFindCampaignById(NextDoorAPIAuth nextDoorAPIAuth, String id) {
+            super(Campaign.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            NextDoorUtil.ensureStringNotNull(id, "id");
+            this.id = id;
+        }
+
+        @Override
+        protected String getPath() {
+            return DefaultURLS.DEFAULT_FULL_ADS_API_URL + "campaign/get/" + this.id;
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public Campaign execute() throws APIRequestException {
+            try {
+                return sendHttpRequest(HttpMethod.POST, getPath(), ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new CampaignNotFoundException("Can't find campaign by id " + this.id + " because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class CampaignNotFoundException extends APIRequestException {
+            public CampaignNotFoundException() {
+            }
+
+            public CampaignNotFoundException(String s) {
+                super(s);
+            }
+
+            public CampaignNotFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public CampaignNotFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public CampaignNotFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
     }
 }
