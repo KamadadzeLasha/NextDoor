@@ -1,9 +1,18 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mashape.unirest.http.HttpMethod;
+import com.nextdoor.api.NextDoorAPIReporting;
+import com.nextdoor.auth.NextDoorAPIAuth;
+import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.share.core.NextDoorAPIRequest;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.util.NextDoorUtil;
 
 import java.io.Serializable;
 import java.util.List;
+
+import static com.nextdoor.constants.DefaultURLS.DEFAULT_FULL_ADS_API_URL;
 
 public class Advertiser extends NextDoorModel implements Serializable {
     @JsonProperty("id")
@@ -131,6 +140,45 @@ public class Advertiser extends NextDoorModel implements Serializable {
 
     public void setAccountBalance(String accountBalance) {
         this.accountBalance = accountBalance;
+    }
+
+    public static Advertiser findById(String id, NextDoorAPIAuth nextDoorAPIAuth) throws APIRequestException {
+        return new NextDoorAPIFindAdvertiserById(nextDoorAPIAuth, id)
+                .execute();
+    }
+
+    static class NextDoorAPIFindAdvertiserById extends NextDoorAPIRequest<Advertiser> implements NextDoorAPIExecute<Advertiser> {
+        private final String id;
+
+        public NextDoorAPIFindAdvertiserById(NextDoorAPIAuth nextDoorAPIAuth, String id) {
+            super(Advertiser.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            NextDoorUtil.ensureStringNotNull(id, "id");
+            this.id = id;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_ADS_API_URL + "advertiser/get/" + this.id;
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public Advertiser execute() throws APIRequestException {
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new NextDoorAPIReporting.NextDoorAPIReportingCreate.AdReportingCreateException("Cannot create creative because of: " + e.getLocalizedMessage());
+            }
+        }
     }
 
     public static class Address {
