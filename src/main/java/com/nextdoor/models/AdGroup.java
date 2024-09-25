@@ -2,6 +2,13 @@ package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mashape.unirest.http.HttpMethod;
+import com.nextdoor.auth.NextDoorAPIAuth;
+import com.nextdoor.constants.DefaultURLS;
+import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.share.core.NextDoorAPIRequest;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.util.NextDoorUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -786,6 +793,61 @@ public class AdGroup extends NextDoorModel implements Serializable {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    static class NextDoorAPIFindAdGroupById extends NextDoorAPIRequest<AdGroup> implements NextDoorAPIExecute<AdGroup> {
+        private final String id;
+
+        public NextDoorAPIFindAdGroupById(NextDoorAPIAuth nextDoorAPIAuth, String id) {
+            super(AdGroup.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            NextDoorUtil.ensureStringNotNull(id, "id");
+            this.id = id;
+        }
+
+        @Override
+        protected String getPath() {
+            return DefaultURLS.DEFAULT_FULL_ADS_API_URL + "adgroup/get/" + this.id;
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public AdGroup execute() throws APIRequestException {
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new AdGroupNotFoundException("Cannot find Ad group with id: " + this.id + " because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AdGroupNotFoundException extends APIRequestException {
+            public AdGroupNotFoundException() {
+            }
+
+            public AdGroupNotFoundException(String s) {
+                super(s);
+            }
+
+            public AdGroupNotFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AdGroupNotFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AdGroupNotFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
