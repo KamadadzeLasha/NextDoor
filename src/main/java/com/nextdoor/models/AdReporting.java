@@ -111,7 +111,7 @@ public class AdReporting extends NextDoorModel implements Serializable {
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
-                throw new AdReportingNotFoundException("Cannot find Ad group with id: " + this.id + " because of: " + e.getLocalizedMessage());
+                throw new AdReportingNotFoundException("Cannot find AdReporting with id: " + this.id + " because of: " + e.getLocalizedMessage());
             }
         }
 
