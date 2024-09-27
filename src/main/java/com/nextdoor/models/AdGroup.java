@@ -797,6 +797,10 @@ public class AdGroup extends NextDoorModel implements Serializable {
         }
     }
 
+    public static AdGroup findById(String id, NextDoorAPIAuth nextDoorAPIAuth) throws APIRequestException {
+        return new NextDoorAPIFindAdGroupById(nextDoorAPIAuth, id).execute();
+    }
+
     static class NextDoorAPIFindAdGroupById extends NextDoorAPIRequest<AdGroup> implements NextDoorAPIExecute<AdGroup> {
         private final String id;
 
@@ -821,8 +825,6 @@ public class AdGroup extends NextDoorModel implements Serializable {
 
         @Override
         public AdGroup execute() throws APIRequestException {
-            validateRequiredParams();
-
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {

@@ -2,6 +2,13 @@ package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mashape.unirest.http.HttpMethod;
+import com.nextdoor.auth.NextDoorAPIAuth;
+import com.nextdoor.constants.DefaultURLS;
+import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.share.core.NextDoorAPIRequest;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.util.NextDoorUtil;
 
 import java.io.Serializable;
 
@@ -135,5 +142,41 @@ public class Ad extends NextDoorModel implements Serializable {
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
                 '}';
+    }
+
+    public static Ad findById(String id, NextDoorAPIAuth nextDoorAPIAuth) throws APIRequestException {
+        return new NextDoorAPIFindAdById(nextDoorAPIAuth, id).execute();
+    }
+
+    static class NextDoorAPIFindAdById extends NextDoorAPIRequest<Ad> implements NextDoorAPIExecute<Ad> {
+        private final String id;
+
+        public NextDoorAPIFindAdById(NextDoorAPIAuth nextDoorAPIAuth, String id) {
+            super(Ad.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            NextDoorUtil.ensureStringNotNull(id, "id");
+            this.id = id;
+        }
+
+        @Override
+        protected String getPath() {
+            return DefaultURLS.DEFAULT_FULL_ADS_API_URL + "ad/get/" + this.id;
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public Ad execute() throws APIRequestException {
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new AdGroup.NextDoorAPIFindAdGroupById.AdGroupNotFoundException("Cannot find Ad group with id: " + this.id + " because of: " + e.getLocalizedMessage());
+            }
+        }
     }
 }

@@ -2,8 +2,16 @@ package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mashape.unirest.http.HttpMethod;
+import com.nextdoor.auth.NextDoorAPIAuth;
+import com.nextdoor.exception.APIRequestException;
+import com.nextdoor.share.core.NextDoorAPIRequest;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
+import com.nextdoor.util.NextDoorUtil;
 
 import java.io.Serializable;
+
+import static com.nextdoor.constants.DefaultURLS.DEFAULT_FULL_ADS_API_URL;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AdReporting extends NextDoorModel implements Serializable {
@@ -70,5 +78,62 @@ public class AdReporting extends NextDoorModel implements Serializable {
                 ", name='" + name + '\'' +
                 ", downloadUrl='" + downloadUrl + '\'' +
                 '}';
+    }
+
+    public static AdReporting findById(String id, NextDoorAPIAuth nextDoorAPIAuth) throws APIRequestException {
+        return new NextDoorAPIGetReportingById(nextDoorAPIAuth, id).execute();
+    }
+
+    static class NextDoorAPIGetReportingById extends NextDoorAPIRequest<AdReporting> implements NextDoorAPIExecute<AdReporting> {
+        private final String id;
+
+        public NextDoorAPIGetReportingById(NextDoorAPIAuth nextDoorAPIAuth, String id) {
+            super(AdReporting.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+
+            NextDoorUtil.ensureStringNotNull(id, "id");
+            this.id = id;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_ADS_API_URL + "reporting/get/" + this.id;
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public AdReporting execute() throws APIRequestException {
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new AdReportingNotFoundException("Cannot find Ad group with id: " + this.id + " because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AdReportingNotFoundException extends APIRequestException {
+            public AdReportingNotFoundException() {
+            }
+
+            public AdReportingNotFoundException(String s) {
+                super(s);
+            }
+
+            public AdReportingNotFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AdReportingNotFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AdReportingNotFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
     }
 }
