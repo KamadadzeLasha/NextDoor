@@ -189,4 +189,35 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             }
         }
     }
+
+    public static class NextDoorAPIAdvertiserCategoriesList extends NextDoorAPIRequest<Advertiser> implements NextDoorAPIExecute<Advertiser> {
+        public NextDoorAPIAdvertiserCategoriesList(NextDoorAPIAuth nextDoorAPIAuth, String advertiserId) {
+            super(Advertiser.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
+            this.setParamInternal("advertiser_id", advertiserId);
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_ADS_API_URL + "advertiser/categories/list";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("advertiser_id"), "advertiser_id");
+        }
+
+        @Override
+        public Advertiser execute() throws APIRequestException {
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new NextDoorAPIUpdateAdvertiser.AdvertiserUpdateException("Can't update advertiser campaign, because of: " + e.getLocalizedMessage());
+            }
+        }
+    }
 }

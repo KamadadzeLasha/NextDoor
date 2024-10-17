@@ -209,9 +209,13 @@ public abstract class HTTPRequest {
                 case PUT:
                 case POST: {
                     addAdditionalPostRequestHeaders(conversionType);
-                    return httpClient.sendPostRequest(path, getBody(conversionType), this.getAdditionalHeaders());
+                    return httpClient.sendRequestWithBody(path, getBody(conversionType), this.getAdditionalHeaders());
                 }
                 case GET:
+                    if (conversionType == ConversionType.JSON) {
+                        addAdditionalPostRequestHeaders(conversionType);
+                        return httpClient.sendRequestWithBody(path, getBody(conversionType), this.getAdditionalHeaders());
+                    }
                     return httpClient.sendGetRequest(path, this.getAdditionalHeaders());
                 default:
                     throw new RuntimeException("Unsupported HTTP method");

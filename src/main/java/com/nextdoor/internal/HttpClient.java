@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpClient {
-    public HttpResponse<JsonNode> sendPostRequest(String url, String body, Map<String, String> headers) throws UnirestException {
+    public HttpResponse<JsonNode> sendRequestWithBody(String url, String body, Map<String, String> headers) throws UnirestException {
         return Unirest.post(url)
                 .headers(headers)
                 .body(body)

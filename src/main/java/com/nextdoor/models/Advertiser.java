@@ -2,6 +2,7 @@ package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mashape.unirest.http.HttpMethod;
+import com.nextdoor.api.NextDoorAPIPosts;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.share.core.NextDoorAPIRequest;
@@ -279,6 +280,62 @@ public class Advertiser extends NextDoorModel implements Serializable {
 
         public void setCountry(String country) {
             this.country = country;
+        }
+    }
+
+    public static Advertiser findById(NextDoorAPIAuth nextDoorAPIAuth, String id) throws APIRequestException {
+        return new NextDoorAPIGetAdvertiserById(nextDoorAPIAuth, id).execute();
+    }
+
+    static class NextDoorAPIGetAdvertiserById extends NextDoorAPIRequest<Advertiser> implements NextDoorAPIExecute<Advertiser> {
+        private final String advertiserId;
+
+        public NextDoorAPIGetAdvertiserById(NextDoorAPIAuth nextDoorAPIAuth, String advertiserId) {
+            super(Advertiser.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
+            this.advertiserId = advertiserId;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_ADS_API_URL + "get/" + this.advertiserId;
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public Advertiser execute() throws APIRequestException {
+            try {
+                return sendHttpRequest(HttpMethod.GET);
+            } catch (APIRequestException e) {
+                throw new AdvertiserNotFoundException("Cannot get Advertiser by ID: " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AdvertiserNotFoundException extends APIRequestException {
+            public AdvertiserNotFoundException() {
+            }
+
+            public AdvertiserNotFoundException(String s) {
+                super(s);
+            }
+
+            public AdvertiserNotFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AdvertiserNotFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AdvertiserNotFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
         }
     }
 }
