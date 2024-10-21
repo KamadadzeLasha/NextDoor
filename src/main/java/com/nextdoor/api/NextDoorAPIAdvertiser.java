@@ -191,12 +191,15 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
     }
 
     public static class NextDoorAPIAdvertiserCategoriesList extends NextDoorAPIRequest<Advertiser> implements NextDoorAPIExecute<Advertiser> {
+        private final String advertiserId;
+
         public NextDoorAPIAdvertiserCategoriesList(NextDoorAPIAuth nextDoorAPIAuth, String advertiserId) {
             super(Advertiser.class, nextDoorAPIAuth);
 
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
             NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
             this.setParamInternal("advertiser_id", advertiserId);
+            this.advertiserId = advertiserId;
         }
 
         @Override
@@ -216,7 +219,28 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
             } catch (APIRequestException e) {
-                throw new NextDoorAPIUpdateAdvertiser.AdvertiserUpdateException("Can't update advertiser campaign, because of: " + e.getLocalizedMessage());
+                throw new AdvertiserCategoriesListFoundException("Can't find Advertiser categories list with ID" + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AdvertiserCategoriesListFoundException extends APIRequestException {
+            public AdvertiserCategoriesListFoundException() {
+            }
+
+            public AdvertiserCategoriesListFoundException(String s) {
+                super(s);
+            }
+
+            public AdvertiserCategoriesListFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AdvertiserCategoriesListFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AdvertiserCategoriesListFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
