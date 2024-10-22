@@ -5,10 +5,7 @@ import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
-import com.nextdoor.models.Advertiser;
-import com.nextdoor.models.AdvertiserCampaigns;
-import com.nextdoor.models.AdvertiserCreatives;
-import com.nextdoor.models.ConversionType;
+import com.nextdoor.models.*;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
@@ -363,6 +360,67 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             }
 
             public AdvertiserCreativeNotFound(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
+    }
+
+    public static class NextDoorAPIAdvertiserReportingScheduledList extends NextDoorAPIRequest<AdvertiserReportingScheduledList> implements NextDoorAPIExecute<AdvertiserReportingScheduledList> {
+        private final String advertiserId;
+
+        public NextDoorAPIAdvertiserReportingScheduledList(NextDoorAPIAuth nextDoorAPIAuth, String advertiserId) {
+            super(AdvertiserReportingScheduledList.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
+            this.setParamInternal("advertiser_id", advertiserId);
+            this.advertiserId = advertiserId;
+        }
+
+        public NextDoorAPIAdvertiserReportingScheduledList setPaginationParameters(PaginationParameters paginationParameters) {
+            this.setParamInternal("pagination_parameters", paginationParameters);
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_ADS_API_URL + "reporting/scheduled/list";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("pagination_parameters"), "pagination_parameters");
+        }
+
+        @Override
+        public AdvertiserReportingScheduledList execute() throws APIRequestException {
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new AdvertiserReportingScheduledListNotFound("Can't find Advertiser reporting scheduled list with ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AdvertiserReportingScheduledListNotFound extends APIRequestException {
+            public AdvertiserReportingScheduledListNotFound() {
+            }
+
+            public AdvertiserReportingScheduledListNotFound(String s) {
+                super(s);
+            }
+
+            public AdvertiserReportingScheduledListNotFound(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AdvertiserReportingScheduledListNotFound(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AdvertiserReportingScheduledListNotFound(String s, Throwable throwable, boolean b, boolean b1) {
                 super(s, throwable, b, b1);
             }
         }
