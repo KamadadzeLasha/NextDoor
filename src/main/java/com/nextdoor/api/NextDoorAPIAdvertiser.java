@@ -1,10 +1,12 @@
 package com.nextdoor.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Advertiser;
+import com.nextdoor.models.AdvertiserCampaign;
 import com.nextdoor.models.ConversionType;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
@@ -209,13 +211,11 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
 
         @Override
         protected void validateRequiredParams() {
-            NextDoorUtil.ensureStringNotNull(this.getParamInternal("advertiser_id"), "advertiser_id");
+
         }
 
         @Override
         public Advertiser execute() throws APIRequestException {
-            validateRequiredParams();
-
             try {
                 return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
             } catch (APIRequestException e) {
@@ -244,4 +244,98 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             }
         }
     }
+
+    public static class NextDoorAPIAdvertiserCampaignList extends NextDoorAPIRequest<AdvertiserCampaign> implements NextDoorAPIExecute<AdvertiserCampaign> {
+        private final String advertiserId;
+
+        public NextDoorAPIAdvertiserCampaignList(NextDoorAPIAuth nextDoorAPIAuth, String advertiserId) {
+            super(AdvertiserCampaign.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
+            this.setParamInternal("advertiser_id", advertiserId);
+            this.advertiserId = advertiserId;
+        }
+
+        public NextDoorAPIAdvertiserCampaignList setPaginationParameters(PaginationParameters paginationParameters) {
+            this.setParamInternal("pagination_parameters", paginationParameters);
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_ADS_API_URL + "advertiser/campaign/list";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("pagination_parameters"), "pagination_parameters");
+        }
+
+        @Override
+        public AdvertiserCampaign execute() throws APIRequestException {
+            try {
+                return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new AdvertiserCampaignListFoundException("Can't find Advertiser campaign list with ID" + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AdvertiserCampaignListFoundException extends APIRequestException {
+            public AdvertiserCampaignListFoundException() {
+            }
+
+            public AdvertiserCampaignListFoundException(String s) {
+                super(s);
+            }
+
+            public AdvertiserCampaignListFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AdvertiserCampaignListFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AdvertiserCampaignListFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
+
+        public static class PaginationParameters {
+            @JsonProperty("page_size")
+            private int pageSize;
+
+            @JsonProperty("cursor")
+            private String cursor;
+
+            public PaginationParameters() {
+
+            }
+
+            public PaginationParameters(int pageSize, String cursor) {
+                this.pageSize = pageSize;
+                this.cursor = cursor;
+            }
+
+            public int getPageSize() {
+                return pageSize;
+            }
+
+            public void setPageSize(int pageSize) {
+                this.pageSize = pageSize;
+            }
+
+            public String getCursor() {
+                return cursor;
+            }
+
+            public void setCursor(String cursor) {
+                this.cursor = cursor;
+            }
+        }
+    }
+
+
 }
