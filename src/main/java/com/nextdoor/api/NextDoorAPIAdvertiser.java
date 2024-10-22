@@ -426,6 +426,67 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         }
     }
 
+    public static class NextDoorAPIAdvertiserReportingList extends NextDoorAPIRequest<AdvertiserReportingList> implements NextDoorAPIExecute<AdvertiserReportingList> {
+        private final String advertiserId;
+
+        public NextDoorAPIAdvertiserReportingList(NextDoorAPIAuth nextDoorAPIAuth, String advertiserId) {
+            super(AdvertiserReportingList.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
+            this.setParamInternal("advertiser_id", advertiserId);
+            this.advertiserId = advertiserId;
+        }
+
+        public NextDoorAPIAdvertiserReportingList setPaginationParameters(PaginationParameters paginationParameters) {
+            this.setParamInternal("pagination_parameters", paginationParameters);
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_ADS_API_URL + "advertiser/reportinglist";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("pagination_parameters"), "pagination_parameters");
+        }
+
+        @Override
+        public AdvertiserReportingList execute() throws APIRequestException {
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new AdvertiserReportingListNotFound("Can't find Advertiser reporting list with ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AdvertiserReportingListNotFound extends APIRequestException {
+            public AdvertiserReportingListNotFound() {
+            }
+
+            public AdvertiserReportingListNotFound(String s) {
+                super(s);
+            }
+
+            public AdvertiserReportingListNotFound(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AdvertiserReportingListNotFound(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AdvertiserReportingListNotFound(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
+    }
+
     public static class PaginationParameters {
         @JsonProperty("page_size")
         private int pageSize;
