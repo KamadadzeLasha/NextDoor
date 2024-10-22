@@ -6,7 +6,8 @@ import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Advertiser;
-import com.nextdoor.models.AdvertiserCampaign;
+import com.nextdoor.models.AdvertiserCampaigns;
+import com.nextdoor.models.AdvertiserCreatives;
 import com.nextdoor.models.ConversionType;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
@@ -245,11 +246,11 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         }
     }
 
-    public static class NextDoorAPIAdvertiserCampaignList extends NextDoorAPIRequest<AdvertiserCampaign> implements NextDoorAPIExecute<AdvertiserCampaign> {
+    public static class NextDoorAPIAdvertiserCampaignList extends NextDoorAPIRequest<AdvertiserCampaigns> implements NextDoorAPIExecute<AdvertiserCampaigns> {
         private final String advertiserId;
 
         public NextDoorAPIAdvertiserCampaignList(NextDoorAPIAuth nextDoorAPIAuth, String advertiserId) {
-            super(AdvertiserCampaign.class, nextDoorAPIAuth);
+            super(AdvertiserCampaigns.class, nextDoorAPIAuth);
 
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
             NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
@@ -274,7 +275,9 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         }
 
         @Override
-        public AdvertiserCampaign execute() throws APIRequestException {
+        public AdvertiserCampaigns execute() throws APIRequestException {
+            validateRequiredParams();
+
             try {
                 return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
             } catch (APIRequestException e) {
@@ -302,40 +305,99 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
                 super(s, throwable, b, b1);
             }
         }
+    }
 
-        public static class PaginationParameters {
-            @JsonProperty("page_size")
-            private int pageSize;
+    public static class NextDoorAPIAdvertiserCreativeList extends NextDoorAPIRequest<AdvertiserCreatives> implements NextDoorAPIExecute<AdvertiserCreatives> {
+        private final String advertiserId;
 
-            @JsonProperty("cursor")
-            private String cursor;
+        public NextDoorAPIAdvertiserCreativeList(NextDoorAPIAuth nextDoorAPIAuth, String advertiserId) {
+            super(AdvertiserCreatives.class, nextDoorAPIAuth);
 
-            public PaginationParameters() {
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
+            this.setParamInternal("advertiser_id", advertiserId);
+            this.advertiserId = advertiserId;
+        }
 
+        public NextDoorAPIAdvertiserCreativeList setPaginationParameters(PaginationParameters paginationParameters) {
+            this.setParamInternal("pagination_parameters", paginationParameters);
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_ADS_API_URL + "advertiser/creative/list";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.getParamInternal("pagination_parameters"), "pagination_parameters");
+        }
+
+        @Override
+        public AdvertiserCreatives execute() throws APIRequestException {
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new AdvertiserCreativeNotFound("Can't find Advertiser creative list with ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AdvertiserCreativeNotFound extends APIRequestException {
+            public AdvertiserCreativeNotFound() {
             }
 
-            public PaginationParameters(int pageSize, String cursor) {
-                this.pageSize = pageSize;
-                this.cursor = cursor;
+            public AdvertiserCreativeNotFound(String s) {
+                super(s);
             }
 
-            public int getPageSize() {
-                return pageSize;
+            public AdvertiserCreativeNotFound(String s, Throwable throwable) {
+                super(s, throwable);
             }
 
-            public void setPageSize(int pageSize) {
-                this.pageSize = pageSize;
+            public AdvertiserCreativeNotFound(Throwable throwable) {
+                super(throwable);
             }
 
-            public String getCursor() {
-                return cursor;
-            }
-
-            public void setCursor(String cursor) {
-                this.cursor = cursor;
+            public AdvertiserCreativeNotFound(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
 
+    public static class PaginationParameters {
+        @JsonProperty("page_size")
+        private int pageSize;
 
+        @JsonProperty("cursor")
+        private String cursor;
+
+        public PaginationParameters() {
+
+        }
+
+        public PaginationParameters(int pageSize, String cursor) {
+            this.pageSize = pageSize;
+            this.cursor = cursor;
+        }
+
+        public int getPageSize() {
+            return pageSize;
+        }
+
+        public void setPageSize(int pageSize) {
+            this.pageSize = pageSize;
+        }
+
+        public String getCursor() {
+            return cursor;
+        }
+
+        public void setCursor(String cursor) {
+            this.cursor = cursor;
+        }
+    }
 }
