@@ -1,4 +1,4 @@
-package com.nextdoor.api;
+package com.nextdoor.api.displayingcontent;
 
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
@@ -63,7 +63,28 @@ public class NextDoorAPITrendingPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequestForList(HttpMethod.GET, getPath(), ConversionType.NONE);
             } catch (APIRequestException e) {
-                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new CityListFoundException("Can't get list of cities, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class CityListFoundException extends APIRequestException {
+            public CityListFoundException() {
+            }
+
+            public CityListFoundException(String s) {
+                super(s);
+            }
+
+            public CityListFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public CityListFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public CityListFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
@@ -90,7 +111,28 @@ public class NextDoorAPITrendingPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequestForList(HttpMethod.GET, getPath(), ConversionType.NONE);
             } catch (APIRequestException e) {
-                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new StateListFindException("Can't get states list, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class StateListFindException extends APIRequestException {
+            public StateListFindException() {
+            }
+
+            public StateListFindException(String s) {
+                super(s);
+            }
+
+            public StateListFindException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public StateListFindException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public StateListFindException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
@@ -125,7 +167,28 @@ public class NextDoorAPITrendingPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
-                throw new NextDoorAPIAdvertiser.NextDoorAPICreateAdvertiser.AdvertiserCreationException("Can't create advertiser campaign, because of: " + e.getLocalizedMessage());
+                throw new TargetingPostsCityFoundException("Can't find targeting posts city, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class TargetingPostsCityFoundException extends APIRequestException {
+            public TargetingPostsCityFoundException() {
+            }
+
+            public TargetingPostsCityFoundException(String s) {
+                super(s);
+            }
+
+            public TargetingPostsCityFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public TargetingPostsCityFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public TargetingPostsCityFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
@@ -165,7 +228,28 @@ public class NextDoorAPITrendingPosts extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
-                throw new NextDoorAPIAdvertiser.NextDoorAPICreateAdvertiser.AdvertiserCreationException("Can't create advertiser campaign, because of: " + e.getLocalizedMessage());
+                throw new TargetingStateWithPaginationException("Can't find targeting state " + this.stateId + " by pagination ( " + this.pageNum + "), because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class TargetingStateWithPaginationException extends APIRequestException {
+            public TargetingStateWithPaginationException() {
+            }
+
+            public TargetingStateWithPaginationException(String s) {
+                super(s);
+            }
+
+            public TargetingStateWithPaginationException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public TargetingStateWithPaginationException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public TargetingStateWithPaginationException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }

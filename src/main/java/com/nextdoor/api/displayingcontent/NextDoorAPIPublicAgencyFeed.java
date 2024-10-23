@@ -1,4 +1,4 @@
-package com.nextdoor.api;
+package com.nextdoor.api.displayingcontent;
 
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
@@ -53,7 +53,28 @@ public class NextDoorAPIPublicAgencyFeed extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
-                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new LocationListByStateNotFoundException("Can't find location list by state " + this.stateId + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class LocationListByStateNotFoundException extends APIRequestException {
+            public LocationListByStateNotFoundException() {
+            }
+
+            public LocationListByStateNotFoundException(String s) {
+                super(s);
+            }
+
+            public LocationListByStateNotFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public LocationListByStateNotFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public LocationListByStateNotFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
@@ -90,7 +111,28 @@ public class NextDoorAPIPublicAgencyFeed extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
-                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new AgencyPostsNotFoundException("Can't find agency posts by ID " + this.id + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AgencyPostsNotFoundException extends APIRequestException {
+            public AgencyPostsNotFoundException() {
+            }
+
+            public AgencyPostsNotFoundException(String s) {
+                super(s);
+            }
+
+            public AgencyPostsNotFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AgencyPostsNotFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AgencyPostsNotFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }

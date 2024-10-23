@@ -1,4 +1,4 @@
-package com.nextdoor.api;
+package com.nextdoor.api.advertising;
 
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;

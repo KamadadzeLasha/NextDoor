@@ -1,4 +1,4 @@
-package com.nextdoor.api;
+package com.nextdoor.api.displayingcontent;
 
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
@@ -99,7 +99,28 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
-                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new SearchPostsNotFoudException("Can't search posts, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class SearchPostsNotFoudException extends APIRequestException {
+            public SearchPostsNotFoudException() {
+            }
+
+            public SearchPostsNotFoudException(String s) {
+                super(s);
+            }
+
+            public SearchPostsNotFoudException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public SearchPostsNotFoudException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public SearchPostsNotFoudException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
@@ -146,7 +167,28 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
-                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new SearchPostsBySignalsNotFoundException("Can't search post by signals, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class SearchPostsBySignalsNotFoundException extends APIRequestException {
+            public SearchPostsBySignalsNotFoundException() {
+            }
+
+            public SearchPostsBySignalsNotFoundException(String s) {
+                super(s);
+            }
+
+            public SearchPostsBySignalsNotFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public SearchPostsBySignalsNotFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public SearchPostsBySignalsNotFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
@@ -201,7 +243,28 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequestForList(HttpMethod.GET, getPath(), ConversionType.URL_ENCODED);
             } catch (APIRequestException e) {
-                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new SearchFSFItemsException("Can't search FSF items, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class SearchFSFItemsException extends APIRequestException {
+            public SearchFSFItemsException() {
+            }
+
+            public SearchFSFItemsException(String s) {
+                super(s);
+            }
+
+            public SearchFSFItemsException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public SearchFSFItemsException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public SearchFSFItemsException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
@@ -256,7 +319,28 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequestForList(HttpMethod.GET, getPath(), ConversionType.URL_ENCODED);
             } catch (APIRequestException e) {
-                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new SearchEventsException("Can't search events, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class SearchEventsException extends APIRequestException {
+            public SearchEventsException() {
+            }
+
+            public SearchEventsException(String s) {
+                super(s);
+            }
+
+            public SearchEventsException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public SearchEventsException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public SearchEventsException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }
@@ -312,7 +396,28 @@ public class NextDoorAPISearch extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequestForList(HttpMethod.GET, getPath(), ConversionType.URL_ENCODED);
             } catch (APIRequestException e) {
-                throw new NextDoorAPICampaign.NextDoorAPICreateCampaign.CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new SearchBusinessesNotFoundException("Can't search businesses, because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class SearchBusinessesNotFoundException extends APIRequestException {
+            public SearchBusinessesNotFoundException() {
+            }
+
+            public SearchBusinessesNotFoundException(String s) {
+                super(s);
+            }
+
+            public SearchBusinessesNotFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public SearchBusinessesNotFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public SearchBusinessesNotFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
             }
         }
     }

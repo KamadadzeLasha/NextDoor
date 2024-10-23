@@ -1,7 +1,7 @@
 package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nextdoor.api.NextDoorAPIPosts;
+import com.nextdoor.api.sharingcontent.NextDoorAPIPosts;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 
