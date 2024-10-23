@@ -11,6 +11,8 @@ import com.nextdoor.share.core.NextDoorAPIRequestNode;
 import com.nextdoor.share.interfaces.NextDoorAPIExecute;
 import com.nextdoor.util.NextDoorUtil;
 
+import java.util.Date;
+
 import static com.nextdoor.constants.DefaultURLS.DEFAULT_FULL_ADS_API_URL;
 
 public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
@@ -190,6 +192,85 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         }
     }
 
+    public static class NextDoorAPIAdvertiserFindStatsById extends NextDoorAPIRequest<AdvertuserStatsById> implements NextDoorAPIExecute<AdvertuserStatsById> {
+        private final String id;
+
+        public NextDoorAPIAdvertiserFindStatsById(NextDoorAPIAuth nextDoorAPIAuth, String id) {
+            super(AdvertuserStatsById.class, nextDoorAPIAuth);
+
+            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            NextDoorUtil.ensureStringNotNull(id, "id");
+
+            this.id = id;
+        }
+
+        public NextDoorAPIAdvertiserFindStatsById setAdvertiserId(String advertiserId) {
+            this.setParamInternal("advertiser_id", advertiserId);
+
+            return this;
+        }
+
+        public NextDoorAPIAdvertiserFindStatsById setStartTime(Date startTime) {
+            return setStartTime(NextDoorUtil.formatDate(startTime));
+        }
+
+        public NextDoorAPIAdvertiserFindStatsById setStartTime(String startTime) {
+            this.setParamInternal("start_time", startTime);
+
+            return this;
+        }
+
+        public NextDoorAPIAdvertiserFindStatsById setEndTime(Date endTime) {
+            return setEndTime(NextDoorUtil.formatDate(endTime));
+        }
+
+        public NextDoorAPIAdvertiserFindStatsById setEndTime(String endTime) {
+            this.setParamInternal("end_time", endTime);
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return DEFAULT_FULL_ADS_API_URL + "advertiser/get/" + this.id + "/stats";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public AdvertuserStatsById execute() throws APIRequestException {
+            try {
+                return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new AdvertiserStatsByIdNotFoundException("Can't find Advertiser stats by ID " + this.id + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class AdvertiserStatsByIdNotFoundException extends APIRequestException {
+            public AdvertiserStatsByIdNotFoundException() {
+            }
+
+            public AdvertiserStatsByIdNotFoundException(String s) {
+                super(s);
+            }
+
+            public AdvertiserStatsByIdNotFoundException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public AdvertiserStatsByIdNotFoundException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public AdvertiserStatsByIdNotFoundException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
+    }
+
     public static class NextDoorAPIAdvertiserCategoriesList extends NextDoorAPIRequest<Advertiser> implements NextDoorAPIExecute<Advertiser> {
         private final String advertiserId;
 
@@ -217,7 +298,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
             } catch (APIRequestException e) {
-                throw new AdvertiserCategoriesListFoundException("Can't find Advertiser categories list with ID" + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+                throw new AdvertiserCategoriesListFoundException("Can't find Advertiser categories list by ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -278,7 +359,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
             } catch (APIRequestException e) {
-                throw new AdvertiserCampaignListFoundException("Can't find Advertiser campaign list with ID" + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+                throw new AdvertiserCampaignListFoundException("Can't find Advertiser campaign list by ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -339,7 +420,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
             } catch (APIRequestException e) {
-                throw new AdvertiserCreativeNotFound("Can't find Advertiser creative list with ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+                throw new AdvertiserCreativeNotFound("Can't find Advertiser creative list by ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -400,7 +481,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
             } catch (APIRequestException e) {
-                throw new AdvertiserReportingScheduledListNotFound("Can't find Advertiser reporting scheduled list with ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+                throw new AdvertiserReportingScheduledListNotFound("Can't find Advertiser reporting scheduled list by ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -461,7 +542,7 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
             try {
                 return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
             } catch (APIRequestException e) {
-                throw new AdvertiserReportingListNotFound("Can't find Advertiser reporting list with ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+                throw new AdvertiserReportingListNotFound("Can't find Advertiser reporting list by ID " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
             }
         }
 
