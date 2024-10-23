@@ -32,6 +32,30 @@ public class NextDoorAPIAdvertiser extends NextDoorAPIRequestNode {
         return new NextDoorAPIUpdateAdvertiser(this.getNextDoorAPIAuth());
     }
 
+    public NextDoorAPIAdvertiserFindStatsById findStatsById(String id) {
+        return new NextDoorAPIAdvertiserFindStatsById(this.getNextDoorAPIAuth(), id);
+    }
+
+    public NextDoorAPIAdvertiserCategoriesList findAdvertiserCategoriesListById(String id) {
+        return new NextDoorAPIAdvertiserCategoriesList(this.getNextDoorAPIAuth(), id);
+    }
+
+    public NextDoorAPIAdvertiserCampaignList findAdvertiserCampaignListById(String id) {
+        return new NextDoorAPIAdvertiserCampaignList(this.getNextDoorAPIAuth(), id);
+    }
+
+    public NextDoorAPIAdvertiserCreativeList findAdvertiserCreativeListById(String id) {
+        return new NextDoorAPIAdvertiserCreativeList(this.getNextDoorAPIAuth(), id);
+    }
+
+    public NextDoorAPIAdvertiserReportingScheduledList findAdvertiserReportingScheduledListById(String id) {
+        return new NextDoorAPIAdvertiserReportingScheduledList(this.getNextDoorAPIAuth(), id);
+    }
+
+    public NextDoorAPIAdvertiserReportingList findAdvertiserReportingListById(String id) {
+        return new NextDoorAPIAdvertiserReportingList(this.getNextDoorAPIAuth(), id);
+    }
+
     public static class NextDoorAPICreateAdvertiser extends NextDoorAPIRequest<Advertiser> implements NextDoorAPIExecute<Advertiser> {
         public NextDoorAPICreateAdvertiser(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Advertiser.class, nextDoorAPIAuth);

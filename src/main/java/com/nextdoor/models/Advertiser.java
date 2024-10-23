@@ -2,7 +2,6 @@ package com.nextdoor.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mashape.unirest.http.HttpMethod;
-import com.nextdoor.api.NextDoorAPIPosts;
 import com.nextdoor.auth.NextDoorAPIAuth;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.share.core.NextDoorAPIRequest;
@@ -171,12 +170,10 @@ public class Advertiser extends NextDoorModel implements Serializable {
 
         @Override
         public Advertiser execute() throws APIRequestException {
-            validateRequiredParams();
-
             try {
                 return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
-                throw new AdvertiserNotFoundException("Cannot find Advertiser with id: " + this.id + " because of: " + e.getLocalizedMessage());
+                throw new AdvertiserNotFoundException("Cannot find Advertiser by ID: " + this.id + ", because of: " + e.getLocalizedMessage());
             }
         }
 
