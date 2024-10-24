@@ -118,8 +118,12 @@ public class Campaign extends NextDoorModel implements Serializable {
         ARCHIVED
     }
 
-    public static Campaign findById(String id, NextDoorAPIAuth nextDoorAPIAuth) throws APIRequestException {
+    public static Campaign findById(NextDoorAPIAuth nextDoorAPIAuth, String id) throws APIRequestException {
         return new NextDoorAPIFindCampaignById(nextDoorAPIAuth, id).execute();
+    }
+
+    public static CampaignStatsById findStatsById(NextDoorAPIAuth nextDoorAPIAuth, String id) throws APIRequestException {
+        return new NextDoorAPIFindCampaignStatsById(nextDoorAPIAuth, id).execute();
     }
 
     static class NextDoorAPIFindCampaignById extends NextDoorAPIRequest<Campaign> implements NextDoorAPIExecute<Campaign> {
