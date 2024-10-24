@@ -12,50 +12,40 @@ import com.nextdoor.share.interfaces.NextDoorAPIExecute;
 import com.nextdoor.util.NextDoorUtil;
 
 public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
-    protected String advertiserId;
-
     public NextDoorAPICampaign() {
         super(NextDoorAPIAuth.defaultNextDoorAPIAuth());
     }
 
-    public NextDoorAPICampaign(String advertiserId, NextDoorAPIAuth nextDoorAPIAuth) {
+    public NextDoorAPICampaign(NextDoorAPIAuth nextDoorAPIAuth) {
         super(nextDoorAPIAuth);
-
-        NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
-        this.advertiserId = advertiserId;
-    }
-
-    public String getAdvertiserId() {
-        return advertiserId;
-    }
-
-    public void setAdvertiserId(String advertiserId) {
-        this.advertiserId = advertiserId;
     }
 
     public NextDoorAPICreateCampaign createCampaign() {
-        return new NextDoorAPICreateCampaign(this.getNextDoorAPIAuth(), this.advertiserId);
+        return new NextDoorAPICreateCampaign(this.getNextDoorAPIAuth());
     }
 
     public NextDoorAPIUpdateCampaign updateCampaign(String campaignId) {
-        return new NextDoorAPIUpdateCampaign(this.getNextDoorAPIAuth(), campaignId, this.advertiserId);
+        return new NextDoorAPIUpdateCampaign(this.getNextDoorAPIAuth(), campaignId);
     }
 
     public NextDoorAPIUpdateCampaignStatus updateCampaignStatus(String campaignId) {
-        return new NextDoorAPIUpdateCampaignStatus(this.getNextDoorAPIAuth(), campaignId, this.advertiserId);
+        return new NextDoorAPIUpdateCampaignStatus(this.getNextDoorAPIAuth(), campaignId);
     }
 
     public static class NextDoorAPICreateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPIExecute<Campaign> {
-        private final String advertiserId;
+        private String advertiserId;
 
-        public NextDoorAPICreateCampaign(NextDoorAPIAuth nextDoorAPIAuth, String advertiserId) {
+        public NextDoorAPICreateCampaign(NextDoorAPIAuth nextDoorAPIAuth) {
             super(Campaign.class, nextDoorAPIAuth);
 
-            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
-
-            this.setParamInternal("advertiser_id", advertiserId);
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+        }
+
+        public NextDoorAPICreateCampaign setAdvertiserId(String advertiserId) {
             this.advertiserId = advertiserId;
+            this.setParamInternal("advertiser_id", advertiserId);
+
+            return this;
         }
 
         public NextDoorAPICreateCampaign setName(String name) {
@@ -88,6 +78,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         @Override
         protected void validateRequiredParams() {
+            NextDoorUtil.ensureObjectNotNull(this.advertiserId, "advertiser_id");
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal("name"), "name");
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal("objective"), "objective");
         }
@@ -115,20 +106,25 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
     }
 
     public static class NextDoorAPIUpdateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPIExecute<Campaign> {
+        private String advertiserId;
         private final String campaignId;
-        private final String advertiserId;
 
-        public NextDoorAPIUpdateCampaign(NextDoorAPIAuth nextDoorAPIAuth, String campaignId, String advertiserId) {
+        public NextDoorAPIUpdateCampaign(NextDoorAPIAuth nextDoorAPIAuth, String campaignId) {
             super(Campaign.class, nextDoorAPIAuth);
 
             NextDoorUtil.ensureStringNotNull(campaignId, "campaignId");
             NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
 
             this.setParamInternal("id", campaignId);
-            this.setParamInternal("advertiser_id", advertiserId);
 
             this.campaignId = campaignId;
+        }
+
+        public NextDoorAPIUpdateCampaign setAdvertiserId(String advertiserId) {
+            this.setParamInternal("advertiser_id", advertiserId);
             this.advertiserId = advertiserId;
+
+            return this;
         }
 
         public NextDoorAPIUpdateCampaign setName(String name) {
@@ -150,6 +146,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         @Override
         protected void validateRequiredParams() {
+            NextDoorUtil.ensureObjectNotNull(this.advertiserId, "advertiser_id");
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal("name"), "name");
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal("objective"), "objective");
         }
@@ -189,19 +186,23 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
     public static class NextDoorAPIUpdateCampaignStatus extends NextDoorAPIRequest<Campaign> implements NextDoorAPIExecute<Campaign> {
         private final String campaignId;
-        private final String advertiserId;
+        private String advertiserId;
 
-        public NextDoorAPIUpdateCampaignStatus(NextDoorAPIAuth nextDoorAPIAuth, String campaignId, String advertiserId) {
+        public NextDoorAPIUpdateCampaignStatus(NextDoorAPIAuth nextDoorAPIAuth, String campaignId) {
             super(Campaign.class, nextDoorAPIAuth);
 
             NextDoorUtil.ensureStringNotNull(campaignId, "campaignId");
-            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
 
             this.setParamInternal("id", campaignId);
-            this.setParamInternal("advertiser_id", advertiserId);
 
             this.campaignId = campaignId;
+        }
+
+        public NextDoorAPIUpdateCampaignStatus setAdvertiserId(String advertiserId) {
+            this.setParamInternal("advertiser_id", advertiserId);
             this.advertiserId = advertiserId;
+
+            return this;
         }
 
         public NextDoorAPIUpdateCampaignStatus setUserStatus(Campaign.UserStatus userStatus) {
@@ -217,6 +218,7 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         @Override
         protected void validateRequiredParams() {
+            NextDoorUtil.ensureStringNotNull(this.advertiserId, "advertiserId");
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal("user_status"), "user_status");
         }
 
