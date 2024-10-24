@@ -1,5 +1,6 @@
 package com.nextdoor.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mashape.unirest.http.HttpMethod;
 import com.nextdoor.auth.NextDoorAPIAuth;
@@ -12,6 +13,7 @@ import com.nextdoor.util.NextDoorUtil;
 import java.io.Serializable;
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Campaign extends NextDoorModel implements Serializable {
     @JsonProperty("id")
     private String id;
@@ -171,5 +173,88 @@ public class Campaign extends NextDoorModel implements Serializable {
                 super(s, throwable, b, b1);
             }
         }
+    }
+
+    static class NextDoorAPIFindCampaignStatsById extends NextDoorAPIRequest<CampaignStatsById> implements NextDoorAPIExecute<CampaignStatsById> {
+        private final String campaignId;
+
+        public NextDoorAPIFindCampaignStatsById(NextDoorAPIAuth nextDoorAPIAuth, String campaignId) {
+            super(CampaignStatsById.class, nextDoorAPIAuth);
+
+            NextDoorUtil.ensureStringNotNull(campaignId, "campaignId");
+
+            this.campaignId = campaignId;
+        }
+
+        public NextDoorAPIFindCampaignStatsById setAdvertiserId(String advertiserId) {
+            this.setParamInternal("advertiser_id", advertiserId);
+
+            return this;
+        }
+
+        public NextDoorAPIFindCampaignStatsById setStartTime(Date startTime) {
+            return setStartTime(NextDoorUtil.formatDate(startTime));
+        }
+
+        public NextDoorAPIFindCampaignStatsById setStartTime(String startTime) {
+            this.setParamInternal("start_time", startTime);
+
+            return this;
+        }
+
+        public NextDoorAPIFindCampaignStatsById setEndTime(Date endTime) {
+            return setEndTime(NextDoorUtil.formatDate(endTime));
+        }
+
+        public NextDoorAPIFindCampaignStatsById setEndTime(String endTime) {
+            this.setParamInternal("end_time", endTime);
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return "campaign/get/" + this.campaignId + "/stats";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+
+        }
+
+        @Override
+        public CampaignStatsById execute() throws APIRequestException {
+            try {
+                return sendHttpRequest(HttpMethod.GET, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new CampaignStatsNotFound("Can't find campaign stats by ID " + this.campaignId + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class CampaignStatsNotFound extends APIRequestException {
+            public CampaignStatsNotFound() {
+            }
+
+            public CampaignStatsNotFound(String s) {
+                super(s);
+            }
+
+            public CampaignStatsNotFound(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public CampaignStatsNotFound(Throwable throwable) {
+                super(throwable);
+            }
+
+            public CampaignStatsNotFound(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class CampaignStatsById extends NextDoorModel implements Serializable {
+
     }
 }
