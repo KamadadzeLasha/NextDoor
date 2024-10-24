@@ -29,7 +29,7 @@ public class Campaign extends NextDoorModel implements Serializable {
     private String status;
 
     @JsonProperty("user_status")
-    private String userStatus;
+    private UserStatus userStatus;
 
     @JsonProperty("start_time")
     private Date startTime;
@@ -81,11 +81,11 @@ public class Campaign extends NextDoorModel implements Serializable {
         this.status = status;
     }
 
-    public String getUserStatus() {
+    public UserStatus getUserStatus() {
         return userStatus;
     }
 
-    public void setUserStatus(String userStatus) {
+    public void setUserStatus(UserStatus userStatus) {
         this.userStatus = userStatus;
     }
 
@@ -106,7 +106,8 @@ public class Campaign extends NextDoorModel implements Serializable {
     }
 
     public enum Objective {
-        AWARENESS, CONSIDERATION, CONVERSION, LEAD_GENERATION
+        AWARENESS,
+        CONSIDERATION
     }
 
     public enum UserStatus {
@@ -144,7 +145,7 @@ public class Campaign extends NextDoorModel implements Serializable {
         @Override
         public Campaign execute() throws APIRequestException {
             try {
-                return sendHttpRequest(HttpMethod.POST, getPath(), ConversionType.JSON);
+                return sendHttpRequest(HttpMethod.GET);
             } catch (APIRequestException e) {
                 throw new CampaignNotFoundException("Can't find campaign by id " + this.id + " because of: " + e.getLocalizedMessage());
             }

@@ -6,9 +6,9 @@ import com.nextdoor.constants.DefaultURLS;
 import com.nextdoor.exception.APIRequestException;
 import com.nextdoor.models.Campaign;
 import com.nextdoor.models.ConversionType;
-import com.nextdoor.share.interfaces.NextDoorAPIExecute;
 import com.nextdoor.share.core.NextDoorAPIRequest;
 import com.nextdoor.share.core.NextDoorAPIRequestNode;
+import com.nextdoor.share.interfaces.NextDoorAPIExecute;
 import com.nextdoor.util.NextDoorUtil;
 
 public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
@@ -34,21 +34,28 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
     }
 
     public NextDoorAPICreateCampaign createCampaign() {
-        return new NextDoorAPICreateCampaign(this);
+        return new NextDoorAPICreateCampaign(this.getNextDoorAPIAuth(), this.advertiserId);
     }
 
     public NextDoorAPIUpdateCampaign updateCampaign(String campaignId) {
-        return new NextDoorAPIUpdateCampaign(this, campaignId);
+        return new NextDoorAPIUpdateCampaign(this.getNextDoorAPIAuth(), campaignId, this.advertiserId);
+    }
+
+    public NextDoorAPIUpdateCampaignStatus updateCampaignStatus(String campaignId) {
+        return new NextDoorAPIUpdateCampaignStatus(this.getNextDoorAPIAuth(), campaignId, this.advertiserId);
     }
 
     public static class NextDoorAPICreateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPIExecute<Campaign> {
-        private final NextDoorAPICampaign nextDoorAPICampaign;
+        private final String advertiserId;
 
-        public NextDoorAPICreateCampaign(NextDoorAPICampaign nextDoorAPICampaign) {
-            super(Campaign.class, nextDoorAPICampaign.getNextDoorAPIAuth());
+        public NextDoorAPICreateCampaign(NextDoorAPIAuth nextDoorAPIAuth, String advertiserId) {
+            super(Campaign.class, nextDoorAPIAuth);
 
-            this.nextDoorAPICampaign = nextDoorAPICampaign;
+            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
+
+            this.setParamInternal("advertiser_id", advertiserId);
             this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
+            this.advertiserId = advertiserId;
         }
 
         public NextDoorAPICreateCampaign setName(String name) {
@@ -65,14 +72,12 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         @Override
         public Campaign execute() throws APIRequestException {
-            this.setParamInternal("advertiser_id", nextDoorAPICampaign.getAdvertiserId());
-
             validateRequiredParams();
 
             try {
-                return sendHttpRequest(HttpMethod.POST, getPath(), ConversionType.JSON);
+                return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
             } catch (APIRequestException e) {
-                throw new CampaignCreationException("Can't create campaign, because of: " + e.getLocalizedMessage());
+                throw new CampaignCreationException("Can't create campaign for advertiser " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
             }
         }
 
@@ -83,7 +88,6 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         @Override
         protected void validateRequiredParams() {
-            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("advertiser_id"), "advertiser_id");
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal("name"), "name");
             NextDoorUtil.ensureObjectNotNull(this.getParamInternal("objective"), "objective");
         }
@@ -111,14 +115,20 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
     }
 
     public static class NextDoorAPIUpdateCampaign extends NextDoorAPIRequest<Campaign> implements NextDoorAPIExecute<Campaign> {
-        private final NextDoorAPICampaign nextDoorAPICampaign;
         private final String campaignId;
+        private final String advertiserId;
 
-        public NextDoorAPIUpdateCampaign(NextDoorAPICampaign nextDoorAPICampaign, String campaignId) {
-            super(Campaign.class, nextDoorAPICampaign.getNextDoorAPIAuth());
+        public NextDoorAPIUpdateCampaign(NextDoorAPIAuth nextDoorAPIAuth, String campaignId, String advertiserId) {
+            super(Campaign.class, nextDoorAPIAuth);
 
-            this.nextDoorAPICampaign = nextDoorAPICampaign;
+            NextDoorUtil.ensureStringNotNull(campaignId, "campaignId");
+            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
+
+            this.setParamInternal("id", campaignId);
+            this.setParamInternal("advertiser_id", advertiserId);
+
             this.campaignId = campaignId;
+            this.advertiserId = advertiserId;
         }
 
         public NextDoorAPIUpdateCampaign setName(String name) {
@@ -133,40 +143,6 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             return this;
         }
 
-        public NextDoorAPIUpdateCampaign setUserStatus(Campaign.UserStatus userStatus) {
-            this.setParamInternal("user_status", userStatus.name());
-
-            return this;
-        }
-
-        @Override
-        public Campaign execute() throws APIRequestException {
-            this.setParamInternal("advertiser_id", this.nextDoorAPICampaign.getAdvertiserId());
-            this.setParamInternal("id", this.campaignId);
-
-            validateRequiredParams();
-
-            this.addHeader(this.getNextDoorAPIAuth().getTokenHeader());
-
-            try {
-                if (this.containsParamInternal("user_status") && !this.containsParamInternal("objective")) {
-                    validateParams("user_status");
-                    return sendHttpRequest(HttpMethod.POST, updateStatusPath(), ConversionType.JSON);
-                } else if (!this.containsParamInternal("user_status") && this.containsParamInternal("objective")) {
-                    validateParams("objective", "name");
-
-                    return sendHttpRequest(HttpMethod.POST, getPath(), ConversionType.JSON);
-                }
-
-                validateParams("objective", "name", "user_status");
-
-                sendHttpRequest(HttpMethod.POST, getPath(), ConversionType.JSON);
-                return sendHttpRequest(HttpMethod.POST, updateStatusPath(), ConversionType.JSON);
-            } catch (APIRequestException e) {
-                throw new CampaignUpdateException("Can't create campaign, because of: " + e.getLocalizedMessage());
-            }
-        }
-
         @Override
         protected String getPath() {
             return DefaultURLS.DEFAULT_FULL_ADS_API_URL + "campaign/update";
@@ -174,12 +150,19 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
 
         @Override
         protected void validateRequiredParams() {
-            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("id"), "id");
-            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("advertiser_id"), "id");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("name"), "name");
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("objective"), "objective");
         }
 
-        private String updateStatusPath() {
-            return DefaultURLS.DEFAULT_FULL_ADS_API_URL + "campaign/status/update";
+        @Override
+        public Campaign execute() throws APIRequestException {
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new CampaignUpdateException("Can't update campaign (" + this.campaignId + ") for advertiser " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+            }
         }
 
         public static class CampaignUpdateException extends APIRequestException {
@@ -199,6 +182,72 @@ public class NextDoorAPICampaign extends NextDoorAPIRequestNode {
             }
 
             public CampaignUpdateException(String s, Throwable throwable, boolean b, boolean b1) {
+                super(s, throwable, b, b1);
+            }
+        }
+    }
+
+    public static class NextDoorAPIUpdateCampaignStatus extends NextDoorAPIRequest<Campaign> implements NextDoorAPIExecute<Campaign> {
+        private final String campaignId;
+        private final String advertiserId;
+
+        public NextDoorAPIUpdateCampaignStatus(NextDoorAPIAuth nextDoorAPIAuth, String campaignId, String advertiserId) {
+            super(Campaign.class, nextDoorAPIAuth);
+
+            NextDoorUtil.ensureStringNotNull(campaignId, "campaignId");
+            NextDoorUtil.ensureStringNotNull(advertiserId, "advertiserId");
+
+            this.setParamInternal("id", campaignId);
+            this.setParamInternal("advertiser_id", advertiserId);
+
+            this.campaignId = campaignId;
+            this.advertiserId = advertiserId;
+        }
+
+        public NextDoorAPIUpdateCampaignStatus setUserStatus(Campaign.UserStatus userStatus) {
+            this.setParamInternal("user_status", userStatus.name());
+
+            return this;
+        }
+
+        @Override
+        protected String getPath() {
+            return DefaultURLS.DEFAULT_FULL_ADS_API_URL + "campaign/status/update";
+        }
+
+        @Override
+        protected void validateRequiredParams() {
+            NextDoorUtil.ensureObjectNotNull(this.getParamInternal("user_status"), "user_status");
+        }
+
+        @Override
+        public Campaign execute() throws APIRequestException {
+            validateRequiredParams();
+
+            try {
+                return sendHttpRequest(HttpMethod.POST, ConversionType.JSON);
+            } catch (APIRequestException e) {
+                throw new CampaignStatusUpdateException("Can't update campaign (" + this.campaignId + ") status for advertiser " + this.advertiserId + ", because of: " + e.getLocalizedMessage());
+            }
+        }
+
+        public static class CampaignStatusUpdateException extends APIRequestException {
+            public CampaignStatusUpdateException() {
+            }
+
+            public CampaignStatusUpdateException(String s) {
+                super(s);
+            }
+
+            public CampaignStatusUpdateException(String s, Throwable throwable) {
+                super(s, throwable);
+            }
+
+            public CampaignStatusUpdateException(Throwable throwable) {
+                super(throwable);
+            }
+
+            public CampaignStatusUpdateException(String s, Throwable throwable, boolean b, boolean b1) {
                 super(s, throwable, b, b1);
             }
         }
